@@ -1,5 +1,5 @@
 import { Db } from 'mongodb';
-import { EntityId, IEntitySchema } from 'src/db/mongo';
+import { EntityId, IEntitySchema } from '../db/mongo';
 interface IPublicID extends IEntitySchema {
     key: string;
     value: number;

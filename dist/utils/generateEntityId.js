@@ -37,8 +37,8 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.__EntityIdsCollection = exports.generateEntityId = void 0;
-var mongo_1 = require("src/db/mongo");
-var NotFountException_1 = require("src/exception/common/NotFountException");
+var mongo_1 = require("../db/mongo");
+var NotFountException_1 = require("../exception/common/NotFountException");
 var collection = mongo_1.createCollection({
     name: 'core__ids',
     createEntityFromDBRecord: function (record) {

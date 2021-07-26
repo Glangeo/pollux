@@ -1,4 +1,4 @@
-import { AsyncFuncReturnType } from 'src/types/AsyncFuncReturnType';
+import { AsyncFuncReturnType } from '../../../types/AsyncFuncReturnType';
 import { IEntitySchema, IRecordSchema } from '../types';
 import { ICollection } from './ICollection';
 export declare type CollectionEntityType<C extends ICollection<IEntitySchema, IRecordSchema<IEntitySchema>, any>> = ReturnType<C['createEntityFromDBRecord']>;

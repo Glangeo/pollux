@@ -82,8 +82,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Router = void 0;
-var PublicExceptionKey_1 = require("src/exception/PublicExceptionKey");
 var express_1 = __importDefault(require("express"));
+var PublicExceptionKey_1 = require("../exception/PublicExceptionKey");
 var config_1 = require("../config");
 var context_1 = require("../context");
 var exception_1 = require("../exception");

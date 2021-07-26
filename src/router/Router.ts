@@ -1,5 +1,5 @@
-import { PublicExceptionKey } from 'src/exception/PublicExceptionKey';
 import express from 'express';
+import { PublicExceptionKey } from '../exception/PublicExceptionKey';
 import { Config } from '../config';
 import { getContext } from '../context';
 import {

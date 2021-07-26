@@ -59,8 +59,8 @@ var __rest = (this && this.__rest) || function (s, e) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.DAO = void 0;
-var DBException_1 = require("src/exception/common/DBException");
-var NotFountException_1 = require("src/exception/common/NotFountException");
+var NotFountException_1 = require("../../../exception/common/NotFountException");
+var DBException_1 = require("../../../exception/common/DBException");
 var DAO = /** @class */ (function () {
     function DAO(db, collection, options) {
         if (options === void 0) { options = {}; }

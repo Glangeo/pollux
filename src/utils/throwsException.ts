@@ -1,4 +1,4 @@
-import { Exception } from 'src/exception';
+import { Exception } from '../exception';
 
 export async function throwsException<
   T extends new (...params: any) => Exception

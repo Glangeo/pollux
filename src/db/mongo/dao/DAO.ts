@@ -8,8 +8,8 @@ import {
   UpdateQuery,
   WithId,
 } from 'mongodb';
-import { DBException } from 'src/exception/common/DBException';
-import { NotFoundException } from 'src/exception/common/NotFountException';
+import { NotFoundException } from '../../../exception/common/NotFountException';
+import { DBException } from '../../../exception/common/DBException';
 import { ICollection } from '../collection/ICollection';
 import { IEntitySchema, IRecordSchema } from '../types';
 import { IDAOOptions } from './types';

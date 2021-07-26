@@ -5,8 +5,8 @@ import {
   getDAO,
   IEntitySchema,
   IRecordSchema,
-} from 'src/db/mongo';
-import { NotFoundException } from 'src/exception/common/NotFountException';
+} from '../db/mongo';
+import { NotFoundException } from '../exception/common/NotFountException';
 
 interface IPublicID extends IEntitySchema {
   key: string;

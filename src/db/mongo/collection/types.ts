@@ -1,4 +1,4 @@
-import { AsyncFuncReturnType } from 'src/types/AsyncFuncReturnType';
+import { AsyncFuncReturnType } from '../../../types/AsyncFuncReturnType';
 import { IEntitySchema, IRecordSchema } from '../types';
 import { ICollection } from './ICollection';
 

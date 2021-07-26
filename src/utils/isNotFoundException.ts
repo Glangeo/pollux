@@ -1,5 +1,5 @@
-import { Exception } from 'src/exception';
-import { NotFoundException } from 'src/exception/common/NotFountException';
+import { NotFoundException } from '../exception/common/NotFountException';
+import { Exception } from '../exception';
 
 export function isNotFoundException(
   exception: Exception
