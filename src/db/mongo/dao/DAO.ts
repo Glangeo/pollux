@@ -49,6 +49,33 @@ export class DAO<
     ]);
   }
 
+  public async createMany(
+    form: (Omit<U, keyof F> & Partial<F>)[]
+  ): Promise<T[]> {
+    const dbCollection = this.getDBCollection();
+    const processedData = [];
+
+    for (const inputData of form) {
+      const defaultValues = await this.collection.getRecordDefaultFields();
+
+      processedData.push({
+        ...defaultValues,
+        ...inputData,
+      });
+    }
+
+    const operation = await dbCollection.insertMany(processedData as any);
+
+    if (operation.result.ok) {
+      return operation.ops.map(this.createEntityFromDBRecord);
+    }
+
+    throw new DBException('DAO -> create(...)', [
+      `Collection name: ${this.collection.name}`,
+      `Data: ${JSON.stringify(form, null, 2)}`,
+    ]);
+  }
+
   public async getOne(query: FilterQuery<U>): Promise<T> {
     const dbCollection = this.getDBCollection();
     const document = await dbCollection.findOne(query);
