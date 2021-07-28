@@ -8,6 +8,7 @@ export declare class DAO<T extends IEntitySchema, U extends IRecordSchema<T>, F 
     private readonly options;
     constructor(db: Db, collection: ICollection<T, U, F>, options?: IDAOOptions<T, U, F>);
     create(form: Omit<U, keyof F> & Partial<F>): Promise<T>;
+    createMany(form: (Omit<U, keyof F> & Partial<F>)[]): Promise<T[]>;
     getOne(query: FilterQuery<U>): Promise<T>;
     getMany(query: FilterQuery<U>, options?: FindOneOptions<U>): Promise<T[]>;
     getAll(): Promise<T[]>;

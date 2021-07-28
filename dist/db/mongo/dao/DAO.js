@@ -57,6 +57,17 @@ var __rest = (this && this.__rest) || function (s, e) {
         }
     return t;
 };
+var __values = (this && this.__values) || function(o) {
+    var s = typeof Symbol === "function" && Symbol.iterator, m = s && o[s], i = 0;
+    if (m) return m.call(o);
+    if (o && typeof o.length === "number") return {
+        next: function () {
+            if (o && i >= o.length) o = void 0;
+            return { value: o && o[i++], done: !o };
+        }
+    };
+    throw new TypeError(s ? "Object is not iterable." : "Symbol.iterator is not defined.");
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.DAO = void 0;
 var NotFountException_1 = require("../../../exception/common/NotFountException");
@@ -90,6 +101,56 @@ var DAO = /** @class */ (function () {
                         throw new DBException_1.DBException('DAO -> create(...)', [
                             "Collection name: " + this.collection.name,
                             "Data: " + JSON.stringify(data),
+                        ]);
+                }
+            });
+        });
+    };
+    DAO.prototype.createMany = function (form) {
+        return __awaiter(this, void 0, void 0, function () {
+            var dbCollection, processedData, form_1, form_1_1, inputData, defaultValues, e_1_1, operation;
+            var e_1, _a;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
+                    case 0:
+                        dbCollection = this.getDBCollection();
+                        processedData = [];
+                        _b.label = 1;
+                    case 1:
+                        _b.trys.push([1, 6, 7, 8]);
+                        form_1 = __values(form), form_1_1 = form_1.next();
+                        _b.label = 2;
+                    case 2:
+                        if (!!form_1_1.done) return [3 /*break*/, 5];
+                        inputData = form_1_1.value;
+                        return [4 /*yield*/, this.collection.getRecordDefaultFields()];
+                    case 3:
+                        defaultValues = _b.sent();
+                        processedData.push(__assign(__assign({}, defaultValues), inputData));
+                        _b.label = 4;
+                    case 4:
+                        form_1_1 = form_1.next();
+                        return [3 /*break*/, 2];
+                    case 5: return [3 /*break*/, 8];
+                    case 6:
+                        e_1_1 = _b.sent();
+                        e_1 = { error: e_1_1 };
+                        return [3 /*break*/, 8];
+                    case 7:
+                        try {
+                            if (form_1_1 && !form_1_1.done && (_a = form_1.return)) _a.call(form_1);
+                        }
+                        finally { if (e_1) throw e_1.error; }
+                        return [7 /*endfinally*/];
+                    case 8: return [4 /*yield*/, dbCollection.insertMany(processedData)];
+                    case 9:
+                        operation = _b.sent();
+                        if (operation.result.ok) {
+                            return [2 /*return*/, operation.ops.map(this.createEntityFromDBRecord)];
+                        }
+                        throw new DBException_1.DBException('DAO -> create(...)', [
+                            "Collection name: " + this.collection.name,
+                            "Data: " + JSON.stringify(form, null, 2),
                         ]);
                 }
             });
