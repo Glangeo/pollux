@@ -78,6 +78,7 @@ var DAO = /** @class */ (function () {
         this.db = db;
         this.collection = collection;
         this.options = options;
+        this.createEntityFromDBRecord = this.createEntityFromDBRecord.bind(this);
     }
     DAO.prototype.create = function (form) {
         return __awaiter(this, void 0, void 0, function () {

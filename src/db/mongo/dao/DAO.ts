@@ -23,7 +23,9 @@ export class DAO<
     private readonly db: Db,
     private readonly collection: ICollection<T, U, F>,
     private readonly options: IDAOOptions<T, U, F> = {}
-  ) {}
+  ) {
+    this.createEntityFromDBRecord = this.createEntityFromDBRecord.bind(this);
+  }
 
   public async create(form: Omit<U, keyof F> & Partial<F>): Promise<T> {
     const dbCollection = this.getDBCollection();
