@@ -69,6 +69,8 @@ export class Router {
       ).validate();
 
       if (validationResult.errors) {
+        const { extendableState, ...rest } = context.state;
+
         const exception = new ValidationException(
           context.state.route,
           validationResult.errors.map((error) => error.message),
@@ -78,7 +80,7 @@ export class Router {
           },
           {
             form: req.body,
-            contextState: context.state,
+            contextState: rest,
           }
         );
         throw exception;
@@ -114,6 +116,8 @@ export class Router {
           })
           .send();
       } else {
+        const { extendableState, ...rest } = context.state;
+
         const exceptionInstance = new InternalException(
           context.state.route,
           [String(exception)],
@@ -122,7 +126,7 @@ export class Router {
             details: [],
           },
           {
-            contextState: context.state,
+            contextState: rest,
           }
         );
 

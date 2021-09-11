@@ -1,8 +1,9 @@
-import { Context } from '../context';
+import { Omit } from 'lodash';
+import { IContextState } from '../context';
 import { ExceptionType } from './ExceptionType';
 
 export interface IExceptionMeta {
-  contextState?: Context['state'];
+  contextState?: Omit<IContextState, 'extendableState'>;
 }
 
 export interface IPublicMeta {

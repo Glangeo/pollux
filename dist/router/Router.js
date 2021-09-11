@@ -46,6 +46,17 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+var __rest = (this && this.__rest) || function (s, e) {
+    var t = {};
+    for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0)
+        t[p] = s[p];
+    if (s != null && typeof Object.getOwnPropertySymbols === "function")
+        for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
+            if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i]))
+                t[p[i]] = s[p[i]];
+        }
+    return t;
+};
 var __values = (this && this.__values) || function(o) {
     var s = typeof Symbol === "function" && Symbol.iterator, m = s && o[s], i = 0;
     if (m) return m.call(o);
@@ -129,42 +140,43 @@ var Router = /** @class */ (function () {
     };
     Router.callRouteAction = function (req, res, route) {
         return __awaiter(this, void 0, void 0, function () {
-            var context, rawForm, validationResult, exception, form, result, response, _a, exception_2, exceptionInstance;
-            return __generator(this, function (_b) {
-                switch (_b.label) {
+            var context, rawForm, validationResult, _a, extendableState, rest, exception, form, result, response, _b, exception_2, _c, extendableState, rest, exceptionInstance;
+            return __generator(this, function (_d) {
+                switch (_d.label) {
                     case 0:
                         context = context_1.getContext(res);
-                        _b.label = 1;
+                        _d.label = 1;
                     case 1:
-                        _b.trys.push([1, 7, , 8]);
+                        _d.trys.push([1, 7, , 8]);
                         rawForm = req.body;
                         return [4 /*yield*/, new validator_1.Validator(rawForm, route.schema).validate()];
                     case 2:
-                        validationResult = _b.sent();
+                        validationResult = _d.sent();
                         if (validationResult.errors) {
+                            _a = context.state, extendableState = _a.extendableState, rest = __rest(_a, ["extendableState"]);
                             exception = new exception_1.ValidationException(context.state.route, validationResult.errors.map(function (error) { return error.message; }), {
                                 key: PublicExceptionKey_1.PublicExceptionKey.VALIDATION,
                                 details: [],
                             }, {
                                 form: req.body,
-                                contextState: context.state,
+                                contextState: rest,
                             });
                             throw exception;
                         }
                         form = validationResult.data;
                         return [4 /*yield*/, route.action(form, context)];
                     case 3:
-                        result = _b.sent();
+                        result = _d.sent();
                         if (!route.decoration) return [3 /*break*/, 5];
                         return [4 /*yield*/, route.decoration(result, context)];
                     case 4:
-                        _a = _b.sent();
+                        _b = _d.sent();
                         return [3 /*break*/, 6];
                     case 5:
-                        _a = result;
-                        _b.label = 6;
+                        _b = result;
+                        _d.label = 6;
                     case 6:
-                        response = _a;
+                        response = _b;
                         if (res.writableEnded) {
                             return [2 /*return*/];
                         }
@@ -174,7 +186,7 @@ var Router = /** @class */ (function () {
                         });
                         return [3 /*break*/, 8];
                     case 7:
-                        exception_2 = _b.sent();
+                        exception_2 = _d.sent();
                         if (exception_2 instanceof exception_1.Exception) {
                             res
                                 .json({
@@ -185,11 +197,12 @@ var Router = /** @class */ (function () {
                                 .send();
                         }
                         else {
+                            _c = context.state, extendableState = _c.extendableState, rest = __rest(_c, ["extendableState"]);
                             exceptionInstance = new exception_1.InternalException(context.state.route, [String(exception_2)], {
                                 key: PublicExceptionKey_1.PublicExceptionKey.INTERNAL,
                                 details: [],
                             }, {
-                                contextState: context.state,
+                                contextState: rest,
                             });
                             if (config_1.Config.isDev()) {
                                 // eslint-disable-next-line no-console
