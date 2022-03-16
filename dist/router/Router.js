@@ -99,6 +99,13 @@ var config_1 = require("../config");
 var context_1 = require("../context");
 var exception_1 = require("../exception");
 var validator_1 = require("../validator");
+/**
+ * Request handling mechanism
+ *
+ * @todo Add support for different Http.Method in routes
+ * @todo Move exception handling mechanism outside
+ * @todo Add file-based routing system support
+ */
 var Router = /** @class */ (function () {
     function Router(config) {
         this.config = config;

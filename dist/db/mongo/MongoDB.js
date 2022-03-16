@@ -38,8 +38,8 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.MongoDB = void 0;
 var mongodb_1 = require("mongodb");
+var utils_1 = require("src/utils");
 var exception_1 = require("../../exception");
-var config_1 = require("../../config");
 var MongoDB = /** @class */ (function () {
     function MongoDB(connectionUrl, PRIMARY_DB_NAME) {
         this.connectionUrl = connectionUrl;
@@ -72,10 +72,7 @@ var MongoDB = /** @class */ (function () {
                             })];
                     case 1:
                         _a.connection = _b.sent();
-                        if (config_1.Config.IS_LOGGING_ENABLED) {
-                            // eslint-disable-next-line no-console
-                            console.log("[LOGS][DB] MongoDB connected: " + this.connectionUrl);
-                        }
+                        utils_1.DevelopmentLogger.LOG(utils_1.DevLogEvent.DbConnected, this.connectionUrl);
                         _b.label = 2;
                     case 2: return [2 /*return*/];
                 }

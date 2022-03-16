@@ -1,9 +1,18 @@
+/**
+ * Global configuration class. Singleton.
+ * Used to store application specific data
+ *
+ * @todo remove methods: isDev(), isTest()
+ */
 export declare abstract class Config {
-    protected static isLoggingEnabled: boolean;
+    /**
+     * Indicates development bootstrap mode
+     */
     static isDev(): boolean;
+    /**
+     * Indicates testing bootstrap mode
+     */
     static isTest(): boolean;
     static getPort(): number;
-    static setIsLoggingEnabled(isEnabled: boolean): void;
-    static get IS_LOGGING_ENABLED(): boolean;
     protected static safeGetEnvVar(name: string): string;
 }

@@ -6,6 +6,13 @@ export interface IRouterConfig {
     routes: (IRoute<any, any, any> | (() => IRoute<any, any, any>))[];
     defaultMiddleware?: Middleware[];
 }
+/**
+ * Request handling mechanism
+ *
+ * @todo Add support for different Http.Method in routes
+ * @todo Move exception handling mechanism outside
+ * @todo Add file-based routing system support
+ */
 export declare class Router {
     private config;
     constructor(config: IRouterConfig);

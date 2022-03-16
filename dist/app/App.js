@@ -40,35 +40,40 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.App = void 0;
+var fs_1 = __importDefault(require("fs"));
 var express_1 = __importDefault(require("express"));
 var body_parser_1 = __importDefault(require("body-parser"));
 var path_1 = __importDefault(require("path"));
+var utils_1 = require("src/utils");
 var config_1 = require("../config");
 var loadEnvFile_1 = require("../utils/loadEnvFile");
+// TODO: move to separate file
+var ENV_LOCAL_FILENAME = '.env.local';
+var ENV_DEV_FILENAME = '.env.development';
+var ENV_PROD_FILENAME = '.env.production';
+// TODO: add jsdoc
 var App = /** @class */ (function () {
     function App(options) {
-        var _a, _b;
+        var _a;
         this.options = options;
         this.route = ((_a = this.options) === null || _a === void 0 ? void 0 : _a.baseRoute) || '/';
         this.server = express_1.default();
-        config_1.Config.setIsLoggingEnabled(Boolean((_b = this.options) === null || _b === void 0 ? void 0 : _b.areLogsEnabled));
     }
     App.prototype.init = function (callback) {
-        var _a;
         return __awaiter(this, void 0, void 0, function () {
-            return __generator(this, function (_b) {
-                switch (_b.label) {
+            return __generator(this, function (_a) {
+                switch (_a.label) {
                     case 0:
-                        App._beforeInit((_a = this.options) === null || _a === void 0 ? void 0 : _a.areLogsEnabled);
+                        App._beforeInit();
                         return [4 /*yield*/, this.beforeInit()];
                     case 1:
-                        _b.sent();
+                        _a.sent();
                         this.applyMiddleware();
                         this.applyHeaders();
                         this.enableModules();
                         return [4 /*yield*/, this.afterInit()];
                     case 2:
-                        _b.sent();
+                        _a.sent();
                         if (callback) {
                             callback();
                         }
@@ -96,22 +101,18 @@ var App = /** @class */ (function () {
         }); });
     };
     App.prototype.addModule = function (module) {
-        var _a;
         return __awaiter(this, void 0, void 0, function () {
-            return __generator(this, function (_b) {
-                switch (_b.label) {
+            return __generator(this, function (_a) {
+                switch (_a.label) {
                     case 0:
                         if (!module.init) return [3 /*break*/, 2];
                         return [4 /*yield*/, module.init()];
                     case 1:
-                        _b.sent();
-                        _b.label = 2;
+                        _a.sent();
+                        _a.label = 2;
                     case 2:
-                        if ((_a = this.options) === null || _a === void 0 ? void 0 : _a.areLogsEnabled) {
-                            // eslint-disable-next-line no-console
-                            console.log('[LOGS][App] add module: ' + module.name);
-                        }
                         this.server.use(this.route, module.router.getExpressRouter());
+                        utils_1.DevelopmentLogger.LOG(utils_1.DevLogEvent.AppModuleAdded, module.name);
                         return [2 /*return*/];
                 }
             });
@@ -128,13 +129,22 @@ var App = /** @class */ (function () {
     App.prototype.applyMiddleware = function () {
         this.server.use(body_parser_1.default.json());
     };
-    App._beforeInit = function (isDebugMode) {
-        loadEnvFile_1.loadEnvFile(path_1.default.join(process.cwd(), '.env.local'), isDebugMode);
-        if (config_1.Config.isDev()) {
-            loadEnvFile_1.loadEnvFile(path_1.default.join(process.cwd(), '.env.development'), isDebugMode);
+    App._beforeInit = function () {
+        var getEnvPath = function (filename) { return path_1.default.join(process.cwd(), filename); };
+        var localPath = getEnvPath(ENV_LOCAL_FILENAME);
+        var devPath = getEnvPath(ENV_DEV_FILENAME);
+        var prodPath = getEnvPath(ENV_PROD_FILENAME);
+        if (fs_1.default.existsSync(localPath)) {
+            loadEnvFile_1.loadEnvFile(localPath, false);
+            utils_1.DevelopmentLogger.LOG(utils_1.DevLogEvent.EnvFileLoaded, ENV_LOCAL_FILENAME);
         }
-        else {
-            loadEnvFile_1.loadEnvFile(path_1.default.join(process.cwd(), '.env.production'), isDebugMode);
+        if (config_1.Config.isDev() && fs_1.default.existsSync(devPath)) {
+            loadEnvFile_1.loadEnvFile(devPath, false);
+            utils_1.DevelopmentLogger.LOG(utils_1.DevLogEvent.EnvFileLoaded, ENV_DEV_FILENAME);
+        }
+        if (!config_1.Config.isDev() && fs_1.default.existsSync(prodPath)) {
+            loadEnvFile_1.loadEnvFile(prodPath, false);
+            utils_1.DevelopmentLogger.LOG(utils_1.DevLogEvent.EnvFileLoaded, ENV_PROD_FILENAME);
         }
     };
     return App;
