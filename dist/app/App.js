@@ -51,19 +51,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.App = void 0;
-var fs_1 = __importDefault(require("fs"));
 var express_1 = __importDefault(require("express"));
 var body_parser_1 = __importDefault(require("body-parser"));
-var path_1 = __importDefault(require("path"));
 var utils_1 = require("../utils");
 var config_1 = require("../config");
-// TODO: move to separate file
-var ENV_LOCAL_FILENAME = '.env.local';
-var ENV_DEV_FILENAME = '.env.development';
-var ENV_PROD_FILENAME = '.env.production';
-var defaultAppOptions = {
-    shouldLoadEnvFiles: true,
-};
+var defaultAppOptions = {};
 // TODO: add jsdoc
 var App = /** @class */ (function () {
     function App(options) {
@@ -74,9 +66,6 @@ var App = /** @class */ (function () {
         this.options = mergedOptions;
         this.route = ((_a = this.options) === null || _a === void 0 ? void 0 : _a.baseRoute) || '/';
         this.server = express_1.default();
-        if (this.options.shouldLoadEnvFiles) {
-            App.LOAD_ENVIRONMENT();
-        }
     }
     App.prototype.init = function (callback) {
         return __awaiter(this, void 0, void 0, function () {
@@ -147,24 +136,6 @@ var App = /** @class */ (function () {
     };
     App.prototype.applyMiddleware = function () {
         this.server.use(body_parser_1.default.json());
-    };
-    App.LOAD_ENVIRONMENT = function () {
-        var getEnvPath = function (filename) { return path_1.default.join(process.cwd(), filename); };
-        var localPath = getEnvPath(ENV_LOCAL_FILENAME);
-        var devPath = getEnvPath(ENV_DEV_FILENAME);
-        var prodPath = getEnvPath(ENV_PROD_FILENAME);
-        if (fs_1.default.existsSync(localPath)) {
-            utils_1.loadEnvFile(localPath, false);
-            utils_1.DevelopmentLogger.LOG(utils_1.DevLogEvent.EnvFileLoaded, ENV_LOCAL_FILENAME);
-        }
-        if (config_1.Config.isDev() && fs_1.default.existsSync(devPath)) {
-            utils_1.loadEnvFile(devPath, false);
-            utils_1.DevelopmentLogger.LOG(utils_1.DevLogEvent.EnvFileLoaded, ENV_DEV_FILENAME);
-        }
-        if (!config_1.Config.isDev() && fs_1.default.existsSync(prodPath)) {
-            utils_1.loadEnvFile(prodPath, false);
-            utils_1.DevelopmentLogger.LOG(utils_1.DevLogEvent.EnvFileLoaded, ENV_PROD_FILENAME);
-        }
     };
     return App;
 }());

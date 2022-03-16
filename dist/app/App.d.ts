@@ -15,5 +15,4 @@ export declare abstract class App {
     protected addModule(module: IModule): Promise<void>;
     protected applyHeaders(): void;
     protected applyMiddleware(): void;
-    private static LOAD_ENVIRONMENT;
 }
