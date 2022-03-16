@@ -67,6 +67,7 @@ var defaultAppOptions = {
 // TODO: add jsdoc
 var App = /** @class */ (function () {
     function App(options) {
+        if (options === void 0) { options = {}; }
         var _a;
         this.options = options;
         var mergedOptions = __assign(__assign({}, defaultAppOptions), options);
@@ -79,7 +80,7 @@ var App = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        App._beforeInit();
+                        App._beforeInit(this.options.shouldLoadEnvFiles);
                         return [4 /*yield*/, this.beforeInit()];
                     case 1:
                         _a.sent();
@@ -146,22 +147,26 @@ var App = /** @class */ (function () {
     App.prototype.applyMiddleware = function () {
         this.server.use(body_parser_1.default.json());
     };
-    App._beforeInit = function () {
-        var getEnvPath = function (filename) { return path_1.default.join(process.cwd(), filename); };
-        var localPath = getEnvPath(ENV_LOCAL_FILENAME);
-        var devPath = getEnvPath(ENV_DEV_FILENAME);
-        var prodPath = getEnvPath(ENV_PROD_FILENAME);
-        if (fs_1.default.existsSync(localPath)) {
-            utils_1.loadEnvFile(localPath, false);
-            utils_1.DevelopmentLogger.LOG(utils_1.DevLogEvent.EnvFileLoaded, ENV_LOCAL_FILENAME);
-        }
-        if (config_1.Config.isDev() && fs_1.default.existsSync(devPath)) {
-            utils_1.loadEnvFile(devPath, false);
-            utils_1.DevelopmentLogger.LOG(utils_1.DevLogEvent.EnvFileLoaded, ENV_DEV_FILENAME);
-        }
-        if (!config_1.Config.isDev() && fs_1.default.existsSync(prodPath)) {
-            utils_1.loadEnvFile(prodPath, false);
-            utils_1.DevelopmentLogger.LOG(utils_1.DevLogEvent.EnvFileLoaded, ENV_PROD_FILENAME);
+    App._beforeInit = function (shouldLoadEnvFiles) {
+        if (shouldLoadEnvFiles) {
+            var getEnvPath = function (filename) {
+                return path_1.default.join(process.cwd(), filename);
+            };
+            var localPath = getEnvPath(ENV_LOCAL_FILENAME);
+            var devPath = getEnvPath(ENV_DEV_FILENAME);
+            var prodPath = getEnvPath(ENV_PROD_FILENAME);
+            if (fs_1.default.existsSync(localPath)) {
+                utils_1.loadEnvFile(localPath, false);
+                utils_1.DevelopmentLogger.LOG(utils_1.DevLogEvent.EnvFileLoaded, ENV_LOCAL_FILENAME);
+            }
+            if (config_1.Config.isDev() && fs_1.default.existsSync(devPath)) {
+                utils_1.loadEnvFile(devPath, false);
+                utils_1.DevelopmentLogger.LOG(utils_1.DevLogEvent.EnvFileLoaded, ENV_DEV_FILENAME);
+            }
+            if (!config_1.Config.isDev() && fs_1.default.existsSync(prodPath)) {
+                utils_1.loadEnvFile(prodPath, false);
+                utils_1.DevelopmentLogger.LOG(utils_1.DevLogEvent.EnvFileLoaded, ENV_PROD_FILENAME);
+            }
         }
     };
     return App;

@@ -21,7 +21,7 @@ export abstract class App {
   private readonly route: string;
   private readonly server: express.Express;
 
-  public constructor(private readonly options?: IAppOptions) {
+  public constructor(private readonly options: IAppOptions = {}) {
     const mergedOptions = {
       ...defaultAppOptions,
       ...options,
@@ -34,7 +34,7 @@ export abstract class App {
   }
 
   public async init(callback?: () => void): Promise<this> {
-    App._beforeInit();
+    App._beforeInit(this.options.shouldLoadEnvFiles);
 
     await this.beforeInit();
 
@@ -96,29 +96,32 @@ export abstract class App {
     this.server.use(bodyParser.json());
   }
 
-  private static _beforeInit(): void {
-    const getEnvPath = (filename: string) => path.join(process.cwd(), filename);
+  private static _beforeInit(shouldLoadEnvFiles?: boolean): void {
+    if (shouldLoadEnvFiles) {
+      const getEnvPath = (filename: string) =>
+        path.join(process.cwd(), filename);
 
-    const localPath = getEnvPath(ENV_LOCAL_FILENAME);
-    const devPath = getEnvPath(ENV_DEV_FILENAME);
-    const prodPath = getEnvPath(ENV_PROD_FILENAME);
+      const localPath = getEnvPath(ENV_LOCAL_FILENAME);
+      const devPath = getEnvPath(ENV_DEV_FILENAME);
+      const prodPath = getEnvPath(ENV_PROD_FILENAME);
 
-    if (fs.existsSync(localPath)) {
-      loadEnvFile(localPath, false);
+      if (fs.existsSync(localPath)) {
+        loadEnvFile(localPath, false);
 
-      DevelopmentLogger.LOG(DevLogEvent.EnvFileLoaded, ENV_LOCAL_FILENAME);
-    }
+        DevelopmentLogger.LOG(DevLogEvent.EnvFileLoaded, ENV_LOCAL_FILENAME);
+      }
 
-    if (Config.isDev() && fs.existsSync(devPath)) {
-      loadEnvFile(devPath, false);
+      if (Config.isDev() && fs.existsSync(devPath)) {
+        loadEnvFile(devPath, false);
 
-      DevelopmentLogger.LOG(DevLogEvent.EnvFileLoaded, ENV_DEV_FILENAME);
-    }
+        DevelopmentLogger.LOG(DevLogEvent.EnvFileLoaded, ENV_DEV_FILENAME);
+      }
 
-    if (!Config.isDev() && fs.existsSync(prodPath)) {
-      loadEnvFile(prodPath, false);
+      if (!Config.isDev() && fs.existsSync(prodPath)) {
+        loadEnvFile(prodPath, false);
 
-      DevelopmentLogger.LOG(DevLogEvent.EnvFileLoaded, ENV_PROD_FILENAME);
+        DevelopmentLogger.LOG(DevLogEvent.EnvFileLoaded, ENV_PROD_FILENAME);
+      }
     }
   }
 }
