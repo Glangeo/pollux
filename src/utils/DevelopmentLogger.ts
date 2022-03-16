@@ -42,10 +42,10 @@ export type DevelopmentLoggerConfiguration = {
 
 export enum DevLogEvent {
   // Application
-  AppModuleAdded = 'app/module-added',
+  AppModuleAdded = 'app/moduleAdded',
 
   // Environment
-  EnvFileLoaded = 'env/file-loaded',
+  EnvFileLoaded = 'env/fileLoaded',
 
   // Database
   DbConnected = 'db/connected',

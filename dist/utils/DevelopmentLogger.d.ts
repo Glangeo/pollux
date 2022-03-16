@@ -35,8 +35,8 @@ export declare type DevelopmentLoggerConfiguration = {
     };
 };
 export declare enum DevLogEvent {
-    AppModuleAdded = "app/module-added",
-    EnvFileLoaded = "env/file-loaded",
+    AppModuleAdded = "app/moduleAdded",
+    EnvFileLoaded = "env/fileLoaded",
     DbConnected = "db/connected"
 }
 export declare abstract class DevelopmentLogger {

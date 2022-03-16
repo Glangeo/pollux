@@ -21,9 +21,9 @@ exports.DevelopmentLogger = exports.DevLogEvent = void 0;
 var DevLogEvent;
 (function (DevLogEvent) {
     // Application
-    DevLogEvent["AppModuleAdded"] = "app/module-added";
+    DevLogEvent["AppModuleAdded"] = "app/moduleAdded";
     // Environment
-    DevLogEvent["EnvFileLoaded"] = "env/file-loaded";
+    DevLogEvent["EnvFileLoaded"] = "env/fileLoaded";
     // Database
     DevLogEvent["DbConnected"] = "db/connected";
 })(DevLogEvent = exports.DevLogEvent || (exports.DevLogEvent = {}));
