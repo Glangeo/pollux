@@ -69,9 +69,11 @@ var App = /** @class */ (function () {
                         _a.sent();
                         this.applyMiddleware();
                         this.applyHeaders();
-                        this.enableModules();
-                        return [4 /*yield*/, this.afterInit()];
+                        return [4 /*yield*/, this.enableModules()];
                     case 2:
+                        _a.sent();
+                        return [4 /*yield*/, this.afterInit()];
+                    case 3:
                         _a.sent();
                         if (callback) {
                             callback();

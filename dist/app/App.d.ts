@@ -9,7 +9,7 @@ export declare abstract class App {
     init(callback?: () => void): Promise<this>;
     getExpressApp(): express.Express;
     listen(callback?: (port: number) => void): void;
-    abstract enableModules(): void;
+    abstract enableModules(): Promise<void>;
     protected beforeInit(): Promise<void>;
     protected afterInit(): Promise<void>;
     protected addModule(module: IModule): Promise<void>;

@@ -29,7 +29,7 @@ export abstract class App {
 
     this.applyMiddleware();
     this.applyHeaders();
-    this.enableModules();
+    await this.enableModules();
 
     await this.afterInit();
 
@@ -51,7 +51,7 @@ export abstract class App {
     );
   }
 
-  public abstract enableModules(): void;
+  public abstract enableModules(): Promise<void>;
 
   // eslint-disable-next-line class-methods-use-this
   protected async beforeInit(): Promise<void> {}
