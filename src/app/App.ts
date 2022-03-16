@@ -12,12 +12,23 @@ const ENV_LOCAL_FILENAME = '.env.local';
 const ENV_DEV_FILENAME = '.env.development';
 const ENV_PROD_FILENAME = '.env.production';
 
+const defaultAppOptions: IAppOptions = {
+  shouldLoadEnvFiles: true,
+};
+
 // TODO: add jsdoc
 export abstract class App {
   private readonly route: string;
   private readonly server: express.Express;
 
   public constructor(private readonly options?: IAppOptions) {
+    const mergedOptions = {
+      ...defaultAppOptions,
+      ...options,
+    };
+
+    this.options = mergedOptions;
+
     this.route = this.options?.baseRoute || '/';
     this.server = express();
   }

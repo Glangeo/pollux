@@ -1,4 +1,15 @@
 "use strict";
+var __assign = (this && this.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -50,11 +61,16 @@ var config_1 = require("../config");
 var ENV_LOCAL_FILENAME = '.env.local';
 var ENV_DEV_FILENAME = '.env.development';
 var ENV_PROD_FILENAME = '.env.production';
+var defaultAppOptions = {
+    shouldLoadEnvFiles: true,
+};
 // TODO: add jsdoc
 var App = /** @class */ (function () {
     function App(options) {
         var _a;
         this.options = options;
+        var mergedOptions = __assign(__assign({}, defaultAppOptions), options);
+        this.options = mergedOptions;
         this.route = ((_a = this.options) === null || _a === void 0 ? void 0 : _a.baseRoute) || '/';
         this.server = express_1.default();
     }

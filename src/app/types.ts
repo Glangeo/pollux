@@ -5,6 +5,14 @@ export interface IAppOptions {
   baseRoute?: string;
 
   /**
+   * Load environment files.
+   * Commonly disabled when app used as a child of another app
+   *
+   * @default true
+   */
+  shouldLoadEnvFiles?: boolean;
+
+  /**
    * Enable dev logs
    *
    * @deprecated
