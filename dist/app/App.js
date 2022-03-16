@@ -44,9 +44,8 @@ var fs_1 = __importDefault(require("fs"));
 var express_1 = __importDefault(require("express"));
 var body_parser_1 = __importDefault(require("body-parser"));
 var path_1 = __importDefault(require("path"));
-var utils_1 = require("src/utils");
+var utils_1 = require("../utils");
 var config_1 = require("../config");
-var loadEnvFile_1 = require("../utils/loadEnvFile");
 // TODO: move to separate file
 var ENV_LOCAL_FILENAME = '.env.local';
 var ENV_DEV_FILENAME = '.env.development';
@@ -135,15 +134,15 @@ var App = /** @class */ (function () {
         var devPath = getEnvPath(ENV_DEV_FILENAME);
         var prodPath = getEnvPath(ENV_PROD_FILENAME);
         if (fs_1.default.existsSync(localPath)) {
-            loadEnvFile_1.loadEnvFile(localPath, false);
+            utils_1.loadEnvFile(localPath, false);
             utils_1.DevelopmentLogger.LOG(utils_1.DevLogEvent.EnvFileLoaded, ENV_LOCAL_FILENAME);
         }
         if (config_1.Config.isDev() && fs_1.default.existsSync(devPath)) {
-            loadEnvFile_1.loadEnvFile(devPath, false);
+            utils_1.loadEnvFile(devPath, false);
             utils_1.DevelopmentLogger.LOG(utils_1.DevLogEvent.EnvFileLoaded, ENV_DEV_FILENAME);
         }
         if (!config_1.Config.isDev() && fs_1.default.existsSync(prodPath)) {
-            loadEnvFile_1.loadEnvFile(prodPath, false);
+            utils_1.loadEnvFile(prodPath, false);
             utils_1.DevelopmentLogger.LOG(utils_1.DevLogEvent.EnvFileLoaded, ENV_PROD_FILENAME);
         }
     };

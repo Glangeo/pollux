@@ -1,5 +1,5 @@
 import { Db, MongoClient } from 'mongodb';
-import { DevelopmentLogger, DevLogEvent } from 'src/utils';
+import { DevelopmentLogger, DevLogEvent } from '../../utils';
 import { InternalException } from '../../exception';
 
 export class MongoDB {

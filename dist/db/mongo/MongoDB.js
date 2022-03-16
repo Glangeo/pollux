@@ -38,7 +38,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.MongoDB = void 0;
 var mongodb_1 = require("mongodb");
-var utils_1 = require("src/utils");
+var utils_1 = require("../../utils");
 var exception_1 = require("../../exception");
 var MongoDB = /** @class */ (function () {
     function MongoDB(connectionUrl, PRIMARY_DB_NAME) {

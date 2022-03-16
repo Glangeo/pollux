@@ -2,10 +2,9 @@ import fs from 'fs';
 import express from 'express';
 import bodyParser from 'body-parser';
 import path from 'path';
-import { DevelopmentLogger, DevLogEvent } from 'src/utils';
+import { loadEnvFile, DevelopmentLogger, DevLogEvent } from '../utils';
 import { Config } from '../config';
 import { IModule } from '../module';
-import { loadEnvFile } from '../utils/loadEnvFile';
 import { IAppOptions } from './types';
 
 // TODO: move to separate file
