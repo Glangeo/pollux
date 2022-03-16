@@ -1,6 +1,13 @@
+/**
+ * Global configuration class. Singleton.
+ * Used to store application specific data
+ *
+ * @todo remove methods: isDev(), isTest()
+ */
 export abstract class Config {
-  protected static isLoggingEnabled: boolean;
-
+  /**
+   * Indicates development bootstrap mode
+   */
   public static isDev(): boolean {
     const environment = process.env.ENV;
 
@@ -11,6 +18,9 @@ export abstract class Config {
     return false;
   }
 
+  /**
+   * Indicates testing bootstrap mode
+   */
   public static isTest(): boolean {
     const environment = process.env.ENV;
 
@@ -23,14 +33,6 @@ export abstract class Config {
 
   public static getPort(): number {
     return Number(this.safeGetEnvVar('PORT'));
-  }
-
-  public static setIsLoggingEnabled(isEnabled: boolean): void {
-    this.isLoggingEnabled = isEnabled;
-  }
-
-  public static get IS_LOGGING_ENABLED(): boolean {
-    return this.isLoggingEnabled;
   }
 
   protected static safeGetEnvVar(name: string): string {

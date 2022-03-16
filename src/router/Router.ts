@@ -17,6 +17,13 @@ export interface IRouterConfig {
   defaultMiddleware?: Middleware[];
 }
 
+/**
+ * Request handling mechanism
+ *
+ * @todo Add support for different Http.Method in routes
+ * @todo Move exception handling mechanism outside
+ * @todo Add file-based routing system support
+ */
 export class Router {
   public constructor(private config: IRouterConfig) {}
 

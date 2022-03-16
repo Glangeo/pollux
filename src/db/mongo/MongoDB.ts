@@ -1,6 +1,6 @@
 import { Db, MongoClient } from 'mongodb';
+import { DevelopmentLogger, DevLogEvent } from 'src/utils';
 import { InternalException } from '../../exception';
-import { Config } from '../../config';
 
 export class MongoDB {
   private connection: MongoClient | undefined;
@@ -27,10 +27,7 @@ export class MongoDB {
         useUnifiedTopology: true,
       });
 
-      if (Config.IS_LOGGING_ENABLED) {
-        // eslint-disable-next-line no-console
-        console.log(`[LOGS][DB] MongoDB connected: ${this.connectionUrl}`);
-      }
+      DevelopmentLogger.LOG(DevLogEvent.DbConnected, this.connectionUrl);
     }
   }
 

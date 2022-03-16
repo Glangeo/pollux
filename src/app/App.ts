@@ -1,11 +1,19 @@
+import fs from 'fs';
 import express from 'express';
 import bodyParser from 'body-parser';
 import path from 'path';
+import { DevelopmentLogger, DevLogEvent } from 'src/utils';
 import { Config } from '../config';
 import { IModule } from '../module';
 import { loadEnvFile } from '../utils/loadEnvFile';
 import { IAppOptions } from './types';
 
+// TODO: move to separate file
+const ENV_LOCAL_FILENAME = '.env.local';
+const ENV_DEV_FILENAME = '.env.development';
+const ENV_PROD_FILENAME = '.env.production';
+
+// TODO: add jsdoc
 export abstract class App {
   private readonly route: string;
   private readonly server: express.Express;
@@ -13,12 +21,10 @@ export abstract class App {
   public constructor(private readonly options?: IAppOptions) {
     this.route = this.options?.baseRoute || '/';
     this.server = express();
-
-    Config.setIsLoggingEnabled(Boolean(this.options?.areLogsEnabled));
   }
 
   public async init(callback?: () => void): Promise<this> {
-    App._beforeInit(this.options?.areLogsEnabled);
+    App._beforeInit();
 
     await this.beforeInit();
 
@@ -59,12 +65,9 @@ export abstract class App {
       await module.init();
     }
 
-    if (this.options?.areLogsEnabled) {
-      // eslint-disable-next-line no-console
-      console.log('[LOGS][App] add module: ' + module.name);
-    }
-
     this.server.use(this.route, module.router.getExpressRouter());
+
+    DevelopmentLogger.LOG(DevLogEvent.AppModuleAdded, module.name);
   }
 
   protected applyHeaders(): void {
@@ -83,13 +86,29 @@ export abstract class App {
     this.server.use(bodyParser.json());
   }
 
-  private static _beforeInit(isDebugMode?: boolean): void {
-    loadEnvFile(path.join(process.cwd(), '.env.local'), isDebugMode);
+  private static _beforeInit(): void {
+    const getEnvPath = (filename: string) => path.join(process.cwd(), filename);
 
-    if (Config.isDev()) {
-      loadEnvFile(path.join(process.cwd(), '.env.development'), isDebugMode);
-    } else {
-      loadEnvFile(path.join(process.cwd(), '.env.production'), isDebugMode);
+    const localPath = getEnvPath(ENV_LOCAL_FILENAME);
+    const devPath = getEnvPath(ENV_DEV_FILENAME);
+    const prodPath = getEnvPath(ENV_PROD_FILENAME);
+
+    if (fs.existsSync(localPath)) {
+      loadEnvFile(localPath, false);
+
+      DevelopmentLogger.LOG(DevLogEvent.EnvFileLoaded, ENV_LOCAL_FILENAME);
+    }
+
+    if (Config.isDev() && fs.existsSync(devPath)) {
+      loadEnvFile(devPath, false);
+
+      DevelopmentLogger.LOG(DevLogEvent.EnvFileLoaded, ENV_DEV_FILENAME);
+    }
+
+    if (!Config.isDev() && fs.existsSync(prodPath)) {
+      loadEnvFile(prodPath, false);
+
+      DevelopmentLogger.LOG(DevLogEvent.EnvFileLoaded, ENV_PROD_FILENAME);
     }
   }
 }
