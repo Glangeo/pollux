@@ -24,6 +24,8 @@ var DevLogEvent;
     DevLogEvent["AppModuleAdded"] = "app/moduleAdded";
     // Environment
     DevLogEvent["EnvFileLoaded"] = "env/fileLoaded";
+    // Router
+    DevLogEvent["RouterIncomingRequest"] = "router/incomimgRequests";
     // Database
     DevLogEvent["DbConnected"] = "db/connected";
 })(DevLogEvent = exports.DevLogEvent || (exports.DevLogEvent = {}));
@@ -34,6 +36,9 @@ var defaultConfiguration = {
     },
     env: {
         fileLoaded: true,
+    },
+    router: {
+        incomimgRequests: false,
     },
     db: {
         connected: true,

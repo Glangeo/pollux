@@ -64,6 +64,9 @@ var App = /** @class */ (function () {
         this.options = options;
         var mergedOptions = __assign(__assign({}, defaultAppOptions), options);
         this.options = mergedOptions;
+        if (this.options.logging) {
+            utils_1.DevelopmentLogger.configuration = this.options.logging;
+        }
         this.route = ((_a = this.options) === null || _a === void 0 ? void 0 : _a.baseRoute) || '/';
         this.server = express_1.default();
     }

@@ -25,6 +25,12 @@ export declare type DevelopmentLoggerConfiguration = {
         fileLoaded: boolean;
     };
     /**
+     * Router logs
+     */
+    router: {
+        incomimgRequests: boolean;
+    };
+    /**
      * Database
      */
     db: {
@@ -37,6 +43,7 @@ export declare type DevelopmentLoggerConfiguration = {
 export declare enum DevLogEvent {
     AppModuleAdded = "app/moduleAdded",
     EnvFileLoaded = "env/fileLoaded",
+    RouterIncomingRequest = "router/incomimgRequests",
     DbConnected = "db/connected"
 }
 export declare abstract class DevelopmentLogger {

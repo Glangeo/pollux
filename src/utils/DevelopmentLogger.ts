@@ -30,6 +30,13 @@ export type DevelopmentLoggerConfiguration = {
   };
 
   /**
+   * Router logs
+   */
+  router: {
+    incomimgRequests: boolean;
+  };
+
+  /**
    * Database
    */
   db: {
@@ -47,6 +54,9 @@ export enum DevLogEvent {
   // Environment
   EnvFileLoaded = 'env/fileLoaded',
 
+  // Router
+  RouterIncomingRequest = 'router/incomimgRequests',
+
   // Database
   DbConnected = 'db/connected',
 }
@@ -58,6 +68,9 @@ const defaultConfiguration: DevelopmentLoggerConfiguration = {
   },
   env: {
     fileLoaded: true,
+  },
+  router: {
+    incomimgRequests: false,
   },
   db: {
     connected: true,

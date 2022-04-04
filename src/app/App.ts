@@ -20,6 +20,10 @@ export abstract class App {
 
     this.options = mergedOptions;
 
+    if (this.options.logging) {
+      DevelopmentLogger.configuration = this.options.logging;
+    }
+
     this.route = this.options?.baseRoute || '/';
     this.server = express();
   }

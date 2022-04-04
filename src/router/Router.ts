@@ -1,4 +1,5 @@
 import express from 'express';
+import { DevelopmentLogger, DevLogEvent } from 'src/utils';
 import { PublicExceptionKey } from '../exception/PublicExceptionKey';
 import { Config } from '../config';
 import { getContext } from '../context';
@@ -67,6 +68,12 @@ export class Router {
     route: IRoute<any, any, any>
   ): Promise<void> {
     const context = getContext(res);
+    const request = {
+      route: context.state.route,
+      params: context.state.params,
+      query: context.state.queryParams,
+      body: req.body,
+    };
 
     try {
       const rawForm = req.body;
@@ -96,7 +103,7 @@ export class Router {
       const form = validationResult.data;
 
       const result = await route.action(form, context);
-      const response = route.decoration
+      const data = route.decoration
         ? await route.decoration(result, context)
         : result;
 
@@ -104,24 +111,36 @@ export class Router {
         return;
       }
 
-      res.json({
+      const response = {
         status: 'success',
-        result: response,
-      });
+        result: data,
+      };
+
+      DevelopmentLogger.LOG(
+        DevLogEvent.RouterIncomingRequest,
+        JSON.stringify({ request, response }, null, 2)
+      );
+
+      res.status(200).json(response);
     } catch (exception) {
       if (exception instanceof Exception) {
-        res
-          .json({
-            status: 'error',
-            errors:
-              Config.isDev() || Config.isTest()
-                ? {
-                    ...exception.getPublicPlainData(),
-                    ...exception.toPlainObject(),
-                  }
-                : exception.getPublicPlainData(),
-          })
-          .send();
+        const response = {
+          status: 'error',
+          errors:
+            Config.isDev() || Config.isTest()
+              ? {
+                  ...exception.getPublicPlainData(),
+                  ...exception.toPlainObject(),
+                }
+              : exception.getPublicPlainData(),
+        };
+
+        DevelopmentLogger.LOG(
+          DevLogEvent.RouterIncomingRequest,
+          JSON.stringify({ request, response }, null, 2)
+        );
+
+        res.status(200).json(response);
       } else {
         const { extendableState, ...rest } = context.state;
 
@@ -142,15 +161,20 @@ export class Router {
           console.log(exception);
         }
 
-        res
-          .json({
-            status: 'error',
-            errors:
-              Config.isDev() || Config.isTest()
-                ? exceptionInstance.toPlainObject()
-                : exceptionInstance.getPublicPlainData(),
-          })
-          .send();
+        const response = {
+          status: 'error',
+          errors:
+            Config.isDev() || Config.isTest()
+              ? exceptionInstance.toPlainObject()
+              : exceptionInstance.getPublicPlainData(),
+        };
+
+        DevelopmentLogger.LOG(
+          DevLogEvent.RouterIncomingRequest,
+          JSON.stringify({ request, response }, null, 2)
+        );
+
+        res.json(response).send();
       }
     }
   }
