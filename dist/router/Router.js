@@ -94,7 +94,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Router = void 0;
 var express_1 = __importDefault(require("express"));
-var utils_1 = require("src/utils");
+var DevelopmentLogger_1 = require("../utils/DevelopmentLogger");
 var PublicExceptionKey_1 = require("../exception/PublicExceptionKey");
 var config_1 = require("../config");
 var context_1 = require("../context");
@@ -198,7 +198,7 @@ var Router = /** @class */ (function () {
                             status: 'success',
                             result: data,
                         };
-                        utils_1.DevelopmentLogger.LOG(utils_1.DevLogEvent.RouterIncomingRequest, JSON.stringify({ request: request, response: response }, null, 2));
+                        DevelopmentLogger_1.DevelopmentLogger.LOG(DevelopmentLogger_1.DevLogEvent.RouterIncomingRequest, JSON.stringify({ request: request, response: response }, null, 2));
                         res.status(200).json(response);
                         return [3 /*break*/, 8];
                     case 7:
@@ -209,7 +209,7 @@ var Router = /** @class */ (function () {
                                 errors: config_1.Config.isDev() || config_1.Config.isTest()
                                     ? __assign(__assign({}, exception_2.getPublicPlainData()), exception_2.toPlainObject()) : exception_2.getPublicPlainData(),
                             };
-                            utils_1.DevelopmentLogger.LOG(utils_1.DevLogEvent.RouterIncomingRequest, JSON.stringify({ request: request, response: response }, null, 2));
+                            DevelopmentLogger_1.DevelopmentLogger.LOG(DevelopmentLogger_1.DevLogEvent.RouterIncomingRequest, JSON.stringify({ request: request, response: response }, null, 2));
                             res.status(200).json(response);
                         }
                         else {
@@ -230,7 +230,7 @@ var Router = /** @class */ (function () {
                                     ? exceptionInstance.toPlainObject()
                                     : exceptionInstance.getPublicPlainData(),
                             };
-                            utils_1.DevelopmentLogger.LOG(utils_1.DevLogEvent.RouterIncomingRequest, JSON.stringify({ request: request, response: response }, null, 2));
+                            DevelopmentLogger_1.DevelopmentLogger.LOG(DevelopmentLogger_1.DevLogEvent.RouterIncomingRequest, JSON.stringify({ request: request, response: response }, null, 2));
                             res.json(response).send();
                         }
                         return [3 /*break*/, 8];

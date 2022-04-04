@@ -1,5 +1,5 @@
 import express from 'express';
-import { DevelopmentLogger, DevLogEvent } from 'src/utils';
+import { DevelopmentLogger, DevLogEvent } from '../utils/DevelopmentLogger';
 import { PublicExceptionKey } from '../exception/PublicExceptionKey';
 import { Config } from '../config';
 import { getContext } from '../context';
