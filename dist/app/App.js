@@ -53,6 +53,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.App = void 0;
 var express_1 = __importDefault(require("express"));
 var body_parser_1 = __importDefault(require("body-parser"));
+var merge_1 = __importDefault(require("lodash/merge"));
 var utils_1 = require("../utils");
 var config_1 = require("../config");
 var defaultAppOptions = {};
@@ -65,7 +66,7 @@ var App = /** @class */ (function () {
         var mergedOptions = __assign(__assign({}, defaultAppOptions), options);
         this.options = mergedOptions;
         if (this.options.logging) {
-            utils_1.DevelopmentLogger.configuration = this.options.logging;
+            utils_1.DevelopmentLogger.configuration = merge_1.default(__assign({}, utils_1.DevelopmentLogger.configuration), this.options.logging);
         }
         this.route = ((_a = this.options) === null || _a === void 0 ? void 0 : _a.baseRoute) || '/';
         this.server = express_1.default();

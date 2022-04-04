@@ -1,4 +1,5 @@
-import { DevelopmentLoggerConfiguration } from 'src/utils';
+import { DeepPartial } from 'utility-types';
+import { DevelopmentLoggerConfiguration } from '../utils/DevelopmentLogger';
 export interface IAppOptions {
     /**
      * Application URL route. If provided, all application modules will use this route prefix
@@ -13,5 +14,5 @@ export interface IAppOptions {
     /**
      * Logging configuration
      */
-    logging?: DevelopmentLoggerConfiguration;
+    logging?: DeepPartial<DevelopmentLoggerConfiguration>;
 }

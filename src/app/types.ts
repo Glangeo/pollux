@@ -1,4 +1,5 @@
-import { DevelopmentLoggerConfiguration } from 'src/utils';
+import { DeepPartial } from 'utility-types';
+import { DevelopmentLoggerConfiguration } from '../utils/DevelopmentLogger';
 
 export interface IAppOptions {
   /**
@@ -16,5 +17,5 @@ export interface IAppOptions {
   /**
    * Logging configuration
    */
-  logging?: DevelopmentLoggerConfiguration;
+  logging?: DeepPartial<DevelopmentLoggerConfiguration>;
 }

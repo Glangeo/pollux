@@ -1,5 +1,6 @@
 import express from 'express';
 import bodyParser from 'body-parser';
+import merge from 'lodash/merge';
 import { DevelopmentLogger, DevLogEvent } from '../utils';
 import { Config } from '../config';
 import { IModule } from '../module';
@@ -21,7 +22,12 @@ export abstract class App {
     this.options = mergedOptions;
 
     if (this.options.logging) {
-      DevelopmentLogger.configuration = this.options.logging;
+      DevelopmentLogger.configuration = merge(
+        {
+          ...DevelopmentLogger.configuration,
+        },
+        this.options.logging
+      );
     }
 
     this.route = this.options?.baseRoute || '/';
