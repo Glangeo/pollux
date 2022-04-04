@@ -1,7 +1,6 @@
 {
-  "name": "pollux",
+  "name": "@glangeo/pollux",
   "version": "1.1.0-a",
-  "description": "",
   "main": "dist/index.js",
   "exports": "./dist/index.js",
   "scripts": {
@@ -9,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/Glangeo/pollux.git"
+    "url": "git+https://github.com/Glangeo/pollux.git"
   },
   "author": "Makar Glavanar",
   "license": "MIT",
@@ -40,5 +39,9 @@
     "ts-node": "^9.1.1",
     "typescript": "^4.1.3",
     "utility-types": "^3.10.0"
-  }
+  },
+  "bugs": {
+    "url": "https://github.com/Glangeo/pollux/issues"
+  },
+  "description": ""
 }
