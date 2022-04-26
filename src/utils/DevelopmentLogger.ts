@@ -34,6 +34,7 @@ export type DevelopmentLoggerConfiguration = {
    */
   router: {
     incomimgRequests: boolean;
+    routeAdded: boolean;
   };
 
   /**
@@ -56,6 +57,7 @@ export enum DevLogEvent {
 
   // Router
   RouterIncomingRequest = 'router/incomimgRequests',
+  RouterRouteAdded = 'router/routeAdded',
 
   // Database
   DbConnected = 'db/connected',
@@ -71,6 +73,7 @@ const defaultConfiguration: DevelopmentLoggerConfiguration = {
   },
   router: {
     incomimgRequests: false,
+    routeAdded: false,
   },
   db: {
     connected: true,
@@ -94,7 +97,11 @@ export abstract class DevelopmentLogger {
     }
   }
 
-  private static FORMAT_LOG_MESSAGE(event: DevLogEvent, msg: string): string {
+  public static WARN(msg: string): void {
+    console.log(DevelopmentLogger.FORMAT_LOG_MESSAGE('WARNING', msg));
+  }
+
+  private static FORMAT_LOG_MESSAGE(event: string, msg: string): string {
     return `[DEV][${event}]: ${msg}`;
   }
 }

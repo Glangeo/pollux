@@ -12,7 +12,7 @@
     "downlevelIteration": true,
     "declaration": true,
     "outDir": "./dist",
-    "baseUrl": ".",
+    "baseUrl": "."
   },
   "include": ["**/*.ts"],
   "exclude": ["node_modules", "./dist/**/*"]
