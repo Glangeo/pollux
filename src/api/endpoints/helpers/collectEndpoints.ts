@@ -5,10 +5,16 @@ import pth from 'path';
 import { AnyEndpoint } from '../types/Endpoint';
 
 type EndpointConfiguration = {
-  path: string[];
-  endpoint: AnyEndpoint;
+  readonly path: string[];
+  readonly endpoint: AnyEndpoint;
 };
 
+/**
+ * Collects endpoints from their files inside specified folder
+ *
+ * @param dirname path to folder where endpoints are stored
+ * @returns array of collected from folder endpoints
+ */
 export function collectEndpoints(dirname: string): AnyEndpoint[] {
   const endpointsFolderPath = pth.resolve(dirname, 'endpoints');
   const paths = fs.readdirSync(endpointsFolderPath);

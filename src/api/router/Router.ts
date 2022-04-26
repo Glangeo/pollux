@@ -5,12 +5,27 @@ import { AnyEndpoint, EndpointMethod, isEndpointWithBody } from '../endpoints';
 import { validate, ValidationSchema, Validator } from '../validator';
 import { fixRoutePath } from './helpers/fixRoutePath';
 
+/**
+ * Router configuration
+ */
 export type RouterConfiguration = {
+  /**
+   * Array of endpoints to be addded
+   */
   readonly endpoints: AnyEndpoint[];
+  /**
+   * Base path for all nested endpoints
+   */
   readonly path: string;
+  /**
+   * Validator that is used to validate request data
+   */
   readonly validator: Validator;
 };
 
+/**
+ * Adds each endpoint to express.Router, adds validations mechanism and wraps every request with exception handler
+ */
 export class Router {
   private static readonly DEFAULT_CONFIG: RouterConfiguration = {
     endpoints: [],
@@ -26,12 +41,19 @@ export class Router {
     };
   }
 
+  /**
+   * Adds all endpoints with validations and exception handling wrapper to newly created express router
+   *
+   * @returns configurated express router instance
+   */
   public getExpressRouter(): express.Router {
     const router = express.Router();
 
     for (const endpoint of this.config.endpoints) {
       if (!endpoint.route) {
-        throw new Error('[ROUTER] endpoint.route was not provided!');
+        DevelopmentLogger.WARN('endpoint.route was not provided!');
+
+        continue;
       }
 
       let method: express.IRouterMatcher<typeof router> | undefined = undefined;

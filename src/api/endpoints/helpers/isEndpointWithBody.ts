@@ -5,6 +5,12 @@ import {
   EndpointMethodWithBody,
 } from '../types/EndpointMethod';
 
+/**
+ * Checks if given endpoint might accept a body request data
+ *
+ * @param endpoint an endpoint to check
+ * @returns
+ */
 export function isEndpointWithBody<
   Q extends ValidationSchema | undefined,
   P extends ValidationSchema | undefined,

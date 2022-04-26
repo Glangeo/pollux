@@ -7,7 +7,7 @@ import { EndpointMethod, EndpointMethodWithBody } from './EndpointMethod';
  */
 export namespace EndpointPartials {
   /**
-   * Type for declaring query, body and params validations schemas (TODO: add params)
+   * Type for declaring query, params and body validations schemas
    */
   export type Validation<
     M extends EndpointMethod,
@@ -24,7 +24,7 @@ export namespace EndpointPartials {
     : {});
 
   /**
-   * Type for declaring query, body and params data after succeessful validation (TODO: add params)
+   * Type for declaring query, params and body data after succeessful validation
    */
   export type RequestData<
     Q extends ValidationSchema | undefined,

@@ -9,4 +9,3 @@ export * from './module';
 export * from './router';
 export * from './types';
 export * from './utils';
-export * from './validator';
