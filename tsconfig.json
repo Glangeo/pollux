@@ -12,7 +12,10 @@
     "downlevelIteration": true,
     "declaration": true,
     "outDir": "./dist",
-    "baseUrl": "."
+    "baseUrl": ".",
+    "paths": {
+      "src": ["./src"]
+    }
   },
   "include": ["**/*.ts"],
   "exclude": ["node_modules", "./dist/**/*"]

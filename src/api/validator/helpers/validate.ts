@@ -6,6 +6,13 @@ import {
   Validator,
 } from '../types';
 
+/**
+ * Validates data using validation schema
+ *
+ * @param schema data validation schema
+ * @param data data to validate
+ * @returns validation result
+ */
 export const validate: Validator = async <T extends ValidationSchema>(
   schema: T,
   data: any

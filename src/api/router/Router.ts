@@ -1,9 +1,16 @@
 import express from 'express';
+import { Exception } from 'src/core/exception';
+import { IExceptionHandler } from 'src/core/exception-handler';
+import { castUnknownErrorToException } from 'src/core/exception/helpers';
+import { ValidationException } from 'src/core/exception/prebuild';
 import { DevelopmentLogger, DevLogEvent } from 'src/utils';
 import { Optional } from 'utility-types';
 import { AnyEndpoint, EndpointMethod, isEndpointWithBody } from '../endpoints';
+import { createSuccessResponse } from '../response/helpers';
+import { HTTPStatusCode } from '../response/types';
 import { validate, ValidationSchema, Validator } from '../validator';
 import { fixRoutePath } from './helpers/fixRoutePath';
+import { getRouterDefaultExceptionHandler } from './helpers/getRouterDefaultExceptionHandler';
 
 /**
  * Router configuration
@@ -20,7 +27,15 @@ export type RouterConfiguration = {
   /**
    * Validator that is used to validate request data
    */
-  readonly validator: Validator;
+  readonly validate: Validator;
+  /**
+   * Exception handling mechanism
+   */
+  readonly getRouterExceptionHandler: (
+    req: express.Request,
+    res: express.Response,
+    endpoint: AnyEndpoint
+  ) => IExceptionHandler;
 };
 
 /**
@@ -30,7 +45,8 @@ export class Router {
   private static readonly DEFAULT_CONFIG: RouterConfiguration = {
     endpoints: [],
     path: '',
-    validator: validate,
+    validate,
+    getRouterExceptionHandler: getRouterDefaultExceptionHandler,
   };
   private readonly config: RouterConfiguration;
 
@@ -96,17 +112,28 @@ export class Router {
 
   private createRequestHandler(endpoint: AnyEndpoint): express.RequestHandler {
     return async (req, res) => {
-      const requestData = await this.tryGetRequestData(endpoint, req);
+      try {
+        const requestData = await this.tryGetRequestData(endpoint, req);
+        const result = await endpoint.action(requestData, req, res);
 
-      if (!requestData) {
-        return;
-      }
+        if (!res.headersSent) {
+          const response = createSuccessResponse(result);
 
-      // TODO: wrap into exception handler
-      const result = await endpoint.action(requestData, req, res);
+          res.status(HTTPStatusCode.Ok).json(response);
+        }
+      } catch (error) {
+        const exception =
+          error instanceof Exception
+            ? error
+            : castUnknownErrorToException(error);
 
-      if (!res.headersSent) {
-        // TODO: send success response
+        const handler = this.config.getRouterExceptionHandler(
+          req,
+          res,
+          endpoint
+        );
+
+        await handler.handle(exception);
       }
     };
   }
@@ -114,7 +141,7 @@ export class Router {
   private async tryGetRequestData(
     endpoint: AnyEndpoint,
     req: express.Request
-  ): Promise<any | undefined> {
+  ): Promise<any> {
     const requestData: {
       query?: any;
       params?: any;
@@ -143,12 +170,18 @@ export class Router {
 
     for (const { name, schema } of partials) {
       if (schema) {
-        const validated = await this.config.validator(schema, req[name]);
+        const validated = await this.config.validate(schema, req[name]);
 
         if (!validated.isValid) {
-          // TODO: send error response
-
-          return undefined;
+          throw new ValidationException({
+            message: `Request data for ${name} failed.`,
+            meta: {
+              errors: validated.errors,
+            },
+            publicInfo: {
+              message: `Request data for ${name} failed.`,
+            },
+          });
         }
 
         requestData[name] = validated.data;

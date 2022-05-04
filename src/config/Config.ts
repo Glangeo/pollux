@@ -31,10 +31,19 @@ export abstract class Config {
     return false;
   }
 
+  /**
+   * Listening port
+   */
   public static getPort(): number {
     return Number(this.safeGetEnvVar('PORT'));
   }
 
+  /**
+   * Gets environment variable value and throws error if value is missing
+   *
+   * @param name variable name
+   * @returns variables value from .env files
+   */
   protected static safeGetEnvVar(name: string): string {
     const variable = process.env[name];
 
