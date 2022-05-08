@@ -45,6 +45,7 @@ Thumbs.db
 *.wmv
 
 # Env
-
 .env.local
 
+# Tests
+coverage
