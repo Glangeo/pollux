@@ -64,7 +64,7 @@ var DevelopmentLogger = /** @class */ (function () {
         console.log(DevelopmentLogger.FORMAT_LOG_MESSAGE('WARNING', msg));
     };
     DevelopmentLogger.FORMAT_LOG_MESSAGE = function (event, msg) {
-        return "[DEV][" + event + "]: " + msg;
+        return "[DEV][".concat(event, "]: ").concat(msg);
     };
     DevelopmentLogger.configuration = defaultConfiguration;
     return DevelopmentLogger;

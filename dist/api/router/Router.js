@@ -109,13 +109,13 @@ var Router = /** @class */ (function () {
                     default:
                         break;
                 }
-                var path = fixRoutePath_1.fixRoutePath(this.config.path + "/" + endpoint.route);
+                var path = (0, fixRoutePath_1.fixRoutePath)("".concat(this.config.path, "/").concat(endpoint.route));
                 if (method) {
                     method(path, this.createRequestHandler(endpoint));
-                    local_utils_1.DevelopmentLogger.LOG(local_utils_1.DevLogEvent.RouterRouteAdded, "Add route: " + endpoint.method + " " + path);
+                    local_utils_1.DevelopmentLogger.LOG(local_utils_1.DevLogEvent.RouterRouteAdded, "Add route: ".concat(endpoint.method, " ").concat(path));
                 }
                 else {
-                    local_utils_1.DevelopmentLogger.WARN("[WARNING] route " + endpoint.method + " " + path + " could not be added! Requested method is not supported. Currenlty supported methods: GET, POST, PUT");
+                    local_utils_1.DevelopmentLogger.WARN("[WARNING] route ".concat(endpoint.method, " ").concat(path, " could not be added! Requested method is not supported. Currenlty supported methods: GET, POST, PUT"));
                 }
             }
         }
@@ -143,7 +143,7 @@ var Router = /** @class */ (function () {
                     case 2:
                         result = _a.sent();
                         if (!res.headersSent) {
-                            response = helpers_2.createSuccessResponse(result);
+                            response = (0, helpers_2.createSuccessResponse)(result);
                             res.status(common_1.HTTPStatusCode.Ok).json(response);
                         }
                         return [3 /*break*/, 5];
@@ -151,7 +151,7 @@ var Router = /** @class */ (function () {
                         error_1 = _a.sent();
                         exception = error_1 instanceof exception_1.Exception
                             ? error_1
-                            : helpers_1.castUnknownErrorToException(error_1);
+                            : (0, helpers_1.castUnknownErrorToException)(error_1);
                         handler = this.config.getRouterExceptionHandler(req, res, endpoint);
                         return [4 /*yield*/, handler.handle(exception)];
                     case 4:
@@ -182,8 +182,9 @@ var Router = /** @class */ (function () {
                             },
                             {
                                 name: 'body',
-                                schema: endpoints_1.isEndpointWithBody(endpoint)
-                                    ? (_c = endpoint.validation) === null || _c === void 0 ? void 0 : _c.body : undefined,
+                                schema: (0, endpoints_1.isEndpointWithBody)(endpoint)
+                                    ? (_c = endpoint.validation) === null || _c === void 0 ? void 0 : _c.body
+                                    : undefined,
                             },
                         ];
                         _f.label = 1;
@@ -200,12 +201,12 @@ var Router = /** @class */ (function () {
                         validated = _f.sent();
                         if (!validated.isValid) {
                             throw new prebuild_1.ValidationException({
-                                message: "Request data for " + name_1 + " failed.",
+                                message: "Request data for ".concat(name_1, " failed."),
                                 meta: {
                                     errors: validated.errors,
                                 },
                                 publicInfo: {
-                                    message: "Request data for " + name_1 + " failed.",
+                                    message: "Request data for ".concat(name_1, " failed."),
                                 },
                             });
                         }

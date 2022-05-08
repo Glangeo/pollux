@@ -30,7 +30,7 @@ function groupEndpoints(endpoints, options) {
                 return __assign(__assign({}, endpoint), { route: concatinatePaths([routePrefix, endpoint.route]) });
             }
             var stack = new Error().stack;
-            local_utils_1.DevelopmentLogger.WARN("groupEndpoints: endpoint skipped cause of lack of route property." + (stack ? "\n" + stack : ''));
+            local_utils_1.DevelopmentLogger.WARN("groupEndpoints: endpoint skipped cause of lack of route property.".concat(stack ? "\n".concat(stack) : ''));
             return null;
         })
             .filter(Boolean);

@@ -73,9 +73,14 @@ var __read = (this && this.__read) || function (o, n) {
     }
     return ar;
 };
-var __spread = (this && this.__spread) || function () {
-    for (var ar = [], i = 0; i < arguments.length; i++) ar = ar.concat(__read(arguments[i]));
-    return ar;
+var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
+    if (pack || arguments.length === 2) for (var i = 0, l = from.length, ar; i < l; i++) {
+        if (ar || !(i in from)) {
+            if (!ar) ar = Array.prototype.slice.call(from, 0, i);
+            ar[i] = from[i];
+        }
+    }
+    return to.concat(ar || Array.prototype.slice.call(from));
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.DAO = void 0;
@@ -111,8 +116,8 @@ var DAO = /** @class */ (function () {
                             message: 'Could not create entity.',
                             meta: {
                                 description: [
-                                    "Collection name: " + this.collection.name,
-                                    "Data: " + local_utils_1.stringifyObject(data),
+                                    "Collection name: ".concat(this.collection.name),
+                                    "Data: ".concat((0, local_utils_1.stringifyObject)(data)),
                                 ],
                             },
                         });
@@ -160,15 +165,15 @@ var DAO = /** @class */ (function () {
                     case 9:
                         operation = _b.sent();
                         if (operation.acknowledged) {
-                            ids = Object.keys(operation.insertedIds).reduce(function (ids, index) { return __spread(ids, [operation.insertedIds[Number(index)]]); }, []);
+                            ids = Object.keys(operation.insertedIds).reduce(function (ids, index) { return __spreadArray(__spreadArray([], __read(ids), false), [operation.insertedIds[Number(index)]], false); }, []);
                             return [2 /*return*/, this.getMany({ _id: { $in: ids } })];
                         }
                         throw new prebuild_1.InternalException({
                             message: 'Could not create entity.',
                             meta: {
                                 description: [
-                                    "Collection name: " + this.collection.name,
-                                    "Data: " + local_utils_1.stringifyObject(processedData),
+                                    "Collection name: ".concat(this.collection.name),
+                                    "Data: ".concat((0, local_utils_1.stringifyObject)(processedData)),
                                 ],
                             },
                         });
@@ -193,7 +198,7 @@ var DAO = /** @class */ (function () {
                             message: 'Entity is not found.',
                             meta: {
                                 collection: this.collection.name,
-                                query: local_utils_1.stringifyObject(query),
+                                query: (0, local_utils_1.stringifyObject)(query),
                             },
                         });
                 }
@@ -262,7 +267,7 @@ var DAO = /** @class */ (function () {
                             message: 'Entity is not found.',
                             meta: {
                                 collection: this.collection.name,
-                                query: local_utils_1.stringifyObject(query),
+                                query: (0, local_utils_1.stringifyObject)(query),
                             },
                         });
                 }

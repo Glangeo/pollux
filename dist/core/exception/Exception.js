@@ -12,7 +12,7 @@ var Exception = /** @class */ (function () {
         Error.captureStackTrace(this, this.constructor);
     }
     Exception.prototype.toString = function () {
-        return this.constructor.name + ": " + this.message;
+        return "".concat(this.constructor.name, ": ").concat(this.message);
     };
     Exception.prototype.getFullProjection = function () {
         return {

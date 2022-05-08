@@ -18,7 +18,7 @@ function getRouterDefaultExceptionHandler(req, res, endpoint, isFullProjection) 
         var context = isFullProjection
             ? exception.message
             : (_a = exception.publicInfo) === null || _a === void 0 ? void 0 : _a.message;
-        var response = helpers_1.createErrorResponse(context || '', meta);
+        var response = (0, helpers_1.createErrorResponse)(context || '', meta);
         var httpStatusCode = exception.httpStatusCode ||
             getHttpStatusCodeFromExceptionType(exception.type);
         res.status(httpStatusCode).json(response);

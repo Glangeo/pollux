@@ -36,7 +36,7 @@ var Config = /** @class */ (function () {
     Config.safeGetEnvVar = function (name) {
         var variable = process.env[name];
         if (!variable) {
-            throw new Error("[ERROR][CONFIG] " + name + " not defined in .env*");
+            throw new Error("[ERROR][CONFIG] ".concat(name, " not defined in .env*"));
         }
         return variable;
     };

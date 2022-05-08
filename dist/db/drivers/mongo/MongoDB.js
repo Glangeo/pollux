@@ -51,7 +51,7 @@ var MongoDB = /** @class */ (function () {
             throw new prebuild_1.InternalException({
                 message: 'Database name was not specified!',
                 meta: {
-                    description: ["Connection URI: " + this.connectionUri],
+                    description: ["Connection URI: ".concat(this.connectionUri)],
                 },
             });
         }

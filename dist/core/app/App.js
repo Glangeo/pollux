@@ -62,10 +62,10 @@ var App = /** @class */ (function () {
         var _a;
         this.options = options;
         if (this.options.logging) {
-            local_utils_1.DevelopmentLogger.configuration = merge_1.default(__assign({}, local_utils_1.DevelopmentLogger.configuration), this.options.logging);
+            local_utils_1.DevelopmentLogger.configuration = (0, merge_1.default)(__assign({}, local_utils_1.DevelopmentLogger.configuration), this.options.logging);
         }
         this.route = ((_a = this.options) === null || _a === void 0 ? void 0 : _a.baseRoute) || '/';
-        this.server = express_1.default();
+        this.server = (0, express_1.default)();
     }
     App.prototype.init = function (callback) {
         return __awaiter(this, void 0, void 0, function () {

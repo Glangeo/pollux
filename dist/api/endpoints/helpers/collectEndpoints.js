@@ -10,6 +10,17 @@ var __assign = (this && this.__assign) || function () {
     };
     return __assign.apply(this, arguments);
 };
+var __rest = (this && this.__rest) || function (s, e) {
+    var t = {};
+    for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0)
+        t[p] = s[p];
+    if (s != null && typeof Object.getOwnPropertySymbols === "function")
+        for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
+            if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i]))
+                t[p[i]] = s[p[i]];
+        }
+    return t;
+};
 var __values = (this && this.__values) || function(o) {
     var s = typeof Symbol === "function" && Symbol.iterator, m = s && o[s], i = 0;
     if (m) return m.call(o);
@@ -37,9 +48,14 @@ var __read = (this && this.__read) || function (o, n) {
     }
     return ar;
 };
-var __spread = (this && this.__spread) || function () {
-    for (var ar = [], i = 0; i < arguments.length; i++) ar = ar.concat(__read(arguments[i]));
-    return ar;
+var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
+    if (pack || arguments.length === 2) for (var i = 0, l = from.length, ar; i < l; i++) {
+        if (ar || !(i in from)) {
+            if (!ar) ar = Array.prototype.slice.call(from, 0, i);
+            ar[i] = from[i];
+        }
+    }
+    return to.concat(ar || Array.prototype.slice.call(from));
 };
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
@@ -50,6 +66,7 @@ exports.collectEndpoints = void 0;
 /* eslint-disable @typescript-eslint/no-require-imports */
 var fs_1 = __importDefault(require("fs"));
 var path_1 = __importDefault(require("path"));
+var helpers_1 = require("../../router/helpers");
 /**
  * Collects endpoints from their files inside specified folder
  *
@@ -61,7 +78,10 @@ function collectEndpoints(dirname) {
     var paths = fs_1.default.readdirSync(endpointsFolderPath);
     var configurations = configureEndpointsByPaths(endpointsFolderPath, paths, []);
     var endpoints = configurations.map(function (configuration) { return (__assign(__assign({}, configuration.endpoint), { route: configuration.path.join('/') })); });
-    return endpoints;
+    return endpoints.map(function (_a) {
+        var route = _a.route, rest = __rest(_a, ["route"]);
+        return (__assign(__assign({}, rest), { route: (0, helpers_1.fixRoutePath)(route || '') }));
+    });
 }
 exports.collectEndpoints = collectEndpoints;
 function configureEndpointsByPaths(absoluteBasePath, relativePaths, components) {
@@ -75,8 +95,9 @@ function configureEndpointsByPaths(absoluteBasePath, relativePaths, components) 
             if (isFile) {
                 var module_1 = require(absolutePath);
                 if (module_1.default) {
+                    var route = castFolderOrFileNameToRoute(path);
                     var configuration = {
-                        path: __spread(components, [path.replace(/\.ts/g, '')]),
+                        path: __spreadArray(__spreadArray([], __read(components), false), [route], false),
                         endpoint: module_1.default,
                     };
                     configurations.push(configuration);
@@ -86,7 +107,8 @@ function configureEndpointsByPaths(absoluteBasePath, relativePaths, components) 
                 }
             }
             else {
-                configurations.push.apply(configurations, __spread(configureEndpointsByPaths(path_1.default.resolve(absoluteBasePath, path), fs_1.default.readdirSync(absolutePath), __spread(components, [path]))));
+                var route = castFolderOrFileNameToRoute(path);
+                configurations.push.apply(configurations, __spreadArray([], __read(configureEndpointsByPaths(path_1.default.resolve(absoluteBasePath, path), fs_1.default.readdirSync(absolutePath), __spreadArray(__spreadArray([], __read(components), false), [route], false))), false));
             }
         }
     }
@@ -98,4 +120,16 @@ function configureEndpointsByPaths(absoluteBasePath, relativePaths, components) 
         finally { if (e_1) throw e_1.error; }
     }
     return configurations;
+}
+function castFolderOrFileNameToRoute(name) {
+    if (name === 'index.ts') {
+        return '/';
+    }
+    if (name.includes('[')) {
+        var fromIndex = name.indexOf('[');
+        var toIndex = name.indexOf(']');
+        var param = name.substring(fromIndex + 1, toIndex);
+        return ":".concat(param);
+    }
+    return name.replace(/\.ts/g, '');
 }

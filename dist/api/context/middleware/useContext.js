@@ -8,7 +8,7 @@ var helpers_1 = require("../helpers");
  * @returns
  */
 var useContext = function () { return function (req, res, next) {
-    helpers_1.setContext(helpers_1.getContext(req, res), res);
+    (0, helpers_1.setContext)((0, helpers_1.getContext)(req, res), res);
     next();
 }; };
 exports.useContext = useContext;

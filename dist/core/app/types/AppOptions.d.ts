@@ -2,7 +2,7 @@ import { DevelopmentLoggerConfiguration } from '../../../local-utils';
 import { DeepPartial } from 'utility-types';
 export declare type AppOptions = {
     /**
-     * Port, that will be used by server
+     * Port that will be used by the server
      */
     port?: number;
     /**

@@ -67,7 +67,7 @@ var HTTPTransport = /** @class */ (function () {
                         return [2 /*return*/, response.data];
                     case 3:
                         error_1 = _c.sent();
-                        throw helpers_1.castUnknownErrorToException(error_1);
+                        throw (0, helpers_1.castUnknownErrorToException)(error_1);
                     case 4: return [2 /*return*/];
                 }
             });
@@ -76,11 +76,11 @@ var HTTPTransport = /** @class */ (function () {
     HTTPTransport.prototype.getRequestUrl = function (url, shouldUseBaseUrl) {
         if (shouldUseBaseUrl === void 0) { shouldUseBaseUrl = true; }
         if (shouldUseBaseUrl) {
-            var prefixedUrl = ("/" + url)
+            var prefixedUrl = "/".concat(url)
                 .replace(/\/\/+/g, '/')
                 .replace(/\/$/, '')
                 .replace(/^\/*/, '/');
-            return "" + this.baseUrl + prefixedUrl;
+            return "".concat(this.baseUrl).concat(prefixedUrl);
         }
         return url.replace(/\/$/, '').replace(/^\/*/, '/');
     };

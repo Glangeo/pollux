@@ -35,15 +35,15 @@ function loadEnvironment() {
         types_1.Environment.Development,
     ].map(function (env) { return ({
         env: env,
-        name: ".env." + env,
-        path: getEnvPath(".env." + env),
+        name: ".env.".concat(env),
+        path: getEnvPath(".env.".concat(env)),
     }); });
     try {
         for (var environmentLocalsPaths_1 = __values(environmentLocalsPaths), environmentLocalsPaths_1_1 = environmentLocalsPaths_1.next(); !environmentLocalsPaths_1_1.done; environmentLocalsPaths_1_1 = environmentLocalsPaths_1.next()) {
             var _b = environmentLocalsPaths_1_1.value, env = _b.env, name_1 = _b.name, path_2 = _b.path;
             var isEnvironmentMatches = config_1.Config.getEnvironment() === env;
             if ((isEnvironmentMatches || env === 'local') && fs_1.default.existsSync(path_2)) {
-                loadEnvFile_1.loadEnvFile(path_2, false);
+                (0, loadEnvFile_1.loadEnvFile)(path_2, false);
                 DevelopmentLogger_1.DevelopmentLogger.LOG(DevelopmentLogger_1.DevLogEvent.EnvFileLoaded, name_1);
             }
         }

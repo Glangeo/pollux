@@ -63,7 +63,7 @@ function _flattenNestedProperty(parentPropertyName, source, result, options) {
         }
         else {
             for (var i = 0; i < source.length; i++) {
-                var flatPropertyName = parentPropertyName + "." + i;
+                var flatPropertyName = "".concat(parentPropertyName, ".").concat(i);
                 flattenValue(source[i], flatPropertyName, result);
             }
         }
@@ -73,7 +73,7 @@ function _flattenNestedProperty(parentPropertyName, source, result, options) {
             for (var _b = __values(Object.keys(source)), _c = _b.next(); !_c.done; _c = _b.next()) {
                 var propName = _c.value;
                 var value = source[propName];
-                var flatPropertyName = parentPropertyName + "." + propName;
+                var flatPropertyName = "".concat(parentPropertyName, ".").concat(propName);
                 flattenValue(value, flatPropertyName, result);
             }
         }
