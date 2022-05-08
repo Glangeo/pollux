@@ -1,16 +1,19 @@
-import { HTTPStatusCode } from 'src/api/response/types';
+import { HTTPStatusCode } from 'src/api/common';
 import { Exception, ExceptionConstructionProperties } from '../Exception';
 import { ExceptionType } from './ExceptionType';
 
 export type NotFoundExceptionPrivateMeta = {
-  readonly entity: string;
+  readonly collection: string;
   readonly query: string;
 };
 
-export class NotFoundException extends Exception<NotFoundExceptionPrivateMeta> {
+export class NotFoundException extends Exception<
+  NotFoundExceptionPrivateMeta,
+  any
+> {
   public constructor(
     properties: Omit<
-      ExceptionConstructionProperties<NotFoundExceptionPrivateMeta>,
+      ExceptionConstructionProperties<NotFoundExceptionPrivateMeta, any>,
       'type'
     >
   ) {

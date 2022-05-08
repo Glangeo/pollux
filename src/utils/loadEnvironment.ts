@@ -1,35 +1,38 @@
 import fs from 'fs';
 import path from 'path';
-import { Config } from '../config';
-import { DevelopmentLogger, DevLogEvent } from './DevelopmentLogger';
+import { Environment } from 'src/core/config/types';
+import { Config } from '../core/config';
+import {
+  DevelopmentLogger,
+  DevLogEvent,
+} from '../local-utils/DevelopmentLogger';
 import { loadEnvFile } from './loadEnvFile';
 
-const ENV_LOCAL_FILENAME = '.env.local';
-const ENV_DEV_FILENAME = '.env.development';
-const ENV_PROD_FILENAME = '.env.production';
-
+/**
+ * Loads environment files for current bootstrap environment
+ */
 export function loadEnvironment(): void {
   const getEnvPath = (filename: string) => path.join(process.cwd(), filename);
 
-  const localPath = getEnvPath(ENV_LOCAL_FILENAME);
-  const devPath = getEnvPath(ENV_DEV_FILENAME);
-  const prodPath = getEnvPath(ENV_PROD_FILENAME);
+  const environmentLocalsPaths = [
+    'local',
+    Environment.Production,
+    Environment.Demo,
+    Environment.Testing,
+    Environment.Development,
+  ].map((env) => ({
+    env,
+    name: `.env.${env}`,
+    path: getEnvPath(`.env.${env}`),
+  }));
 
-  if (fs.existsSync(localPath)) {
-    loadEnvFile(localPath, false);
+  for (const { env, name, path } of environmentLocalsPaths) {
+    const isEnvironmentMatches = Config.getEnvironment() === env;
 
-    DevelopmentLogger.LOG(DevLogEvent.EnvFileLoaded, ENV_LOCAL_FILENAME);
-  }
+    if ((isEnvironmentMatches || env === 'local') && fs.existsSync(path)) {
+      loadEnvFile(path, false);
 
-  if (Config.isDev() && fs.existsSync(devPath)) {
-    loadEnvFile(devPath, false);
-
-    DevelopmentLogger.LOG(DevLogEvent.EnvFileLoaded, ENV_DEV_FILENAME);
-  }
-
-  if (!Config.isDev() && fs.existsSync(prodPath)) {
-    loadEnvFile(prodPath, false);
-
-    DevelopmentLogger.LOG(DevLogEvent.EnvFileLoaded, ENV_PROD_FILENAME);
+      DevelopmentLogger.LOG(DevLogEvent.EnvFileLoaded, name);
+    }
   }
 }

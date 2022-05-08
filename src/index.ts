@@ -1,11 +1,5 @@
-export * from './app';
-export * from './config';
-export * from './context';
-export * from './db/mongo';
-export * from './eventBus';
-export * from './exception';
-export * from './http-transport';
-export * from './module';
-export * from './router';
-export * from './types';
+export * from './api';
+export * from './core';
 export * from './utils';
+
+export * from './deprecated';

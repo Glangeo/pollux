@@ -1,9 +1,12 @@
+/* eslint-disable @typescript-eslint/no-require-imports */
 /* eslint-disable @typescript-eslint/no-var-requires */
 import path from 'path';
 import moduleAlias from 'module-alias';
 
+/**
+ * Loads aliases from tsconfig to require.resolce
+ */
 export function loadAliases(): void {
-  // eslint-disable-next-line @typescript-eslint/no-require-imports
   const tsconfig = require(path.join(process.cwd(), 'tsconfig.json'));
 
   for (const alias in tsconfig.compilerOptions.paths) {

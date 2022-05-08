@@ -1,7 +1,8 @@
 import express from 'express';
+import { HTTPStatusCode } from 'src/api/common';
 import { createErrorResponse } from 'src/api/response/helpers';
-import { HTTPStatusCode } from 'src/api/response/types';
-import { Config } from 'src/config';
+import { Config } from 'src/core/config';
+import { Environment } from 'src/core/config/types';
 import {
   ExceptionHandler,
   ExceptionPipe,
@@ -11,17 +12,18 @@ import { ExceptionType } from 'src/core/exception/prebuild';
 
 export function getRouterDefaultExceptionHandler(
   req: express.Request,
-  res: express.Response
+  res: express.Response,
+  isFullProjection = Config.getEnvironment() !== Environment.Production
 ): IExceptionHandler {
   const handler = new ExceptionHandler();
 
   const pipe = new ExceptionPipe((exception) => {
-    const isFull = Config.isDev() || Config.isTest();
-
-    const meta = isFull
+    const meta = isFullProjection
       ? exception.getPublicProjection()
       : exception.getFullProjection();
-    const context = isFull ? exception.message : exception.publicInfo?.message;
+    const context = isFullProjection
+      ? exception.message
+      : exception.publicInfo?.message;
     const response = createErrorResponse(context || '', meta);
 
     const httpStatusCode =
