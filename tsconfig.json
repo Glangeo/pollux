@@ -13,6 +13,9 @@
     "declaration": true,
     "outDir": "./dist",
     "baseUrl": ".",
+    "paths": {
+      "src/": ["./src"]
+    }
   },
   "include": ["**/*.ts"],
   "exclude": ["node_modules", "./dist/**/*"]

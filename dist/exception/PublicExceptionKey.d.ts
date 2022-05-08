@@ -1,6 +1,0 @@
-export declare enum PublicExceptionKey {
-    INTERNAL = "E_INTERNAL",
-    NOT_FOUND = "E_NOT_FOUND",
-    VALIDATION = "E_VALIDATION_FAILED",
-    AUTHORIZATION = "E_AUTHORIZATION_FAILED"
-}
