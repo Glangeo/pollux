@@ -71,7 +71,6 @@ var common_1 = require("../common");
 var endpoints_1 = require("../endpoints");
 var helpers_2 = require("../response/helpers");
 var validator_1 = require("../validator");
-var fixRoutePath_1 = require("./helpers/fixRoutePath");
 var getRouterDefaultExceptionHandler_1 = require("./helpers/getRouterDefaultExceptionHandler");
 /**
  * Adds each endpoint to express.Router, adds validations mechanism and wraps every request with exception handler
@@ -109,7 +108,7 @@ var Router = /** @class */ (function () {
                     default:
                         break;
                 }
-                var path = (0, fixRoutePath_1.fixRoutePath)("".concat(this.config.path, "/").concat(endpoint.route));
+                var path = (0, local_utils_1.fixRoutePath)("".concat(this.config.path, "/").concat(endpoint.route));
                 if (method) {
                     method(path, this.createRequestHandler(endpoint));
                     local_utils_1.DevelopmentLogger.LOG(local_utils_1.DevLogEvent.RouterRouteAdded, "Add route: ".concat(endpoint.method, " ").concat(path));

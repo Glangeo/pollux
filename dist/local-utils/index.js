@@ -15,4 +15,5 @@ var __exportStar = (this && this.__exportStar) || function(m, exports) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 __exportStar(require("./stringifyObject"), exports);
+__exportStar(require("./fixRoutePath"), exports);
 __exportStar(require("./DevelopmentLogger"), exports);

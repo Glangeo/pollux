@@ -2,7 +2,7 @@ import express from 'express';
 import { Module } from '../module';
 import { AppOptions } from './types';
 export declare abstract class App {
-    private readonly options;
+    protected readonly options: AppOptions;
     readonly server: express.Express;
     protected readonly route: string;
     constructor(options?: AppOptions);
@@ -12,5 +12,6 @@ export declare abstract class App {
     protected beforeInit(): Promise<void>;
     protected afterInit(): Promise<void>;
     protected addModule(module: Module): Promise<void>;
+    protected addChildApp(app: App, path?: string): void;
     protected applyMiddleware(): Promise<void>;
 }

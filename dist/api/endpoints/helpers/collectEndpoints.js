@@ -66,7 +66,7 @@ exports.collectEndpoints = void 0;
 /* eslint-disable @typescript-eslint/no-require-imports */
 var fs_1 = __importDefault(require("fs"));
 var path_1 = __importDefault(require("path"));
-var helpers_1 = require("../../router/helpers");
+var local_utils_1 = require("../../../local-utils");
 /**
  * Collects endpoints from their files inside specified folder
  *
@@ -80,7 +80,7 @@ function collectEndpoints(dirname) {
     var endpoints = configurations.map(function (configuration) { return (__assign(__assign({}, configuration.endpoint), { route: configuration.path.join('/') })); });
     return endpoints.map(function (_a) {
         var route = _a.route, rest = __rest(_a, ["route"]);
-        return (__assign(__assign({}, rest), { route: (0, helpers_1.fixRoutePath)(route || '') }));
+        return (__assign(__assign({}, rest), { route: (0, local_utils_1.fixRoutePath)(route || '') }));
     });
 }
 exports.collectEndpoints = collectEndpoints;

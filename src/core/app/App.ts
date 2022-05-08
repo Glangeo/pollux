@@ -1,7 +1,7 @@
 import express from 'express';
 import bodyParser from 'body-parser';
 import merge from 'lodash/merge';
-import { DevelopmentLogger, DevLogEvent } from 'src/local-utils';
+import { DevelopmentLogger, DevLogEvent, fixRoutePath } from 'src/local-utils';
 import { Module } from '../module';
 import { AppOptions } from './types';
 
@@ -11,7 +11,7 @@ export abstract class App {
   public readonly server: express.Express;
   protected readonly route: string;
 
-  public constructor(private readonly options: AppOptions = {}) {
+  public constructor(protected readonly options: AppOptions = {}) {
     if (this.options.logging) {
       DevelopmentLogger.configuration = merge(
         {
@@ -60,6 +60,16 @@ export abstract class App {
     }
 
     DevelopmentLogger.LOG(DevLogEvent.AppModuleAdded, module.name);
+  }
+
+  protected addChildApp(app: App, path?: string): void {
+    const appPath = [this.options.baseRoute];
+
+    if (path) {
+      appPath.push(path);
+    }
+
+    this.server.use(fixRoutePath(appPath.join('/')), app.server);
   }
 
   protected async applyMiddleware(): Promise<void> {

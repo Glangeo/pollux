@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-require-imports */
 import fs from 'fs';
 import pth from 'path';
-import { fixRoutePath } from 'src/api/router/helpers';
+import { fixRoutePath } from 'src/local-utils';
 import { AnyEndpoint } from '../types/Endpoint';
 
 type EndpointConfiguration = {

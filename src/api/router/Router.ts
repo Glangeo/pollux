@@ -3,13 +3,12 @@ import { Exception } from 'src/core/exception';
 import { IExceptionHandler } from 'src/core/exception-handler';
 import { castUnknownErrorToException } from 'src/core/exception/helpers';
 import { ValidationException } from 'src/core/exception/prebuild';
-import { DevelopmentLogger, DevLogEvent } from 'src/local-utils';
+import { DevelopmentLogger, DevLogEvent, fixRoutePath } from 'src/local-utils';
 import { Optional } from 'utility-types';
 import { HTTPStatusCode } from '../common';
 import { AnyEndpoint, EndpointMethod, isEndpointWithBody } from '../endpoints';
 import { createSuccessResponse } from '../response/helpers';
 import { validate, ValidationSchema, Validator } from '../validator';
-import { fixRoutePath } from './helpers/fixRoutePath';
 import { getRouterDefaultExceptionHandler } from './helpers/getRouterDefaultExceptionHandler';
 
 /**

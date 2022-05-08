@@ -125,6 +125,13 @@ var App = /** @class */ (function () {
             });
         });
     };
+    App.prototype.addChildApp = function (app, path) {
+        var appPath = [this.options.baseRoute];
+        if (path) {
+            appPath.push(path);
+        }
+        this.server.use((0, local_utils_1.fixRoutePath)(appPath.join('/')), app.server);
+    };
     App.prototype.applyMiddleware = function () {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
