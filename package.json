@@ -1,6 +1,6 @@
 {
   "name": "@glangeo/pollux",
-  "version": "1.1.0-a",
+  "version": "2.0.0-a",
   "main": "dist/index.js",
   "exports": "./dist/index.js",
   "scripts": {
