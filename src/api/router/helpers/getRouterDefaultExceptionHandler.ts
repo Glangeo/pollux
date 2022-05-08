@@ -1,5 +1,6 @@
 import express from 'express';
 import { HTTPStatusCode } from 'src/api/common';
+import { AnyEndpoint } from 'src/api/endpoints';
 import { createErrorResponse } from 'src/api/response/helpers';
 import { Config } from 'src/core/config';
 import { Environment } from 'src/core/config/types';
@@ -13,6 +14,7 @@ import { ExceptionType } from 'src/core/exception/prebuild';
 export function getRouterDefaultExceptionHandler(
   req: express.Request,
   res: express.Response,
+  endpoint: AnyEndpoint,
   isFullProjection = Config.getEnvironment() !== Environment.Production
 ): IExceptionHandler {
   const handler = new ExceptionHandler();

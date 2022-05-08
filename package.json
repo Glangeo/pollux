@@ -4,7 +4,9 @@
   "main": "dist/index.js",
   "exports": "./dist/index.js",
   "scripts": {
-    "build": "tsc"
+    "prebuild": "npx rimraf ./dist",
+    "build": "tsc",
+    "postbuild": "tsconfig-replace-paths -p tsconfig.json -o ./dist -s ./src"
   },
   "repository": {
     "type": "git",
@@ -35,7 +37,9 @@
     "eslint-plugin-import": "^2.22.1",
     "eslint-plugin-prettier": "^3.3.1",
     "prettier": "^2.2.1",
+    "rimraf": "^3.0.2",
     "ts-node": "^9.1.1",
+    "tsconfig-replace-paths": "^0.0.11",
     "typescript": "^4.1.3"
   },
   "bugs": {

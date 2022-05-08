@@ -1,4 +1,4 @@
-import { HTTPStatusCode } from 'src/api/response/types';
+import { HTTPStatusCode } from 'src/api';
 import { Exception } from '../Exception';
 import { ExceptionType } from '../prebuild';
 

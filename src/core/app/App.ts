@@ -1,7 +1,7 @@
 import express from 'express';
 import bodyParser from 'body-parser';
 import merge from 'lodash/merge';
-import { DevelopmentLogger, DevLogEvent } from '../../utils';
+import { DevelopmentLogger, DevLogEvent } from 'src/local-utils';
 import { Module } from '../module';
 import { AppOptions } from './types';
 

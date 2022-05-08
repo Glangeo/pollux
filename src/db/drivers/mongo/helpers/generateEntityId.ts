@@ -8,10 +8,11 @@ type PublicID = EntitySchema & {
   key: string;
   value: number;
 };
+type PublicIDRecord = RecordSchema<PublicID>;
 
 const collection = createCollection({
   name: 'core__ids',
-  createEntityFromDBRecord(record: RecordSchema<PublicID>): PublicID {
+  createEntityFromDBRecord(record: PublicIDRecord): PublicID {
     return record;
   },
   async getRecordDefaultFields() {
@@ -29,6 +30,7 @@ export async function generateEntityId(
   const dao = getDAO(db, collection);
 
   let publicId: PublicID | undefined;
+
   try {
     publicId = await dao.getOne({ key: collectionName });
   } catch (exception) {

@@ -37,6 +37,13 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.throwsException = void 0;
+/**
+ * Checks func throws an exception of specified class
+ *
+ * @param func function that is expected to throw
+ * @param constructor exception
+ * @returns true if throwed exception is instance of given constructor
+ */
 function throwsException(func, constructor) {
     return __awaiter(this, void 0, void 0, function () {
         var exception_1;

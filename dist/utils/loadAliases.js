@@ -20,11 +20,14 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.loadAliases = void 0;
+/* eslint-disable @typescript-eslint/no-require-imports */
 /* eslint-disable @typescript-eslint/no-var-requires */
 var path_1 = __importDefault(require("path"));
 var module_alias_1 = __importDefault(require("module-alias"));
+/**
+ * Loads aliases from tsconfig to require.resolce
+ */
 function loadAliases() {
-    // eslint-disable-next-line @typescript-eslint/no-require-imports
     var tsconfig = require(path_1.default.join(process.cwd(), 'tsconfig.json'));
     for (var alias in tsconfig.compilerOptions.paths) {
         var aliasName = alias.replace('/*', '');

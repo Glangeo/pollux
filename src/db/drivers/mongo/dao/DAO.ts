@@ -20,16 +20,16 @@ import { DAOOptions } from './types';
 
 export class DAO<
   T extends EntitySchema,
-  U extends RecordSchema<T>,
-  F extends Partial<U>
+  R extends RecordSchema<T>,
+  F extends Partial<R>
 > {
   public constructor(
     private readonly db: Db,
-    private readonly collection: PolluxCollection<T, U, F>,
-    private readonly options: DAOOptions<T, U, F> = {}
+    private readonly collection: PolluxCollection<T, R, F>,
+    private readonly options: DAOOptions<T, R, F> = {}
   ) {}
 
-  public async create(form: Omit<U, keyof F> & Partial<F>): Promise<T> {
+  public async create(form: Omit<R, keyof F | '_id'> & Partial<F>): Promise<T> {
     const dbCollection = this.getDBCollection();
     const defaultValues = await this.collection.getRecordDefaultFields();
 
@@ -59,7 +59,7 @@ export class DAO<
   }
 
   public async createMany(
-    form: (Omit<U, keyof F> & Partial<F>)[]
+    form: (Omit<R, keyof F> & Partial<F>)[]
   ): Promise<T[]> {
     const dbCollection = this.getDBCollection();
     const processedData = [];
@@ -94,7 +94,7 @@ export class DAO<
     });
   }
 
-  public async getOne(query: Filter<U>): Promise<T> {
+  public async getOne(query: Filter<R>): Promise<T> {
     const dbCollection = this.getDBCollection();
     const document = await dbCollection.findOne(query);
 
@@ -112,8 +112,8 @@ export class DAO<
   }
 
   public async getMany(
-    query: Filter<U>,
-    options: FindOptions<U> = {}
+    query: Filter<R>,
+    options: FindOptions<R> = {}
   ): Promise<T[]> {
     const dbCollection = this.getDBCollection();
     const dbQuery = dbCollection.find(query, options as any);
@@ -144,10 +144,10 @@ export class DAO<
     return [];
   }
 
-  public async getDBRecordField<K extends keyof WithId<U>>(
-    query: Filter<U>,
+  public async getDBRecordField<K extends keyof WithId<R>>(
+    query: Filter<R>,
     fieldName: K
-  ): Promise<WithId<U>[K]> {
+  ): Promise<WithId<R>[K]> {
     const dbCollection = this.getDBCollection();
     const document = await dbCollection.findOne(query);
 
@@ -164,7 +164,7 @@ export class DAO<
     });
   }
 
-  public async getRecordsCount(query: Filter<U>): Promise<number> {
+  public async getRecordsCount(query: Filter<R>): Promise<number> {
     const dbCollection = this.getDBCollection();
     const count = await dbCollection.countDocuments(query);
 
@@ -172,8 +172,8 @@ export class DAO<
   }
 
   public async updateOne(
-    query: Filter<U>,
-    updates: UpdateFilter<U> | Partial<U>,
+    query: Filter<R>,
+    updates: UpdateFilter<R> | Partial<R>,
     options?: UpdateOptions
   ): Promise<boolean> {
     const dbCollection = this.getDBCollection();
@@ -188,8 +188,8 @@ export class DAO<
   }
 
   public async updateMany(
-    query: Filter<U>,
-    updates: UpdateFilter<U> | Partial<U>,
+    query: Filter<R>,
+    updates: UpdateFilter<R> | Partial<R>,
     options?: UpdateOptions
   ): Promise<boolean> {
     const dbCollection = this.getDBCollection();
@@ -203,14 +203,14 @@ export class DAO<
     return Boolean(operation.acknowledged && operation.matchedCount);
   }
 
-  public async deleteOne(query: Filter<U>): Promise<boolean> {
+  public async deleteOne(query: Filter<R>): Promise<boolean> {
     const dbCollection = this.getDBCollection();
     const operation = await dbCollection.deleteOne(query);
 
     return Boolean(operation.acknowledged && operation.deletedCount);
   }
 
-  public async deleteMany(query: Filter<U>): Promise<boolean> {
+  public async deleteMany(query: Filter<R>): Promise<boolean> {
     const dbCollection = this.getDBCollection();
     const operation = await dbCollection.deleteMany(query);
 
@@ -218,15 +218,15 @@ export class DAO<
   }
 
   public async aggregate(
-    pipeline: Parameters<Collection<U>['aggregate']>[0],
-    options: Parameters<Collection<U>['aggregate']>[1]
+    pipeline: Parameters<Collection<R>['aggregate']>[0],
+    options: Parameters<Collection<R>['aggregate']>[1]
   ): Promise<T[]> {
     const dbCollection = this.getDBCollection();
     const documents = await dbCollection.aggregate(pipeline, options).toArray();
 
     if (documents.length > 0) {
       return documents.map((document) =>
-        this.createEntityFromDBRecord(document as WithId<U>)
+        this.createEntityFromDBRecord(document as WithId<R>)
       );
     }
 
@@ -240,15 +240,15 @@ export class DAO<
     await this.getDBCollection().createIndex(fieldOrSpec, options || {});
   }
 
-  private getDBCollection(): Collection<U> {
+  private getDBCollection(): Collection<R> {
     return this.db.collection(this.collection.name);
   }
 
-  private createEntityFromDBRecord(record: WithId<U>): T {
+  private createEntityFromDBRecord(record: WithId<R>): T {
     if (this.options.modelFactoryFunction) {
-      return this.options.modelFactoryFunction(record as U);
+      return this.options.modelFactoryFunction(record as R);
     }
 
-    return this.collection.createEntityFromDBRecord(record as U);
+    return this.collection.createEntityFromDBRecord(record as R);
   }
 }

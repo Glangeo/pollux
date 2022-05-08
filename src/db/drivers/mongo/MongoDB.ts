@@ -1,6 +1,6 @@
 import { Db, MongoClient } from 'mongodb';
 import { InternalException } from 'src/core/exception/prebuild';
-import { DevelopmentLogger, DevLogEvent } from '../../../utils';
+import { DevelopmentLogger, DevLogEvent } from 'src/local-utils';
 
 export class MongoDB {
   private connection: MongoClient;

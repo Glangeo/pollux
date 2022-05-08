@@ -1,5 +1,5 @@
 import Axios, { AxiosRequestConfig } from 'axios';
-import { InternalException } from '../exception';
+import { castUnknownErrorToException } from 'src/core/exception/helpers';
 import { IResponse } from './IResponse';
 
 export interface IRequestConfig {
@@ -27,10 +27,8 @@ export class HTTPTransport {
       );
 
       return response.data;
-    } catch (exception) {
-      throw new InternalException('HTTPTransport -> request(...)', [
-        `${exception.toString()}`,
-      ]);
+    } catch (error) {
+      throw castUnknownErrorToException(error);
     }
   }
 

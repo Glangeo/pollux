@@ -1,4 +1,4 @@
-import { DevelopmentLogger } from 'src/utils';
+import { DevelopmentLogger } from 'src/local-utils';
 import { AnyEndpoint } from '../types';
 
 /**
