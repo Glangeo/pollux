@@ -3,7 +3,7 @@ import { DeepPartial } from 'utility-types';
 
 export type AppOptions = {
   /**
-   * Port, that will be used by server
+   * Port that will be used by the server
    */
   port?: number;
 

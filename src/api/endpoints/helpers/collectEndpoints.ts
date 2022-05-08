@@ -2,6 +2,7 @@
 /* eslint-disable @typescript-eslint/no-require-imports */
 import fs from 'fs';
 import pth from 'path';
+import { fixRoutePath } from 'src/api/router/helpers';
 import { AnyEndpoint } from '../types/Endpoint';
 
 type EndpointConfiguration = {
@@ -30,7 +31,10 @@ export function collectEndpoints(dirname: string): AnyEndpoint[] {
     route: configuration.path.join('/'),
   }));
 
-  return endpoints;
+  return endpoints.map(({ route, ...rest }) => ({
+    ...rest,
+    route: fixRoutePath(route || ''),
+  }));
 }
 
 function configureEndpointsByPaths(
@@ -48,8 +52,10 @@ function configureEndpointsByPaths(
       const module = require(absolutePath);
 
       if (module.default) {
+        const route = castFolderOrFileNameToRoute(path);
+
         const configuration: EndpointConfiguration = {
-          path: [...components, path.replace(/\.ts/g, '')],
+          path: [...components, route],
           endpoint: module.default,
         };
 
@@ -58,15 +64,34 @@ function configureEndpointsByPaths(
         throw new Error('Endpoint file must have a default export');
       }
     } else {
+      const route = castFolderOrFileNameToRoute(path);
+
       configurations.push(
         ...configureEndpointsByPaths(
           pth.resolve(absoluteBasePath, path),
           fs.readdirSync(absolutePath),
-          [...components, path]
+          [...components, route]
         )
       );
     }
   }
 
   return configurations;
+}
+
+function castFolderOrFileNameToRoute(name: string): string {
+  if (name === 'index.ts') {
+    return '/';
+  }
+
+  if (name.includes('[')) {
+    const fromIndex = name.indexOf('[');
+    const toIndex = name.indexOf(']');
+
+    const param = name.substring(fromIndex + 1, toIndex);
+
+    return `:${param}`;
+  }
+
+  return name.replace(/\.ts/g, '');
 }
