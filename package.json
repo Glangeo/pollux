@@ -2,6 +2,13 @@
   "name": "@glangeo/pollux",
   "version": "2.0.0-a",
   "main": "dist/index.js",
+  "files": [
+    "./dist/api/index.js",
+    "./dist/core/index.js",
+    "./dist/utils/index.js",
+    "./dist/db/index.js",
+    "./dist/deprecated/index.js"
+  ],
   "exports": "./dist/index.js",
   "scripts": {
     "prebuild": "npx rimraf ./dist",
