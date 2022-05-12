@@ -1,3 +1,4 @@
+const path = require('path');
 const { Command } = require('commander');
 const { exec } = require('child-process-promise');
 const { getVersion } = require('./helpers/get-version');
@@ -42,10 +43,13 @@ async function main() {
   }
 
   const currentVersion = getVersion();
-  setVersion(`${currentVersion}-${tag}-${Date.now()}`);
   await exec('npm run build');
   preparePackage();
-  await exec('npm', ['run', 'publish', DIST_FOLDER_NAME, '--tag', tag]);
+  setVersion(
+    `${currentVersion}-${tag}-${Date.now()}`,
+    path.join(process.cwd(), DIST_FOLDER_NAME)
+  );
+  await exec(`npm publish ${DIST_FOLDER_NAME} --tag ${tag}`);
 }
 
 main();
