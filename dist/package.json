@@ -1,6 +1,6 @@
 {
   "name": "@glangeo/pollux",
-  "version": "2.0.0",
+  "version": "rc-1652369165665",
   "main": "index.js",
   "scripts": {
     "prebuild": "npx rimraf ./dist",
@@ -10,7 +10,7 @@
     "coverage": "jest",
     "publish:lts": "node scripts/publish.js -t lts",
     "publish:rc": "node scripts/publish.js -t rc",
-    "publish:beta": "node scripts/publish.js -t beta"
+    "publish:dev": "node scripts/publish.js -t dev"
   },
   "repository": {
     "type": "git",
