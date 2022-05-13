@@ -66,35 +66,39 @@ var Yup = __importStar(require("yup"));
  *
  * @param schema data validation schema
  * @param data data to validate
+ * @param isStrict Yup `strict` property. If true, only validates input, and skips coersion or transformation
  * @returns validation result
  */
-var validate = function (schema, data) { return __awaiter(void 0, void 0, void 0, function () {
-    var result, error_1;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0:
-                _a.trys.push([0, 2, , 3]);
-                return [4 /*yield*/, schema.validate(data, {
-                        stripUnknown: true,
-                        strict: true,
-                    })];
-            case 1:
-                result = _a.sent();
-                return [2 /*return*/, {
-                        isValid: true,
-                        data: result,
-                    }];
-            case 2:
-                error_1 = _a.sent();
-                if (!(error_1 instanceof Yup.ValidationError)) {
-                    throw error_1;
-                }
-                return [2 /*return*/, {
-                        isValid: false,
-                        errors: error_1.errors,
-                    }];
-            case 3: return [2 /*return*/];
-        }
+var validate = function (schema, data, isStrict) {
+    if (isStrict === void 0) { isStrict = true; }
+    return __awaiter(void 0, void 0, void 0, function () {
+        var result, error_1;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    _a.trys.push([0, 2, , 3]);
+                    return [4 /*yield*/, schema.validate(data, {
+                            stripUnknown: true,
+                            strict: isStrict,
+                        })];
+                case 1:
+                    result = _a.sent();
+                    return [2 /*return*/, {
+                            isValid: true,
+                            data: result,
+                        }];
+                case 2:
+                    error_1 = _a.sent();
+                    if (!(error_1 instanceof Yup.ValidationError)) {
+                        throw error_1;
+                    }
+                    return [2 /*return*/, {
+                            isValid: false,
+                            errors: error_1.errors,
+                        }];
+                case 3: return [2 /*return*/];
+            }
+        });
     });
-}); };
+};
 exports.validate = validate;

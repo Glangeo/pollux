@@ -169,7 +169,11 @@ export class Router {
 
     for (const { name, schema } of partials) {
       if (schema) {
-        const validated = await this.config.validate(schema, req[name]);
+        const validated = await this.config.validate(
+          schema,
+          req[name],
+          name === 'body'
+        );
 
         if (!validated.isValid) {
           throw new ValidationException({
