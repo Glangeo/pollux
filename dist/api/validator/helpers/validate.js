@@ -58,6 +58,17 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+var __values = (this && this.__values) || function(o) {
+    var s = typeof Symbol === "function" && Symbol.iterator, m = s && o[s], i = 0;
+    if (m) return m.call(o);
+    if (o && typeof o.length === "number") return {
+        next: function () {
+            if (o && i >= o.length) o = void 0;
+            return { value: o && o[i++], done: !o };
+        }
+    };
+    throw new TypeError(s ? "Object is not iterable." : "Symbol.iterator is not defined.");
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.validate = void 0;
 var Yup = __importStar(require("yup"));
@@ -72,29 +83,47 @@ var Yup = __importStar(require("yup"));
 var validate = function (schema, data, isStrict) {
     if (isStrict === void 0) { isStrict = true; }
     return __awaiter(void 0, void 0, void 0, function () {
-        var result, error_1;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
+        var result, error_1, errors, _a, _b, inner, path, message;
+        var e_1, _c;
+        return __generator(this, function (_d) {
+            switch (_d.label) {
                 case 0:
-                    _a.trys.push([0, 2, , 3]);
+                    _d.trys.push([0, 2, , 3]);
                     return [4 /*yield*/, schema.validate(data, {
                             stripUnknown: true,
                             strict: isStrict,
                         })];
                 case 1:
-                    result = _a.sent();
+                    result = _d.sent();
                     return [2 /*return*/, {
                             isValid: true,
                             data: result,
                         }];
                 case 2:
-                    error_1 = _a.sent();
+                    error_1 = _d.sent();
                     if (!(error_1 instanceof Yup.ValidationError)) {
                         throw error_1;
                     }
+                    errors = [error_1.message];
+                    try {
+                        for (_a = __values(error_1.inner), _b = _a.next(); !_b.done; _b = _a.next()) {
+                            inner = _b.value;
+                            path = inner.path, message = inner.message;
+                            if (path && message) {
+                                errors.push("".concat(inner.path, ": ").concat(inner.message));
+                            }
+                        }
+                    }
+                    catch (e_1_1) { e_1 = { error: e_1_1 }; }
+                    finally {
+                        try {
+                            if (_b && !_b.done && (_c = _a.return)) _c.call(_a);
+                        }
+                        finally { if (e_1) throw e_1.error; }
+                    }
                     return [2 /*return*/, {
+                            errors: errors,
                             isValid: false,
-                            errors: error_1.errors,
                         }];
                 case 3: return [2 /*return*/];
             }

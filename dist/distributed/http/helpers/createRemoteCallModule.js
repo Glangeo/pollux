@@ -85,15 +85,15 @@ function createRemoteCallModule(services) {
                 }))
                     .required(),
                 method: Yup.string().required(),
-                params: Yup.array().required(),
-            }),
+                args: Yup.array().required(),
+            }).required(),
         },
         action: function (_a, req) {
             var body = _a.body;
             return __awaiter(_this, void 0, void 0, function () {
-                var serviceName, method, params, receiver;
+                var serviceName, method, args, receiver;
                 return __generator(this, function (_b) {
-                    serviceName = body.service, method = body.method, params = body.params;
+                    serviceName = body.service, method = body.method, args = body.args;
                     receiver = receivers.find(function (_a) {
                         var service = _a.service;
                         return service === serviceName;
@@ -116,7 +116,7 @@ function createRemoteCallModule(services) {
                         });
                     }
                     local_utils_1.DevelopmentLogger.LOG(local_utils_1.DevLogEvent.DistributedRemoteCallReceived, "from ".concat(req.originalUrl, " to call ").concat(serviceName, ".").concat(method));
-                    return [2 /*return*/, receiver.call(method, params)];
+                    return [2 /*return*/, receiver.call(method, args)];
                 });
             });
         },

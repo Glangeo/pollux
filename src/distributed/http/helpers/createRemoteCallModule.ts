@@ -22,12 +22,12 @@ export function createRemoteCallModule(services: ServiceConstructor[]): Module {
           .equals(services.map(({ name }) => name))
           .required(),
         method: Yup.string().required(),
-        params: Yup.array().required(),
-      }),
+        args: Yup.array().required(),
+      }).required(),
     },
 
     action: async ({ body }, req) => {
-      const { service: serviceName, method, params } = body;
+      const { service: serviceName, method, args } = body;
 
       const receiver = receivers.find(({ service }) => service === serviceName);
 
@@ -51,7 +51,7 @@ export function createRemoteCallModule(services: ServiceConstructor[]): Module {
         `from ${req.originalUrl} to call ${serviceName}.${method}`
       );
 
-      return receiver.call(method as any, params);
+      return receiver.call(method as any, args);
     },
   });
 

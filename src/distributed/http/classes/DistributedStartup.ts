@@ -84,7 +84,6 @@ export class DistributedStartup {
 
           return response.data;
         } catch (error) {
-          console.log(error);
           // TODO: retrieve exception from service response
           const exception = castUnknownErrorToException(error);
 

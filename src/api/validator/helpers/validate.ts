@@ -34,9 +34,19 @@ export const validate: Validator = async <T extends ValidationSchema>(
       throw error;
     }
 
+    const errors: string[] = [error.message];
+
+    for (const inner of error.inner) {
+      const { path, message } = inner;
+
+      if (path && message) {
+        errors.push(`${inner.path}: ${inner.message}`);
+      }
+    }
+
     return {
+      errors,
       isValid: false,
-      errors: error.errors,
     };
   }
 };
