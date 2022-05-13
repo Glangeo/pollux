@@ -83,7 +83,7 @@ var Yup = __importStar(require("yup"));
 var validate = function (schema, data, isStrict) {
     if (isStrict === void 0) { isStrict = true; }
     return __awaiter(void 0, void 0, void 0, function () {
-        var result, error_1, errors, _a, _b, inner, path, message;
+        var result, error_1, errors, _a, _b, inner, message, path;
         var e_1, _c;
         return __generator(this, function (_d) {
             switch (_d.label) {
@@ -104,14 +104,12 @@ var validate = function (schema, data, isStrict) {
                     if (!(error_1 instanceof Yup.ValidationError)) {
                         throw error_1;
                     }
-                    errors = [error_1.message];
+                    errors = [formatYupError(error_1.message, error_1.path)];
                     try {
                         for (_a = __values(error_1.inner), _b = _a.next(); !_b.done; _b = _a.next()) {
                             inner = _b.value;
-                            path = inner.path, message = inner.message;
-                            if (path && message) {
-                                errors.push("".concat(inner.path, ": ").concat(inner.message));
-                            }
+                            message = inner.message, path = inner.path;
+                            errors.push(formatYupError(message, path));
                         }
                     }
                     catch (e_1_1) { e_1 = { error: e_1_1 }; }
@@ -131,3 +129,9 @@ var validate = function (schema, data, isStrict) {
     });
 };
 exports.validate = validate;
+function formatYupError(message, path) {
+    if (path) {
+        return "".concat(path, ": ").concat(message);
+    }
+    return message;
+}

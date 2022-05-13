@@ -34,14 +34,12 @@ export const validate: Validator = async <T extends ValidationSchema>(
       throw error;
     }
 
-    const errors: string[] = [error.message];
+    const errors: string[] = [formatYupError(error.message, error.path)];
 
     for (const inner of error.inner) {
-      const { path, message } = inner;
+      const { message, path } = inner;
 
-      if (path && message) {
-        errors.push(`${inner.path}: ${inner.message}`);
-      }
+      errors.push(formatYupError(message, path));
     }
 
     return {
@@ -50,3 +48,11 @@ export const validate: Validator = async <T extends ValidationSchema>(
     };
   }
 };
+
+function formatYupError(message: string, path?: string): string {
+  if (path) {
+    return `${path}: ${message}`;
+  }
+
+  return message;
+}
