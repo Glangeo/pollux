@@ -1,6 +1,7 @@
 import * as Yup from 'yup';
 import { AnyEndpoint, createEndpoint, EndpointMethod, Router } from 'src/api';
 import { createModule, InternalException, Module } from 'src/core';
+import { DevelopmentLogger, DevLogEvent } from 'src/local-utils';
 import { ServiceRegistry } from '../classes';
 import { ServiceConstructor } from '../types';
 import { getRequestReceiver } from './getRequestReceiver';
@@ -25,7 +26,7 @@ export function createRemoteCallModule(services: ServiceConstructor[]): Module {
       }),
     },
 
-    action: async ({ body }) => {
+    action: async ({ body }, req) => {
       const { service: serviceName, method, params } = body;
 
       const receiver = receivers.find(({ service }) => service === serviceName);
@@ -44,6 +45,11 @@ export function createRemoteCallModule(services: ServiceConstructor[]): Module {
           },
         });
       }
+
+      DevelopmentLogger.LOG(
+        DevLogEvent.DistributedRemoteCallReceived,
+        `from ${req.originalUrl} to call ${serviceName}.${method}`
+      );
 
       return receiver.call(method as any, params);
     },

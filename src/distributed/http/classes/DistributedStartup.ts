@@ -1,6 +1,6 @@
 import { Axios } from 'axios';
 import { App, castUnknownErrorToException } from 'src/core';
-import { fixUrl } from 'src/local-utils';
+import { DevelopmentLogger, DevLogEvent, fixUrl } from 'src/local-utils';
 import { createRemoteCallModule, getRequestEmitter } from '../helpers';
 import { AppConfiguration, Contract, StartupConfig } from '../types';
 import { ServiceRegistry } from './ServiceRegistry';
@@ -75,6 +75,13 @@ export class DistributedStartup {
             request
           );
 
+          const { service, method } = response.data;
+
+          DevelopmentLogger.LOG(
+            DevLogEvent.DistributedRemoteCallResponded,
+            `from ${host} after call ${service}.${method}`
+          );
+
           return response.data;
         } catch (error) {
           // TODO: retrieve exception from service response
@@ -85,6 +92,11 @@ export class DistributedStartup {
       });
 
       ServiceRegistry.setService(service, emitter as any);
+
+      DevelopmentLogger.LOG(
+        DevLogEvent.DistributedDetachedServiceAdded,
+        service.name
+      );
     }
   }
 }

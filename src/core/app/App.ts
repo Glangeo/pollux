@@ -13,7 +13,10 @@ export class App {
   protected readonly route: string;
   private _isInitied: boolean;
 
-  public constructor(public readonly options: AppOptions = {}) {
+  public constructor(
+    public readonly options: AppOptions = {},
+    public readonly name = 'Anonymous'
+  ) {
     this._isInitied = false;
 
     if (this.options.logging) {
@@ -38,6 +41,10 @@ export class App {
     if (callback) {
       callback();
     }
+
+    this._isInitied = true;
+
+    DevelopmentLogger.LOG(DevLogEvent.AppInit, this.name);
 
     return this;
   }
@@ -79,7 +86,10 @@ export class App {
       appPath.push(path);
     }
 
-    this.server.use(fixUrl(appPath.join('/')), app.server);
+    const url = fixUrl(appPath.join('/'));
+    this.server.use(url, app.server);
+
+    DevelopmentLogger.LOG(DevLogEvent.AppChildAdded, `${app.name} on ${url}`);
   }
 
   protected async beforeInit(): Promise<void> {}
