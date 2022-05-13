@@ -1,12 +1,12 @@
 const path = require('path');
 const { Command } = require('commander');
 const { prompt } = require('inquirer');
+const { exec } = require('child-process-promise');
+const { readVersion } = require('../helpers');
 const { PUBLISHING_TAGS, DIST_FOLDER_NAME } = require('../constants');
 const { TagOption } = require('../options');
-
 const { setVersionAction } = require('./setVersion');
 const { prepareAction } = require('./prepare');
-const { exec } = require('child-process-promise');
 
 /**
  * Publish package to NPM
@@ -22,8 +22,15 @@ async function publishAction(tag) {
     process.exit();
   }
 
+  const distFolderPath = path.join(process.cwd(), DIST_FOLDER_NAME);
+
   prepareAction();
   setVersionAction(tag);
+
+  const version = readVersion(distFolderPath);
+
+  await exec(`git add ${path.join(distFolderPath, 'package.json')}`);
+  await exec(`git commit -m "npm release verion ${version}"`);
 
   // TODO: when input is not valid, send question again
   const { otp } = await prompt([
@@ -42,7 +49,7 @@ async function publishAction(tag) {
   ]);
 
   const publish = await exec(`npm publish --tag=${tag} --otp=${otp}`, {
-    cwd: path.join(process.cwd(), DIST_FOLDER_NAME),
+    cwd: distFolderPath,
   });
 
   console.log(publish.stdout);
