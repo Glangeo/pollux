@@ -1,21 +1,6 @@
-import { AppOptions } from 'src/core';
+import { AppConfiguration } from './AppConfiguration';
 
-export namespace StartupConfig {
-  export type Global = {
-    combined: {
-      services: string[];
-      url: string;
-    };
-    detached: {
-      name: string;
-      url: string;
-    }[];
-  };
-
-  export type App = {
-    name: string;
-    options: {
-      app: AppOptions;
-    };
-  };
-}
+export type StartupConfig = {
+  readonly currentAppName: string;
+  readonly apps: AppConfiguration[];
+};

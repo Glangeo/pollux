@@ -1,2 +1,2 @@
-export * from './DistributedStartupProvider';
+export * from './DistributedStartup';
 export * from './ServiceRegistry';

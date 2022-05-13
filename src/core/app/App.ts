@@ -11,7 +11,7 @@ export class App {
   public readonly server: express.Express;
   protected readonly route: string;
 
-  public constructor(protected readonly options: AppOptions = {}) {
+  public constructor(public readonly options: AppOptions = {}) {
     if (this.options.logging) {
       DevelopmentLogger.configuration = merge(
         {
@@ -46,11 +46,7 @@ export class App {
 
   public async enableModules(): Promise<void> {}
 
-  protected async beforeInit(): Promise<void> {}
-
-  protected async afterInit(): Promise<void> {}
-
-  protected async addModule(module: Module): Promise<void> {
+  public async addModule(module: Module): Promise<void> {
     if (module.init) {
       await module.init();
     }
@@ -62,7 +58,7 @@ export class App {
     DevelopmentLogger.LOG(DevLogEvent.AppModuleAdded, module.name);
   }
 
-  protected addChildApp(app: App, path?: string): void {
+  public addChildApp(app: App, path?: string): void {
     app.options.baseRoute = undefined;
 
     const appPath = [this.options.baseRoute];
@@ -73,6 +69,10 @@ export class App {
 
     this.server.use(fixRoutePath(appPath.join('/')), app.server);
   }
+
+  protected async beforeInit(): Promise<void> {}
+
+  protected async afterInit(): Promise<void> {}
 
   protected async applyMiddleware(): Promise<void> {
     this.server.use(bodyParser.json());

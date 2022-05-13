@@ -5,8 +5,6 @@ export function getRequestReceiver<T extends ServiceConstructor>(
   service: InstanceType<T>
 ): RequestReceiver<InstanceType<T>> {
   const receiver = {
-    async isActive(): Promise<void> {},
-
     async call(
       method: keyof InstanceType<T>,
       args: any[]
