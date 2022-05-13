@@ -97,6 +97,7 @@ export class App {
   protected async afterInit(): Promise<void> {}
 
   protected async applyMiddleware(): Promise<void> {
+    this.server.use(bodyParser.urlencoded({ extended: false }));
     this.server.use(bodyParser.json());
   }
 }

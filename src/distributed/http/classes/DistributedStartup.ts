@@ -39,6 +39,9 @@ export class DistributedStartup {
       ServiceRegistry.setService(constructor, instance);
 
       const serviceApp = instance.getApp();
+      const remoteCallModule = createRemoteCallModule(services);
+
+      await serviceApp.addModule(remoteCallModule);
 
       await app.addChildApp(
         serviceApp,
@@ -46,9 +49,6 @@ export class DistributedStartup {
       );
     }
 
-    const remoteCallModule = createRemoteCallModule(services);
-
-    await app.addModule(remoteCallModule);
     app.options.port = port;
 
     return app;

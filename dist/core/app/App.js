@@ -166,6 +166,7 @@ var App = /** @class */ (function () {
     App.prototype.applyMiddleware = function () {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
+                this.server.use(body_parser_1.default.urlencoded({ extended: false }));
                 this.server.use(body_parser_1.default.json());
                 return [2 /*return*/];
             });

@@ -127,7 +127,7 @@ var DistributedStartup = /** @class */ (function () {
     };
     DistributedStartup.prototype.getCurrentApp = function (appConfig) {
         return __awaiter(this, void 0, void 0, function () {
-            var app, port, services, services_1, services_1_1, constructor, instance, serviceApp, e_2_1, remoteCallModule;
+            var app, port, services, services_1, services_1_1, constructor, instance, serviceApp, remoteCallModule, e_2_1;
             var e_2, _a;
             return __generator(this, function (_b) {
                 switch (_b.label) {
@@ -135,38 +135,38 @@ var DistributedStartup = /** @class */ (function () {
                         app = appConfig.app, port = appConfig.port, services = appConfig.services;
                         _b.label = 1;
                     case 1:
-                        _b.trys.push([1, 6, 7, 8]);
+                        _b.trys.push([1, 7, 8, 9]);
                         services_1 = __values(services), services_1_1 = services_1.next();
                         _b.label = 2;
                     case 2:
-                        if (!!services_1_1.done) return [3 /*break*/, 5];
+                        if (!!services_1_1.done) return [3 /*break*/, 6];
                         constructor = services_1_1.value;
                         instance = new constructor();
                         ServiceRegistry_1.ServiceRegistry.setService(constructor, instance);
                         serviceApp = instance.getApp();
-                        return [4 /*yield*/, app.addChildApp(serviceApp, serviceApp.options.baseRoute || constructor.name.toLowerCase())];
+                        remoteCallModule = (0, helpers_1.createRemoteCallModule)(services);
+                        return [4 /*yield*/, serviceApp.addModule(remoteCallModule)];
                     case 3:
                         _b.sent();
-                        _b.label = 4;
+                        return [4 /*yield*/, app.addChildApp(serviceApp, serviceApp.options.baseRoute || constructor.name.toLowerCase())];
                     case 4:
+                        _b.sent();
+                        _b.label = 5;
+                    case 5:
                         services_1_1 = services_1.next();
                         return [3 /*break*/, 2];
-                    case 5: return [3 /*break*/, 8];
-                    case 6:
+                    case 6: return [3 /*break*/, 9];
+                    case 7:
                         e_2_1 = _b.sent();
                         e_2 = { error: e_2_1 };
-                        return [3 /*break*/, 8];
-                    case 7:
+                        return [3 /*break*/, 9];
+                    case 8:
                         try {
                             if (services_1_1 && !services_1_1.done && (_a = services_1.return)) _a.call(services_1);
                         }
                         finally { if (e_2) throw e_2.error; }
                         return [7 /*endfinally*/];
-                    case 8:
-                        remoteCallModule = (0, helpers_1.createRemoteCallModule)(services);
-                        return [4 /*yield*/, app.addModule(remoteCallModule)];
                     case 9:
-                        _b.sent();
                         app.options.port = port;
                         return [2 /*return*/, app];
                 }
