@@ -200,6 +200,7 @@ var DistributedStartup = /** @class */ (function () {
                                 return [2 /*return*/, response.data];
                             case 3:
                                 error_1 = _b.sent();
+                                console.log(error_1);
                                 exception = (0, core_1.castUnknownErrorToException)(error_1);
                                 throw exception;
                             case 4: return [2 /*return*/];
