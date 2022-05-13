@@ -40,7 +40,7 @@ export class DistributedStartup {
 
       const serviceApp = instance.getApp();
 
-      app.addChildApp(
+      await app.addChildApp(
         serviceApp,
         serviceApp.options.baseRoute || constructor.name.toLowerCase()
       );

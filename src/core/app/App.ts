@@ -3,6 +3,7 @@ import bodyParser from 'body-parser';
 import merge from 'lodash/merge';
 import { DevelopmentLogger, DevLogEvent, fixUrl } from 'src/local-utils';
 import { Module } from '../module';
+import { InternalException } from '../exception';
 import { AppOptions } from './types';
 
 const DEFAULT_PORT = 3000;
@@ -10,8 +11,11 @@ const DEFAULT_PORT = 3000;
 export class App {
   public readonly server: express.Express;
   protected readonly route: string;
+  private _isInitied: boolean;
 
   public constructor(public readonly options: AppOptions = {}) {
+    this._isInitied = false;
+
     if (this.options.logging) {
       DevelopmentLogger.configuration = merge(
         {
@@ -58,8 +62,16 @@ export class App {
     DevelopmentLogger.LOG(DevLogEvent.AppModuleAdded, module.name);
   }
 
-  public addChildApp(app: App, path?: string): void {
+  public async addChildApp(app: App, path?: string): Promise<void> {
+    if (app._isInitied) {
+      throw new InternalException({
+        message: 'Could add already inited app as a child.',
+      });
+    }
+
     app.options.baseRoute = undefined;
+
+    await app.init();
 
     const appPath = [this.options.baseRoute];
 
