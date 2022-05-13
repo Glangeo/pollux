@@ -7,7 +7,7 @@ const path = require('path');
  * @param {string} version - package version
  * @param {string} [packageFolderPath] - absolute folder path where package.json file is located
  */
-function setVersion(version, packageFolderPath) {
+function writeVersion(version, packageFolderPath) {
   const filePath = path.join(
     packageFolderPath || process.cwd(),
     'package.json'
@@ -19,4 +19,4 @@ function setVersion(version, packageFolderPath) {
   fs.writeFileSync(filePath, JSON.stringify(contents, null, 2));
 }
 
-module.exports = { setVersion };
+module.exports = { writeVersion };

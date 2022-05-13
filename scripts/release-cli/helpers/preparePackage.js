@@ -4,7 +4,7 @@ const path = require('path');
 const INCLUDE = ['package.json', 'LICENSE.md'];
 
 /**
- * Prepares package to publish
+ * Moves copies of the exporting files to dist folder
  */
 function preparePackage() {
   const configPath = path.join(process.cwd(), 'tsconfig.json');
