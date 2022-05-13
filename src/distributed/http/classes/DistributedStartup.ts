@@ -82,9 +82,11 @@ export class DistributedStartup {
             }
           );
 
-          const { result, service, method } = JSON.parse(
-            response.data
-          ) as Contract.Response;
+          const { data } = JSON.parse(response.data) as {
+            status: string;
+            data: Contract.Response;
+          };
+          const { result, service, method } = data;
 
           DevelopmentLogger.LOG(
             DevLogEvent.DistributedRemoteCallResponded,
