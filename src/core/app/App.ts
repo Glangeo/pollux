@@ -1,7 +1,7 @@
 import express from 'express';
 import bodyParser from 'body-parser';
 import merge from 'lodash/merge';
-import { DevelopmentLogger, DevLogEvent, fixRoutePath } from 'src/local-utils';
+import { DevelopmentLogger, DevLogEvent, fixUrl } from 'src/local-utils';
 import { Module } from '../module';
 import { AppOptions } from './types';
 
@@ -67,7 +67,7 @@ export class App {
       appPath.push(path);
     }
 
-    this.server.use(fixRoutePath(appPath.join('/')), app.server);
+    this.server.use(fixUrl(appPath.join('/')), app.server);
   }
 
   protected async beforeInit(): Promise<void> {}

@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-require-imports */
 import fs from 'fs';
 import pth from 'path';
-import { fixRoutePath } from 'src/local-utils';
+import { fixUrl } from 'src/local-utils';
 import { AnyEndpoint } from '../types/Endpoint';
 
 type EndpointConfiguration = {
@@ -33,7 +33,7 @@ export function collectEndpoints(dirname: string): AnyEndpoint[] {
 
   return endpoints.map(({ route, ...rest }) => ({
     ...rest,
-    route: fixRoutePath(route || ''),
+    route: fixUrl(route || ''),
   }));
 }
 

@@ -3,7 +3,7 @@ import { Exception } from 'src/core/exception';
 import { IExceptionHandler } from 'src/core/exception-handler';
 import { castUnknownErrorToException } from 'src/core/exception/helpers';
 import { ValidationException } from 'src/core/exception/prebuild';
-import { DevelopmentLogger, DevLogEvent, fixRoutePath } from 'src/local-utils';
+import { DevelopmentLogger, DevLogEvent, fixUrl } from 'src/local-utils';
 import { Optional } from 'utility-types';
 import { HTTPStatusCode } from '../common';
 import { AnyEndpoint, EndpointMethod, isEndpointWithBody } from '../endpoints';
@@ -90,7 +90,7 @@ export class Router {
           break;
       }
 
-      const path = fixRoutePath(`${this.config.path}/${endpoint.route}`);
+      const path = fixUrl(`${this.config.path}/${endpoint.route}`);
 
       if (method) {
         method(path, this.createRequestHandler(endpoint));
