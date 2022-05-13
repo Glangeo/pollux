@@ -1,5 +1,4 @@
-import { App, Module } from '../../../core';
+import { App } from '../../../core';
 export interface IDistributedService {
     getApp(): App;
-    getModules(): Module[];
 }

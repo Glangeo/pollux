@@ -108,7 +108,7 @@ var Router = /** @class */ (function () {
                     default:
                         break;
                 }
-                var path = (0, local_utils_1.fixRoutePath)("".concat(this.config.path, "/").concat(endpoint.route));
+                var path = (0, local_utils_1.fixUrl)("".concat(this.config.path, "/").concat(endpoint.route));
                 if (method) {
                     method(path, this.createRequestHandler(endpoint));
                     local_utils_1.DevelopmentLogger.LOG(local_utils_1.DevLogEvent.RouterRouteAdded, "Add route: ".concat(endpoint.method, " ").concat(path));

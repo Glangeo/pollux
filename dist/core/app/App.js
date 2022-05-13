@@ -100,16 +100,6 @@ var App = /** @class */ (function () {
             return [2 /*return*/];
         }); });
     };
-    App.prototype.beforeInit = function () {
-        return __awaiter(this, void 0, void 0, function () { return __generator(this, function (_a) {
-            return [2 /*return*/];
-        }); });
-    };
-    App.prototype.afterInit = function () {
-        return __awaiter(this, void 0, void 0, function () { return __generator(this, function (_a) {
-            return [2 /*return*/];
-        }); });
-    };
     App.prototype.addModule = function (module) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
@@ -136,7 +126,17 @@ var App = /** @class */ (function () {
         if (path) {
             appPath.push(path);
         }
-        this.server.use((0, local_utils_1.fixRoutePath)(appPath.join('/')), app.server);
+        this.server.use((0, local_utils_1.fixUrl)(appPath.join('/')), app.server);
+    };
+    App.prototype.beforeInit = function () {
+        return __awaiter(this, void 0, void 0, function () { return __generator(this, function (_a) {
+            return [2 /*return*/];
+        }); });
+    };
+    App.prototype.afterInit = function () {
+        return __awaiter(this, void 0, void 0, function () { return __generator(this, function (_a) {
+            return [2 /*return*/];
+        }); });
     };
     App.prototype.applyMiddleware = function () {
         return __awaiter(this, void 0, void 0, function () {

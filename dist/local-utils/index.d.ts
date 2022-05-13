@@ -1,3 +1,3 @@
 export * from './stringifyObject';
-export * from './fixRoutePath';
+export * from './fixUrl';
 export * from './DevelopmentLogger';

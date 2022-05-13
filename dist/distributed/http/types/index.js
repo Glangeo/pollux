@@ -19,3 +19,4 @@ __exportStar(require("./RequestEmitter"), exports);
 __exportStar(require("./RequestReceiver"), exports);
 __exportStar(require("./Contract"), exports);
 __exportStar(require("./StartupConfig"), exports);
+__exportStar(require("./AppConfiguration"), exports);

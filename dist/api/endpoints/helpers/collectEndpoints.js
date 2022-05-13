@@ -80,7 +80,7 @@ function collectEndpoints(dirname) {
     var endpoints = configurations.map(function (configuration) { return (__assign(__assign({}, configuration.endpoint), { route: configuration.path.join('/') })); });
     return endpoints.map(function (_a) {
         var route = _a.route, rest = __rest(_a, ["route"]);
-        return (__assign(__assign({}, rest), { route: (0, local_utils_1.fixRoutePath)(route || '') }));
+        return (__assign(__assign({}, rest), { route: (0, local_utils_1.fixUrl)(route || '') }));
     });
 }
 exports.collectEndpoints = collectEndpoints;

@@ -3,3 +3,4 @@ export * from './RequestEmitter';
 export * from './RequestReceiver';
 export * from './Contract';
 export * from './StartupConfig';
+export * from './AppConfiguration';

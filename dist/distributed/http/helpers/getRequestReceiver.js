@@ -65,11 +65,7 @@ exports.getRequestReceiver = void 0;
 var core_1 = require("../../../core");
 function getRequestReceiver(service) {
     var receiver = {
-        isActive: function () {
-            return __awaiter(this, void 0, void 0, function () { return __generator(this, function (_a) {
-                return [2 /*return*/];
-            }); });
-        },
+        service: service.constructor.name,
         call: function (method, args) {
             return __awaiter(this, void 0, void 0, function () {
                 var operation, isMethod, result, response;

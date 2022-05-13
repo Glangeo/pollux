@@ -16,3 +16,4 @@ var __exportStar = (this && this.__exportStar) || function(m, exports) {
 Object.defineProperty(exports, "__esModule", { value: true });
 __exportStar(require("./getRequestEmitter"), exports);
 __exportStar(require("./getRequestReceiver"), exports);
+__exportStar(require("./createRemoteCallModule"), exports);
