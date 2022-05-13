@@ -148,7 +148,7 @@ var DistributedStartup = /** @class */ (function () {
             for (var services_2 = __values(services), services_2_1 = services_2.next(); !services_2_1.done; services_2_1 = services_2.next()) {
                 var service = services_2_1.value;
                 var emitter = (0, helpers_1.getRequestEmitter)(service, function (request) { return __awaiter(_this, void 0, void 0, function () {
-                    var detachedRouterRoute, axios, response, _a, service_1, method, error_1, exception;
+                    var detachedRouterRoute, axios, response, _a, result, service_1, method, error_1, exception;
                     return __generator(this, function (_b) {
                         switch (_b.label) {
                             case 0:
@@ -159,12 +159,16 @@ var DistributedStartup = /** @class */ (function () {
                                 _b.label = 1;
                             case 1:
                                 _b.trys.push([1, 3, , 4]);
-                                return [4 /*yield*/, axios.post('/call', request)];
+                                return [4 /*yield*/, axios.post('/call', JSON.stringify(request), {
+                                        headers: {
+                                            'Content-Type': 'application/json',
+                                        },
+                                    })];
                             case 2:
                                 response = _b.sent();
-                                _a = response.data, service_1 = _a.service, method = _a.method;
+                                _a = JSON.parse(response.data), result = _a.result, service_1 = _a.service, method = _a.method;
                                 local_utils_1.DevelopmentLogger.LOG(local_utils_1.DevLogEvent.DistributedRemoteCallResponded, "from ".concat(host, " after call ").concat(service_1, ".").concat(method));
-                                return [2 /*return*/, response.data];
+                                return [2 /*return*/, { result: result, service: service_1, method: method }];
                             case 3:
                                 error_1 = _b.sent();
                                 exception = (0, core_1.castUnknownErrorToException)(error_1);

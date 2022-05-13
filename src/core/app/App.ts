@@ -12,6 +12,9 @@ export class App {
   public readonly server: express.Express;
   private _isInitied: boolean;
 
+  private modulesQueue: Module[];
+  private childAppQueue: [App, string?][] = [];
+
   public constructor(
     public readonly options: AppOptions = {},
     public readonly name = 'Anonymous'
@@ -27,13 +30,25 @@ export class App {
       );
     }
 
+    this.modulesQueue = [];
+    this.childAppQueue = [];
     this.server = express();
   }
 
   public async init(callback?: () => void): Promise<this> {
     await this.beforeInit();
     await this.applyMiddleware();
+
     await this.enableModules();
+
+    for (const module of this.modulesQueue) {
+      await this.addModule(module);
+    }
+
+    for (const [app, path] of this.childAppQueue) {
+      await this.addChildApp(app, path);
+    }
+
     await this.afterInit();
 
     if (callback) {
@@ -55,7 +70,27 @@ export class App {
 
   public async enableModules(): Promise<void> {}
 
-  public async addModule(module: Module): Promise<void> {
+  public addModuleToQueue(module: Module): void {
+    if (this.modulesQueue.includes(module)) {
+      return;
+    }
+
+    this.modulesQueue.push(module);
+  }
+
+  public addChildAppToQueue(app: App, path?: string): void {
+    const isAppAlreadyAdded = this.childAppQueue.find(
+      ([_app]) => _app.name === app.name
+    );
+
+    if (isAppAlreadyAdded) {
+      return;
+    }
+
+    this.childAppQueue.push([app, path]);
+  }
+
+  protected async addModule(module: Module): Promise<void> {
     const route = this.options.baseRoute || '/';
 
     if (module.init) {
@@ -69,7 +104,7 @@ export class App {
     DevelopmentLogger.LOG(DevLogEvent.AppModuleAdded, module.name);
   }
 
-  public async addChildApp(app: App, path?: string): Promise<void> {
+  protected async addChildApp(app: App, path?: string): Promise<void> {
     if (app._isInitied) {
       throw new InternalException({
         message: 'Could add already inited app as a child.',

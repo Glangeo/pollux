@@ -6,9 +6,9 @@ import { AppConfiguration, Contract, StartupConfig } from '../types';
 import { ServiceRegistry } from './ServiceRegistry';
 
 export class DistributedStartup {
-  public constructor(protected readonly config: StartupConfig) {}
+  private readonly currentApp: App;
 
-  public async init(...args: Parameters<App['init']>): Promise<App> {
+  public constructor(protected readonly config: StartupConfig) {
     const { currentAppName, apps } = this.config;
 
     const currentAppConfig = apps.find(({ name }) => name === currentAppName);
@@ -17,7 +17,7 @@ export class DistributedStartup {
       throw new Error(`Current app is not found in configuration!`);
     }
 
-    const app = await this.getCurrentApp(currentAppConfig);
+    this.currentApp = this.getCurrentApp(currentAppConfig);
 
     for (const app of apps) {
       const isDetached = app.name !== currentAppName;
@@ -26,11 +26,13 @@ export class DistributedStartup {
         this.initDetachedServices(app);
       }
     }
-
-    return app.init(...args);
   }
 
-  protected async getCurrentApp(appConfig: AppConfiguration): Promise<App> {
+  public init(...args: Parameters<App['init']>): ReturnType<App['init']> {
+    return this.currentApp.init(...args);
+  }
+
+  protected getCurrentApp(appConfig: AppConfiguration): App {
     const { app, port, services } = appConfig;
 
     for (const constructor of services) {
@@ -39,15 +41,15 @@ export class DistributedStartup {
       ServiceRegistry.setService(constructor, instance);
 
       const serviceApp = instance.getApp();
-      const remoteCallModule = createRemoteCallModule(services);
 
-      await serviceApp.addModule(remoteCallModule);
-
-      await app.addChildApp(
+      app.addChildAppToQueue(
         serviceApp,
         serviceApp.options.baseRoute || constructor.name.toLowerCase()
       );
     }
+
+    const remoteCallModule = createRemoteCallModule(services);
+    app.addModuleToQueue(remoteCallModule);
 
     app.options.port = port;
 
@@ -70,19 +72,26 @@ export class DistributedStartup {
 
         // TODO: add authorization
         try {
-          const response = await axios.post<Contract.Response>(
+          const response = await axios.post<string>(
             '/call',
-            request
+            JSON.stringify(request),
+            {
+              headers: {
+                'Content-Type': 'application/json',
+              },
+            }
           );
 
-          const { service, method } = response.data;
+          const { result, service, method } = JSON.parse(
+            response.data
+          ) as Contract.Response;
 
           DevelopmentLogger.LOG(
             DevLogEvent.DistributedRemoteCallResponded,
             `from ${host} after call ${service}.${method}`
           );
 
-          return response.data;
+          return { result, service, method };
         } catch (error) {
           // TODO: retrieve exception from service response
           const exception = castUnknownErrorToException(error);
