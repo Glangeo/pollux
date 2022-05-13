@@ -93,8 +93,9 @@ function getRequestReceiver(service) {
                         case 1:
                             result = _a.sent();
                             response = {
-                                method: method.toString(),
                                 result: result,
+                                method: method.toString(),
+                                service: service.constructor.name,
                             };
                             return [2 /*return*/, response];
                     }

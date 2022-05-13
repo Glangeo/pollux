@@ -7,7 +7,10 @@ export function getRequestReceiver<T extends ServiceConstructor>(
   const receiver = {
     async isActive(): Promise<void> {},
 
-    async call(method: keyof T, args: any[]): Promise<Contract.Response> {
+    async call(
+      method: keyof InstanceType<T>,
+      args: any[]
+    ): Promise<Contract.Response> {
       const operation = service[method];
       const isMethod =
         method !== 'constructor' && typeof operation === 'function';
@@ -26,8 +29,9 @@ export function getRequestReceiver<T extends ServiceConstructor>(
 
       const result = await operation.call(service, ...args);
       const response: Contract.Response = {
-        method: method.toString(),
         result,
+        method: method.toString(),
+        service: service.constructor.name,
       };
 
       return response;

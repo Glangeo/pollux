@@ -81,6 +81,7 @@ function getRequestEmitter(constructor, onRequest) {
                                 request = {
                                     args: args,
                                     method: key,
+                                    service: constructor.name,
                                 };
                                 return [4 /*yield*/, onRequest(request)];
                             case 1:

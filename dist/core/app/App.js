@@ -95,6 +95,11 @@ var App = /** @class */ (function () {
         var port = this.options.port || DEFAULT_PORT;
         this.server.listen(port, callback ? function () { return callback(port); } : undefined);
     };
+    App.prototype.enableModules = function () {
+        return __awaiter(this, void 0, void 0, function () { return __generator(this, function (_a) {
+            return [2 /*return*/];
+        }); });
+    };
     App.prototype.beforeInit = function () {
         return __awaiter(this, void 0, void 0, function () { return __generator(this, function (_a) {
             return [2 /*return*/];
@@ -126,6 +131,7 @@ var App = /** @class */ (function () {
         });
     };
     App.prototype.addChildApp = function (app, path) {
+        app.options.baseRoute = undefined;
         var appPath = [this.options.baseRoute];
         if (path) {
             appPath.push(path);

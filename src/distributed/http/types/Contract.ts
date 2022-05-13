@@ -2,6 +2,7 @@ import { CoreTypes } from 'src/core';
 
 export namespace Contract {
   export type Request = {
+    readonly service: string;
     readonly method: string;
     readonly args: (
       | CoreTypes.PlainTypes.Primitive
@@ -10,6 +11,7 @@ export namespace Contract {
   };
 
   export type Response = {
+    readonly service: string;
     readonly method: string;
     readonly result:
       | CoreTypes.PlainTypes.Primitive

@@ -30,6 +30,7 @@ export function getRequestEmitter<T extends ServiceConstructor>(
         const request: Contract.Request = {
           args,
           method: key,
+          service: constructor.name,
         };
         const response = await onRequest(request);
 

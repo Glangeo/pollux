@@ -7,7 +7,7 @@ import { AppOptions } from './types';
 
 const DEFAULT_PORT = 3000;
 
-export abstract class App {
+export class App {
   public readonly server: express.Express;
   protected readonly route: string;
 
@@ -44,7 +44,7 @@ export abstract class App {
     this.server.listen(port, callback ? () => callback(port) : undefined);
   }
 
-  public abstract enableModules(): Promise<void>;
+  public async enableModules(): Promise<void> {}
 
   protected async beforeInit(): Promise<void> {}
 
@@ -63,6 +63,8 @@ export abstract class App {
   }
 
   protected addChildApp(app: App, path?: string): void {
+    app.options.baseRoute = undefined;
+
     const appPath = [this.options.baseRoute];
 
     if (path) {
