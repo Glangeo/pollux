@@ -10,7 +10,6 @@ const DEFAULT_PORT = 3000;
 
 export class App {
   public readonly server: express.Express;
-  protected readonly route: string;
   private _isInitied: boolean;
 
   public constructor(
@@ -28,7 +27,6 @@ export class App {
       );
     }
 
-    this.route = this.options?.baseRoute || '/';
     this.server = express();
   }
 
@@ -58,12 +56,14 @@ export class App {
   public async enableModules(): Promise<void> {}
 
   public async addModule(module: Module): Promise<void> {
+    const route = this.options.baseRoute || '/';
+
     if (module.init) {
       await module.init();
     }
 
     if (module.router) {
-      this.server.use(this.route, module.router.getExpressRouter());
+      this.server.use(route, module.router.getExpressRouter());
     }
 
     DevelopmentLogger.LOG(DevLogEvent.AppModuleAdded, module.name);
