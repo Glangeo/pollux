@@ -29,7 +29,7 @@ async function publishAction(tag) {
 
   const version = readVersion(distFolderPath);
 
-  await exec(`git add ${path.join(distFolderPath, 'package.json')}`);
+  await exec(`git add ${path.join(distFolderPath, '*')}`);
   await exec(`git commit -m "npm release verion ${version}"`);
 
   // TODO: when input is not valid, send question again
