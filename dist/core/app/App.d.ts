@@ -5,7 +5,6 @@ export declare class App {
     readonly options: AppOptions;
     readonly name: string;
     readonly server: express.Express;
-    protected readonly route: string;
     private _isInitied;
     constructor(options?: AppOptions, name?: string);
     init(callback?: () => void): Promise<this>;

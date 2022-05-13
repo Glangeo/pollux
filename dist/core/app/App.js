@@ -61,14 +61,12 @@ var App = /** @class */ (function () {
     function App(options, name) {
         if (options === void 0) { options = {}; }
         if (name === void 0) { name = 'Anonymous'; }
-        var _a;
         this.options = options;
         this.name = name;
         this._isInitied = false;
         if (this.options.logging) {
             local_utils_1.DevelopmentLogger.configuration = (0, merge_1.default)(__assign({}, local_utils_1.DevelopmentLogger.configuration), this.options.logging);
         }
-        this.route = ((_a = this.options) === null || _a === void 0 ? void 0 : _a.baseRoute) || '/';
         this.server = (0, express_1.default)();
     }
     App.prototype.init = function (callback) {
@@ -108,9 +106,11 @@ var App = /** @class */ (function () {
     };
     App.prototype.addModule = function (module) {
         return __awaiter(this, void 0, void 0, function () {
+            var route;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
+                        route = this.options.baseRoute || '/';
                         if (!module.init) return [3 /*break*/, 2];
                         return [4 /*yield*/, module.init()];
                     case 1:
@@ -118,7 +118,7 @@ var App = /** @class */ (function () {
                         _a.label = 2;
                     case 2:
                         if (module.router) {
-                            this.server.use(this.route, module.router.getExpressRouter());
+                            this.server.use(route, module.router.getExpressRouter());
                         }
                         local_utils_1.DevelopmentLogger.LOG(local_utils_1.DevLogEvent.AppModuleAdded, module.name);
                         return [2 /*return*/];
