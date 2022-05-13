@@ -55,12 +55,16 @@ var express_1 = __importDefault(require("express"));
 var body_parser_1 = __importDefault(require("body-parser"));
 var merge_1 = __importDefault(require("lodash/merge"));
 var local_utils_1 = require("../../local-utils");
+var exception_1 = require("../exception");
 var DEFAULT_PORT = 3000;
 var App = /** @class */ (function () {
-    function App(options) {
+    function App(options, name) {
         if (options === void 0) { options = {}; }
+        if (name === void 0) { name = 'Anonymous'; }
         var _a;
         this.options = options;
+        this.name = name;
+        this._isInitied = false;
         if (this.options.logging) {
             local_utils_1.DevelopmentLogger.configuration = (0, merge_1.default)(__assign({}, local_utils_1.DevelopmentLogger.configuration), this.options.logging);
         }
@@ -86,6 +90,8 @@ var App = /** @class */ (function () {
                         if (callback) {
                             callback();
                         }
+                        this._isInitied = true;
+                        local_utils_1.DevelopmentLogger.LOG(local_utils_1.DevLogEvent.AppInit, this.name);
                         return [2 /*return*/, this];
                 }
             });
@@ -121,12 +127,31 @@ var App = /** @class */ (function () {
         });
     };
     App.prototype.addChildApp = function (app, path) {
-        app.options.baseRoute = undefined;
-        var appPath = [this.options.baseRoute];
-        if (path) {
-            appPath.push(path);
-        }
-        this.server.use((0, local_utils_1.fixUrl)(appPath.join('/')), app.server);
+        return __awaiter(this, void 0, void 0, function () {
+            var appPath, url;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        if (app._isInitied) {
+                            throw new exception_1.InternalException({
+                                message: 'Could add already inited app as a child.',
+                            });
+                        }
+                        app.options.baseRoute = undefined;
+                        return [4 /*yield*/, app.init()];
+                    case 1:
+                        _a.sent();
+                        appPath = [this.options.baseRoute];
+                        if (path) {
+                            appPath.push(path);
+                        }
+                        url = (0, local_utils_1.fixUrl)(appPath.join('/'));
+                        this.server.use(url, app.server);
+                        local_utils_1.DevelopmentLogger.LOG(local_utils_1.DevLogEvent.AppChildAdded, "".concat(app.name, " on ").concat(url));
+                        return [2 /*return*/];
+                }
+            });
+        });
     };
     App.prototype.beforeInit = function () {
         return __awaiter(this, void 0, void 0, function () { return __generator(this, function (_a) {

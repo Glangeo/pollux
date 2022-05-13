@@ -63,6 +63,7 @@ exports.createRemoteCallModule = void 0;
 var Yup = __importStar(require("yup"));
 var api_1 = require("../../../api");
 var core_1 = require("../../../core");
+var local_utils_1 = require("../../../local-utils");
 var classes_1 = require("../classes");
 var getRequestReceiver_1 = require("./getRequestReceiver");
 function createRemoteCallModule(services) {
@@ -87,7 +88,7 @@ function createRemoteCallModule(services) {
                 params: Yup.array().required(),
             }),
         },
-        action: function (_a) {
+        action: function (_a, req) {
             var body = _a.body;
             return __awaiter(_this, void 0, void 0, function () {
                 var serviceName, method, params, receiver;
@@ -114,6 +115,7 @@ function createRemoteCallModule(services) {
                             },
                         });
                     }
+                    local_utils_1.DevelopmentLogger.LOG(local_utils_1.DevLogEvent.DistributedRemoteCallReceived, "from ".concat(req.originalUrl, " to call ").concat(serviceName, ".").concat(method));
                     return [2 /*return*/, receiver.call(method, params)];
                 });
             });

@@ -127,31 +127,45 @@ var DistributedStartup = /** @class */ (function () {
     };
     DistributedStartup.prototype.getCurrentApp = function (appConfig) {
         return __awaiter(this, void 0, void 0, function () {
-            var app, port, services, services_1, services_1_1, constructor, instance, serviceApp, remoteCallModule;
+            var app, port, services, services_1, services_1_1, constructor, instance, serviceApp, e_2_1, remoteCallModule;
             var e_2, _a;
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0:
                         app = appConfig.app, port = appConfig.port, services = appConfig.services;
+                        _b.label = 1;
+                    case 1:
+                        _b.trys.push([1, 6, 7, 8]);
+                        services_1 = __values(services), services_1_1 = services_1.next();
+                        _b.label = 2;
+                    case 2:
+                        if (!!services_1_1.done) return [3 /*break*/, 5];
+                        constructor = services_1_1.value;
+                        instance = new constructor();
+                        ServiceRegistry_1.ServiceRegistry.setService(constructor, instance);
+                        serviceApp = instance.getApp();
+                        return [4 /*yield*/, app.addChildApp(serviceApp, serviceApp.options.baseRoute || constructor.name.toLowerCase())];
+                    case 3:
+                        _b.sent();
+                        _b.label = 4;
+                    case 4:
+                        services_1_1 = services_1.next();
+                        return [3 /*break*/, 2];
+                    case 5: return [3 /*break*/, 8];
+                    case 6:
+                        e_2_1 = _b.sent();
+                        e_2 = { error: e_2_1 };
+                        return [3 /*break*/, 8];
+                    case 7:
                         try {
-                            for (services_1 = __values(services), services_1_1 = services_1.next(); !services_1_1.done; services_1_1 = services_1.next()) {
-                                constructor = services_1_1.value;
-                                instance = new constructor();
-                                ServiceRegistry_1.ServiceRegistry.setService(constructor, instance);
-                                serviceApp = instance.getApp();
-                                app.addChildApp(serviceApp, serviceApp.options.baseRoute || constructor.name.toLowerCase());
-                            }
+                            if (services_1_1 && !services_1_1.done && (_a = services_1.return)) _a.call(services_1);
                         }
-                        catch (e_2_1) { e_2 = { error: e_2_1 }; }
-                        finally {
-                            try {
-                                if (services_1_1 && !services_1_1.done && (_a = services_1.return)) _a.call(services_1);
-                            }
-                            finally { if (e_2) throw e_2.error; }
-                        }
+                        finally { if (e_2) throw e_2.error; }
+                        return [7 /*endfinally*/];
+                    case 8:
                         remoteCallModule = (0, helpers_1.createRemoteCallModule)(services);
                         return [4 /*yield*/, app.addModule(remoteCallModule)];
-                    case 1:
+                    case 9:
                         _b.sent();
                         app.options.port = port;
                         return [2 /*return*/, app];
@@ -167,23 +181,25 @@ var DistributedStartup = /** @class */ (function () {
             for (var services_2 = __values(services), services_2_1 = services_2.next(); !services_2_1.done; services_2_1 = services_2.next()) {
                 var service = services_2_1.value;
                 var emitter = (0, helpers_1.getRequestEmitter)(service, function (request) { return __awaiter(_this, void 0, void 0, function () {
-                    var detachedRouterRoute, axios, response, error_1, exception;
-                    return __generator(this, function (_a) {
-                        switch (_a.label) {
+                    var detachedRouterRoute, axios, response, _a, service_1, method, error_1, exception;
+                    return __generator(this, function (_b) {
+                        switch (_b.label) {
                             case 0:
                                 detachedRouterRoute = '/detached';
                                 axios = new axios_1.Axios({
                                     baseURL: (0, local_utils_1.fixUrl)([host, app.options.baseRoute || '', detachedRouterRoute].join('/')),
                                 });
-                                _a.label = 1;
+                                _b.label = 1;
                             case 1:
-                                _a.trys.push([1, 3, , 4]);
+                                _b.trys.push([1, 3, , 4]);
                                 return [4 /*yield*/, axios.post('/call', request)];
                             case 2:
-                                response = _a.sent();
+                                response = _b.sent();
+                                _a = response.data, service_1 = _a.service, method = _a.method;
+                                local_utils_1.DevelopmentLogger.LOG(local_utils_1.DevLogEvent.DistributedRemoteCallResponded, "from ".concat(host, " after call ").concat(service_1, ".").concat(method));
                                 return [2 /*return*/, response.data];
                             case 3:
-                                error_1 = _a.sent();
+                                error_1 = _b.sent();
                                 exception = (0, core_1.castUnknownErrorToException)(error_1);
                                 throw exception;
                             case 4: return [2 /*return*/];
@@ -191,6 +207,7 @@ var DistributedStartup = /** @class */ (function () {
                     });
                 }); });
                 ServiceRegistry_1.ServiceRegistry.setService(service, emitter);
+                local_utils_1.DevelopmentLogger.LOG(local_utils_1.DevLogEvent.DistributedDetachedServiceAdded, service.name);
             }
         }
         catch (e_3_1) { e_3 = { error: e_3_1 }; }

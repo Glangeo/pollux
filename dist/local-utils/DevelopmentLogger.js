@@ -21,7 +21,9 @@ exports.DevelopmentLogger = exports.DevLogEvent = void 0;
 var DevLogEvent;
 (function (DevLogEvent) {
     // Application
+    DevLogEvent["AppInit"] = "app/init";
     DevLogEvent["AppModuleAdded"] = "app/moduleAdded";
+    DevLogEvent["AppChildAdded"] = "app/childAppAdded";
     // Environment
     DevLogEvent["EnvFileLoaded"] = "env/fileLoaded";
     // Router
@@ -29,11 +31,17 @@ var DevLogEvent;
     DevLogEvent["RouterRouteAdded"] = "router/routeAdded";
     // Database
     DevLogEvent["DbConnected"] = "db/connected";
+    // Distributed
+    DevLogEvent["DistributedDetachedServiceAdded"] = "distributed/detachedServiceAdded";
+    DevLogEvent["DistributedRemoteCallReceived"] = "distributed/remoteCallReceived";
+    DevLogEvent["DistributedRemoteCallResponded"] = "distributed/remoteCallResponded";
 })(DevLogEvent = exports.DevLogEvent || (exports.DevLogEvent = {}));
 var defaultConfiguration = {
     isEnabled: true,
     app: {
+        init: true,
         moduleAdded: true,
+        childAppAdded: true,
     },
     env: {
         fileLoaded: true,
@@ -44,6 +52,11 @@ var defaultConfiguration = {
     },
     db: {
         connected: true,
+    },
+    distributed: {
+        detachedServiceAdded: false,
+        remoteCallReceived: false,
+        remoteCallResponded: false,
     },
 };
 var DevelopmentLogger = /** @class */ (function () {
