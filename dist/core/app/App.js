@@ -46,6 +46,33 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+var __values = (this && this.__values) || function(o) {
+    var s = typeof Symbol === "function" && Symbol.iterator, m = s && o[s], i = 0;
+    if (m) return m.call(o);
+    if (o && typeof o.length === "number") return {
+        next: function () {
+            if (o && i >= o.length) o = void 0;
+            return { value: o && o[i++], done: !o };
+        }
+    };
+    throw new TypeError(s ? "Object is not iterable." : "Symbol.iterator is not defined.");
+};
+var __read = (this && this.__read) || function (o, n) {
+    var m = typeof Symbol === "function" && o[Symbol.iterator];
+    if (!m) return o;
+    var i = m.call(o), r, ar = [], e;
+    try {
+        while ((n === void 0 || n-- > 0) && !(r = i.next()).done) ar.push(r.value);
+    }
+    catch (error) { e = { error: error }; }
+    finally {
+        try {
+            if (r && !r.done && (m = i["return"])) m.call(i);
+        }
+        finally { if (e) throw e.error; }
+    }
+    return ar;
+};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -63,28 +90,84 @@ var App = /** @class */ (function () {
         if (name === void 0) { name = 'Anonymous'; }
         this.options = options;
         this.name = name;
+        this.childAppQueue = [];
         this._isInitied = false;
         if (this.options.logging) {
             local_utils_1.DevelopmentLogger.configuration = (0, merge_1.default)(__assign({}, local_utils_1.DevelopmentLogger.configuration), this.options.logging);
         }
+        this.modulesQueue = [];
+        this.childAppQueue = [];
         this.server = (0, express_1.default)();
     }
     App.prototype.init = function (callback) {
         return __awaiter(this, void 0, void 0, function () {
-            return __generator(this, function (_a) {
-                switch (_a.label) {
+            var _a, _b, module_1, e_1_1, _c, _d, _e, app, path, e_2_1;
+            var e_1, _f, e_2, _g;
+            return __generator(this, function (_h) {
+                switch (_h.label) {
                     case 0: return [4 /*yield*/, this.beforeInit()];
                     case 1:
-                        _a.sent();
+                        _h.sent();
                         return [4 /*yield*/, this.applyMiddleware()];
                     case 2:
-                        _a.sent();
+                        _h.sent();
                         return [4 /*yield*/, this.enableModules()];
                     case 3:
-                        _a.sent();
-                        return [4 /*yield*/, this.afterInit()];
+                        _h.sent();
+                        _h.label = 4;
                     case 4:
-                        _a.sent();
+                        _h.trys.push([4, 9, 10, 11]);
+                        _a = __values(this.modulesQueue), _b = _a.next();
+                        _h.label = 5;
+                    case 5:
+                        if (!!_b.done) return [3 /*break*/, 8];
+                        module_1 = _b.value;
+                        return [4 /*yield*/, this.addModule(module_1)];
+                    case 6:
+                        _h.sent();
+                        _h.label = 7;
+                    case 7:
+                        _b = _a.next();
+                        return [3 /*break*/, 5];
+                    case 8: return [3 /*break*/, 11];
+                    case 9:
+                        e_1_1 = _h.sent();
+                        e_1 = { error: e_1_1 };
+                        return [3 /*break*/, 11];
+                    case 10:
+                        try {
+                            if (_b && !_b.done && (_f = _a.return)) _f.call(_a);
+                        }
+                        finally { if (e_1) throw e_1.error; }
+                        return [7 /*endfinally*/];
+                    case 11:
+                        _h.trys.push([11, 16, 17, 18]);
+                        _c = __values(this.childAppQueue), _d = _c.next();
+                        _h.label = 12;
+                    case 12:
+                        if (!!_d.done) return [3 /*break*/, 15];
+                        _e = __read(_d.value, 2), app = _e[0], path = _e[1];
+                        return [4 /*yield*/, this.addChildApp(app, path)];
+                    case 13:
+                        _h.sent();
+                        _h.label = 14;
+                    case 14:
+                        _d = _c.next();
+                        return [3 /*break*/, 12];
+                    case 15: return [3 /*break*/, 18];
+                    case 16:
+                        e_2_1 = _h.sent();
+                        e_2 = { error: e_2_1 };
+                        return [3 /*break*/, 18];
+                    case 17:
+                        try {
+                            if (_d && !_d.done && (_g = _c.return)) _g.call(_c);
+                        }
+                        finally { if (e_2) throw e_2.error; }
+                        return [7 /*endfinally*/];
+                    case 18: return [4 /*yield*/, this.afterInit()];
+                    case 19:
+                        _h.sent();
                         if (callback) {
                             callback();
                         }
@@ -103,6 +186,22 @@ var App = /** @class */ (function () {
         return __awaiter(this, void 0, void 0, function () { return __generator(this, function (_a) {
             return [2 /*return*/];
         }); });
+    };
+    App.prototype.addModuleToQueue = function (module) {
+        if (this.modulesQueue.includes(module)) {
+            return;
+        }
+        this.modulesQueue.push(module);
+    };
+    App.prototype.addChildAppToQueue = function (app, path) {
+        var isAppAlreadyAdded = this.childAppQueue.find(function (_a) {
+            var _b = __read(_a, 1), _app = _b[0];
+            return _app.name === app.name;
+        });
+        if (isAppAlreadyAdded) {
+            return;
+        }
+        this.childAppQueue.push([app, path]);
     };
     App.prototype.addModule = function (module) {
         return __awaiter(this, void 0, void 0, function () {

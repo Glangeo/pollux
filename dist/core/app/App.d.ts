@@ -6,12 +6,16 @@ export declare class App {
     readonly name: string;
     readonly server: express.Express;
     private _isInitied;
+    private modulesQueue;
+    private childAppQueue;
     constructor(options?: AppOptions, name?: string);
     init(callback?: () => void): Promise<this>;
     listen(callback?: (port: number) => void): void;
     enableModules(): Promise<void>;
-    addModule(module: Module): Promise<void>;
-    addChildApp(app: App, path?: string): Promise<void>;
+    addModuleToQueue(module: Module): void;
+    addChildAppToQueue(app: App, path?: string): void;
+    protected addModule(module: Module): Promise<void>;
+    protected addChildApp(app: App, path?: string): Promise<void>;
     protected beforeInit(): Promise<void>;
     protected afterInit(): Promise<void>;
     protected applyMiddleware(): Promise<void>;

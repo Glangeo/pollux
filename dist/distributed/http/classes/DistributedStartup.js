@@ -80,98 +80,65 @@ var helpers_1 = require("../helpers");
 var ServiceRegistry_1 = require("./ServiceRegistry");
 var DistributedStartup = /** @class */ (function () {
     function DistributedStartup(config) {
+        var e_1, _a;
         this.config = config;
+        var _b = this.config, currentAppName = _b.currentAppName, apps = _b.apps;
+        var currentAppConfig = apps.find(function (_a) {
+            var name = _a.name;
+            return name === currentAppName;
+        });
+        if (!currentAppConfig) {
+            throw new Error("Current app is not found in configuration!");
+        }
+        this.currentApp = this.getCurrentApp(currentAppConfig);
+        try {
+            for (var apps_1 = __values(apps), apps_1_1 = apps_1.next(); !apps_1_1.done; apps_1_1 = apps_1.next()) {
+                var app = apps_1_1.value;
+                var isDetached = app.name !== currentAppName;
+                if (isDetached) {
+                    this.initDetachedServices(app);
+                }
+            }
+        }
+        catch (e_1_1) { e_1 = { error: e_1_1 }; }
+        finally {
+            try {
+                if (apps_1_1 && !apps_1_1.done && (_a = apps_1.return)) _a.call(apps_1);
+            }
+            finally { if (e_1) throw e_1.error; }
+        }
     }
     DistributedStartup.prototype.init = function () {
+        var _a;
         var args = [];
         for (var _i = 0; _i < arguments.length; _i++) {
             args[_i] = arguments[_i];
         }
-        return __awaiter(this, void 0, void 0, function () {
-            var _a, currentAppName, apps, currentAppConfig, app, apps_1, apps_1_1, app_1, isDetached;
-            var e_1, _b;
-            return __generator(this, function (_c) {
-                switch (_c.label) {
-                    case 0:
-                        _a = this.config, currentAppName = _a.currentAppName, apps = _a.apps;
-                        currentAppConfig = apps.find(function (_a) {
-                            var name = _a.name;
-                            return name === currentAppName;
-                        });
-                        if (!currentAppConfig) {
-                            throw new Error("Current app is not found in configuration!");
-                        }
-                        return [4 /*yield*/, this.getCurrentApp(currentAppConfig)];
-                    case 1:
-                        app = _c.sent();
-                        try {
-                            for (apps_1 = __values(apps), apps_1_1 = apps_1.next(); !apps_1_1.done; apps_1_1 = apps_1.next()) {
-                                app_1 = apps_1_1.value;
-                                isDetached = app_1.name !== currentAppName;
-                                if (isDetached) {
-                                    this.initDetachedServices(app_1);
-                                }
-                            }
-                        }
-                        catch (e_1_1) { e_1 = { error: e_1_1 }; }
-                        finally {
-                            try {
-                                if (apps_1_1 && !apps_1_1.done && (_b = apps_1.return)) _b.call(apps_1);
-                            }
-                            finally { if (e_1) throw e_1.error; }
-                        }
-                        return [2 /*return*/, app.init.apply(app, __spreadArray([], __read(args), false))];
-                }
-            });
-        });
+        return (_a = this.currentApp).init.apply(_a, __spreadArray([], __read(args), false));
     };
     DistributedStartup.prototype.getCurrentApp = function (appConfig) {
-        return __awaiter(this, void 0, void 0, function () {
-            var app, port, services, services_1, services_1_1, constructor, instance, serviceApp, remoteCallModule, e_2_1;
-            var e_2, _a;
-            return __generator(this, function (_b) {
-                switch (_b.label) {
-                    case 0:
-                        app = appConfig.app, port = appConfig.port, services = appConfig.services;
-                        _b.label = 1;
-                    case 1:
-                        _b.trys.push([1, 7, 8, 9]);
-                        services_1 = __values(services), services_1_1 = services_1.next();
-                        _b.label = 2;
-                    case 2:
-                        if (!!services_1_1.done) return [3 /*break*/, 6];
-                        constructor = services_1_1.value;
-                        instance = new constructor();
-                        ServiceRegistry_1.ServiceRegistry.setService(constructor, instance);
-                        serviceApp = instance.getApp();
-                        remoteCallModule = (0, helpers_1.createRemoteCallModule)(services);
-                        return [4 /*yield*/, serviceApp.addModule(remoteCallModule)];
-                    case 3:
-                        _b.sent();
-                        return [4 /*yield*/, app.addChildApp(serviceApp, serviceApp.options.baseRoute || constructor.name.toLowerCase())];
-                    case 4:
-                        _b.sent();
-                        _b.label = 5;
-                    case 5:
-                        services_1_1 = services_1.next();
-                        return [3 /*break*/, 2];
-                    case 6: return [3 /*break*/, 9];
-                    case 7:
-                        e_2_1 = _b.sent();
-                        e_2 = { error: e_2_1 };
-                        return [3 /*break*/, 9];
-                    case 8:
-                        try {
-                            if (services_1_1 && !services_1_1.done && (_a = services_1.return)) _a.call(services_1);
-                        }
-                        finally { if (e_2) throw e_2.error; }
-                        return [7 /*endfinally*/];
-                    case 9:
-                        app.options.port = port;
-                        return [2 /*return*/, app];
-                }
-            });
-        });
+        var e_2, _a;
+        var app = appConfig.app, port = appConfig.port, services = appConfig.services;
+        try {
+            for (var services_1 = __values(services), services_1_1 = services_1.next(); !services_1_1.done; services_1_1 = services_1.next()) {
+                var constructor = services_1_1.value;
+                var instance = new constructor();
+                ServiceRegistry_1.ServiceRegistry.setService(constructor, instance);
+                var serviceApp = instance.getApp();
+                app.addChildAppToQueue(serviceApp, serviceApp.options.baseRoute || constructor.name.toLowerCase());
+            }
+        }
+        catch (e_2_1) { e_2 = { error: e_2_1 }; }
+        finally {
+            try {
+                if (services_1_1 && !services_1_1.done && (_a = services_1.return)) _a.call(services_1);
+            }
+            finally { if (e_2) throw e_2.error; }
+        }
+        var remoteCallModule = (0, helpers_1.createRemoteCallModule)(services);
+        app.addModuleToQueue(remoteCallModule);
+        app.options.port = port;
+        return app;
     };
     DistributedStartup.prototype.initDetachedServices = function (appConfig) {
         var e_3, _a;

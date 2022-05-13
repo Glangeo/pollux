@@ -72,7 +72,7 @@ function createRemoteCallModule(services) {
         return (0, getRequestReceiver_1.getRequestReceiver)(classes_1.ServiceRegistry.getService(constructor));
     });
     var call = (0, api_1.createEndpoint)({
-        route: '/detached/call',
+        route: '/call',
         method: api_1.EndpointMethod.POST,
         validation: {
             query: undefined,
@@ -124,6 +124,7 @@ function createRemoteCallModule(services) {
     return (0, core_1.createModule)({
         name: 'RemoteCallReciever',
         router: new api_1.Router({
+            path: '/detached',
             endpoints: [call],
         }),
     });
