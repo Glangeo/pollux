@@ -44,7 +44,7 @@ export type Endpoint<
  */
 export type AnyEndpoint = Endpoint<
   AnyEndpointMethod,
-  ValidationSchema,
-  ValidationSchema,
-  ValidationSchema
+  ValidationSchema | undefined,
+  ValidationSchema | undefined,
+  ValidationSchema | undefined
 >;

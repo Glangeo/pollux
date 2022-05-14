@@ -31,4 +31,4 @@ export declare type Endpoint<M extends EndpointMethod, Q extends ValidationSchem
 /**
  * Helper for annotation endpoint with any cofiguration
  */
-export declare type AnyEndpoint = Endpoint<AnyEndpointMethod, ValidationSchema, ValidationSchema, ValidationSchema>;
+export declare type AnyEndpoint = Endpoint<AnyEndpointMethod, ValidationSchema | undefined, ValidationSchema | undefined, ValidationSchema | undefined>;

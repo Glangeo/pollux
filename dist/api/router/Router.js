@@ -108,7 +108,7 @@ var Router = /** @class */ (function () {
                     default:
                         break;
                 }
-                var path = (0, local_utils_1.fixRoutePath)("".concat(this.config.path, "/").concat(endpoint.route));
+                var path = (0, local_utils_1.fixUrl)("".concat(this.config.path, "/").concat(endpoint.route));
                 if (method) {
                     method(path, this.createRequestHandler(endpoint));
                     local_utils_1.DevelopmentLogger.LOG(local_utils_1.DevLogEvent.RouterRouteAdded, "Add route: ".concat(endpoint.method, " ").concat(path));
@@ -195,7 +195,7 @@ var Router = /** @class */ (function () {
                         if (!!partials_1_1.done) return [3 /*break*/, 5];
                         _d = partials_1_1.value, name_1 = _d.name, schema = _d.schema;
                         if (!schema) return [3 /*break*/, 4];
-                        return [4 /*yield*/, this.config.validate(schema, req[name_1])];
+                        return [4 /*yield*/, this.config.validate(schema, req[name_1], name_1 === 'body')];
                     case 3:
                         validated = _f.sent();
                         if (!validated.isValid) {

@@ -1,14 +1,14 @@
 {
   "name": "@glangeo/pollux",
-  "version": "2.0.0-a",
-  "main": "dist/index.js",
-  "exports": "./dist/index.js",
+  "version": "2.0.0",
+  "main": "index.js",
   "scripts": {
     "prebuild": "npx rimraf ./dist",
     "build": "tsc",
     "postbuild": "tsconfig-replace-paths -p tsconfig.json -o ./dist -s ./src",
     "test": "jest --coverage=false",
-    "coverage": "jest"
+    "coverage": "jest",
+    "publish:beta": "node ./scripts/release-cli/index.js publish -t beta"
   },
   "repository": {
     "type": "git",
@@ -22,7 +22,7 @@
     "@types/express": "^4.17.9",
     "@types/module-alias": "^2.0.0",
     "@types/yup": "^0.29.11",
-    "axios": "^0.21.1",
+    "axios": "^0.27.2",
     "body-parser": "^1.20.0",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
@@ -36,11 +36,15 @@
     "@types/jest": "^27.5.0",
     "@typescript-eslint/eslint-plugin": "^4.12.0",
     "@typescript-eslint/parser": "^4.12.0",
+    "child-process-promise": "^2.2.1",
+    "commander": "^9.2.0",
     "eslint": "^7.17.0",
     "eslint-plugin-import": "^2.22.1",
     "eslint-plugin-prettier": "^3.3.1",
+    "inquirer": "^8.2.4",
     "jest": "^28.1.0",
     "prettier": "^2.2.1",
+    "prompt-promise": "^1.0.3",
     "rimraf": "^3.0.2",
     "ts-jest": "^28.0.2",
     "ts-node": "^9.1.1",

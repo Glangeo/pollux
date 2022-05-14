@@ -6,5 +6,6 @@ import { InferValidationSchema, ValidationSchema } from './ValidationSchema';
  */
 export type Validator = <T extends ValidationSchema>(
   schema: T,
-  data: any
+  data: any,
+  isStrict: boolean
 ) => Promise<ValidationResult<InferValidationSchema<T>>>;

@@ -1,5 +1,6 @@
-export * from './api';
 export * from './core';
-export * from './db/drivers/mongo';
-export * from './utils';
-export * from './deprecated';
+export * as UTILS from './utils';
+export * as API from './api';
+export * as Deprecated from './deprecated';
+export * as DB from './db';
+export * as Distributed from './distributed';

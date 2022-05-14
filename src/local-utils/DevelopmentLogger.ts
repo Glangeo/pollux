@@ -14,9 +14,17 @@ export type DevelopmentLoggerConfiguration = {
    */
   app: {
     /**
+     * Init method called on application
+     */
+    init: boolean;
+    /**
      * Module is added to application
      */
     moduleAdded: boolean;
+    /**
+     * Child app is added to application
+     */
+    childAppAdded: boolean;
   };
 
   /**
@@ -46,11 +54,33 @@ export type DevelopmentLoggerConfiguration = {
      */
     connected: boolean;
   };
+
+  /**
+   * Distributed mode logging
+   */
+  distributed: {
+    /**
+     * Added layer for remote calling methods in other service
+     */
+    detachedServiceAdded: boolean;
+
+    /**
+     * Received call from another service
+     */
+    remoteCallReceived: boolean;
+
+    /**
+     * Sent response to another service
+     */
+    remoteCallResponded: boolean;
+  };
 };
 
 export enum DevLogEvent {
   // Application
+  AppInit = 'app/init',
   AppModuleAdded = 'app/moduleAdded',
+  AppChildAdded = 'app/childAppAdded',
 
   // Environment
   EnvFileLoaded = 'env/fileLoaded',
@@ -61,12 +91,19 @@ export enum DevLogEvent {
 
   // Database
   DbConnected = 'db/connected',
+
+  // Distributed
+  DistributedDetachedServiceAdded = 'distributed/detachedServiceAdded',
+  DistributedRemoteCallReceived = 'distributed/remoteCallReceived',
+  DistributedRemoteCallResponded = 'distributed/remoteCallResponded',
 }
 
 const defaultConfiguration: DevelopmentLoggerConfiguration = {
   isEnabled: true,
   app: {
+    init: true,
     moduleAdded: true,
+    childAppAdded: true,
   },
   env: {
     fileLoaded: true,
@@ -78,10 +115,16 @@ const defaultConfiguration: DevelopmentLoggerConfiguration = {
   db: {
     connected: true,
   },
+  distributed: {
+    detachedServiceAdded: false,
+    remoteCallReceived: false,
+    remoteCallResponded: false,
+  },
 };
 
 export abstract class DevelopmentLogger {
-  public static configuration: DevelopmentLoggerConfiguration = defaultConfiguration;
+  public static configuration: DevelopmentLoggerConfiguration =
+    defaultConfiguration;
 
   public static LOG(event: DevLogEvent, msg: string): void {
     if (!this.configuration.isEnabled) {

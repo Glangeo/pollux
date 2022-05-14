@@ -11,9 +11,17 @@ export declare type DevelopmentLoggerConfiguration = {
      */
     app: {
         /**
+         * Init method called on application
+         */
+        init: boolean;
+        /**
          * Module is added to application
          */
         moduleAdded: boolean;
+        /**
+         * Child app is added to application
+         */
+        childAppAdded: boolean;
     };
     /**
      * Environment variables
@@ -40,13 +48,35 @@ export declare type DevelopmentLoggerConfiguration = {
          */
         connected: boolean;
     };
+    /**
+     * Distributed mode logging
+     */
+    distributed: {
+        /**
+         * Added layer for remote calling methods in other service
+         */
+        detachedServiceAdded: boolean;
+        /**
+         * Received call from another service
+         */
+        remoteCallReceived: boolean;
+        /**
+         * Sent response to another service
+         */
+        remoteCallResponded: boolean;
+    };
 };
 export declare enum DevLogEvent {
+    AppInit = "app/init",
     AppModuleAdded = "app/moduleAdded",
+    AppChildAdded = "app/childAppAdded",
     EnvFileLoaded = "env/fileLoaded",
     RouterIncomingRequest = "router/incomimgRequests",
     RouterRouteAdded = "router/routeAdded",
-    DbConnected = "db/connected"
+    DbConnected = "db/connected",
+    DistributedDetachedServiceAdded = "distributed/detachedServiceAdded",
+    DistributedRemoteCallReceived = "distributed/remoteCallReceived",
+    DistributedRemoteCallResponded = "distributed/remoteCallResponded"
 }
 export declare abstract class DevelopmentLogger {
     static configuration: DevelopmentLoggerConfiguration;
