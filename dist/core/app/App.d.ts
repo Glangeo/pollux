@@ -1,10 +1,12 @@
 import express from 'express';
+import { ServiceConstructor } from '../../distributed/http';
 import { Module } from '../module';
 import { AppOptions } from './types';
 export declare class App {
     readonly options: AppOptions;
     readonly name: string;
     readonly server: express.Express;
+    services: ServiceConstructor[];
     private _isInitied;
     private modulesQueue;
     private childAppQueue;

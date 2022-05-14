@@ -1,4 +1,3 @@
-import { App } from '../../../core';
 export interface IDistributedService {
-    getApp(): App;
+    init(): Promise<void>;
 }

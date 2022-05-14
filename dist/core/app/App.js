@@ -90,6 +90,7 @@ var App = /** @class */ (function () {
         if (name === void 0) { name = 'Anonymous'; }
         this.options = options;
         this.name = name;
+        this.services = [];
         this.childAppQueue = [];
         this._isInitied = false;
         if (this.options.logging) {
