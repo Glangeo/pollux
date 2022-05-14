@@ -1,6 +1,6 @@
 {
   "name": "@glangeo/pollux",
-  "version": "2.0.0-beta-1652482093078",
+  "version": "2.0.0-rc-1652561642859",
   "main": "index.js",
   "scripts": {
     "prebuild": "npx rimraf ./dist",
@@ -8,7 +8,8 @@
     "postbuild": "tsconfig-replace-paths -p tsconfig.json -o ./dist -s ./src",
     "test": "jest --coverage=false",
     "coverage": "jest",
-    "publish:beta": "node ./scripts/release-cli/index.js publish -t beta"
+    "publish:beta": "node ./scripts/release-cli/index.js publish -t beta",
+    "publish:rc": "node ./scripts/release-cli/index.js publish -t rc"
   },
   "repository": {
     "type": "git",
