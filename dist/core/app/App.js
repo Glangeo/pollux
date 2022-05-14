@@ -87,15 +87,14 @@ var DEFAULT_PORT = 3000;
 var App = /** @class */ (function () {
     function App(options, name) {
         if (options === void 0) { options = {}; }
-        if (name === void 0) { name = 'Anonymous'; }
         this.options = options;
-        this.name = name;
         this.services = [];
         this.childAppQueue = [];
         this._isInitied = false;
         if (this.options.logging) {
             local_utils_1.DevelopmentLogger.configuration = (0, merge_1.default)(__assign({}, local_utils_1.DevelopmentLogger.configuration), this.options.logging);
         }
+        this.name = name || this.constructor.name;
         this.modulesQueue = [];
         this.childAppQueue = [];
         this.server = (0, express_1.default)();

@@ -16,9 +16,7 @@ export class DistributedStartup {
   public constructor(protected readonly config: StartupConfig) {
     const { currentAppName, apps } = this.config;
 
-    const currentAppConfig = apps.find(
-      ({ app }) => app.name === currentAppName
-    );
+    const currentAppConfig = apps.find(({ name }) => name === currentAppName);
 
     if (!currentAppConfig) {
       throw new Error(`Current app is not found in configuration!`);
@@ -27,7 +25,7 @@ export class DistributedStartup {
     this.currentApp = this.getCurrentApp(currentAppConfig);
 
     for (const config of apps) {
-      const isDetached = config.app.name !== currentAppName;
+      const isDetached = config.name !== currentAppName;
 
       if (isDetached) {
         this.initDetachedServices(config);

@@ -4,8 +4,8 @@ import { Module } from '../module';
 import { AppOptions } from './types';
 export declare class App {
     readonly options: AppOptions;
-    readonly name: string;
     readonly server: express.Express;
+    readonly name: string;
     services: ServiceConstructor[];
     private _isInitied;
     private modulesQueue;

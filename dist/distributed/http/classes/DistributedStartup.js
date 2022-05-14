@@ -84,8 +84,8 @@ var DistributedStartup = /** @class */ (function () {
         this.config = config;
         var _b = this.config, currentAppName = _b.currentAppName, apps = _b.apps;
         var currentAppConfig = apps.find(function (_a) {
-            var app = _a.app;
-            return app.name === currentAppName;
+            var name = _a.name;
+            return name === currentAppName;
         });
         if (!currentAppConfig) {
             throw new Error("Current app is not found in configuration!");
@@ -94,7 +94,7 @@ var DistributedStartup = /** @class */ (function () {
         try {
             for (var apps_1 = __values(apps), apps_1_1 = apps_1.next(); !apps_1_1.done; apps_1_1 = apps_1.next()) {
                 var config_1 = apps_1_1.value;
-                var isDetached = config_1.app.name !== currentAppName;
+                var isDetached = config_1.name !== currentAppName;
                 if (isDetached) {
                     this.initDetachedServices(config_1);
                 }
