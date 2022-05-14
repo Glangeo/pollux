@@ -1,3 +1,1 @@
-export interface IDistributedService {
-  init(): Promise<void>;
-}
+export interface IDistributedService {}
