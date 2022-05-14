@@ -175,6 +175,7 @@ var DistributedStartup = /** @class */ (function () {
         var e_5, _a;
         var _this = this;
         var app = appConfig.app, host = appConfig.host, _b = appConfig.childApps, childApps = _b === void 0 ? [] : _b;
+        var baseAppRoute = app.options.baseRoute || app.name;
         var services = new Set();
         var fillServiceRegistryWithEmittersByApp = function (app) {
             var e_6, _a;
@@ -191,11 +192,7 @@ var DistributedStartup = /** @class */ (function () {
                                 case 0:
                                     detachedRouterRoute = '/detached';
                                     axios = new axios_1.Axios({
-                                        baseURL: (0, local_utils_1.fixUrl)([
-                                            host,
-                                            app.options.baseRoute || app.name,
-                                            detachedRouterRoute,
-                                        ].join('/')),
+                                        baseURL: (0, local_utils_1.fixUrl)([host, baseAppRoute, detachedRouterRoute].join('/')),
                                     });
                                     _a.label = 1;
                                 case 1:

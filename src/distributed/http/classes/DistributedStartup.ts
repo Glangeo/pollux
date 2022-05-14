@@ -77,6 +77,7 @@ export class DistributedStartup {
   protected initDetachedServices(appConfig: AppConfiguration): void {
     const { app, host, childApps = [] } = appConfig;
 
+    const baseAppRoute = app.options.baseRoute || app.name;
     const services: Set<ServiceConstructor> = new Set();
 
     const fillServiceRegistryWithEmittersByApp = (app: App) => {
@@ -93,11 +94,7 @@ export class DistributedStartup {
 
           const axios = new Axios({
             baseURL: fixUrl(
-              [
-                host,
-                app.options.baseRoute || app.name,
-                detachedRouterRoute,
-              ].join('/')
+              [host, baseAppRoute, detachedRouterRoute].join('/')
             ),
           });
 
