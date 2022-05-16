@@ -93,7 +93,9 @@ export class Router {
       const path = fixUrl(`${this.config.path}/${endpoint.route}`);
 
       if (method) {
-        method(path, this.createRequestHandler(endpoint));
+        const middlewares = endpoint.middlewares || [];
+
+        method(path, ...middlewares, this.createRequestHandler(endpoint));
 
         DevelopmentLogger.LOG(
           DevLogEvent.RouterRouteAdded,
