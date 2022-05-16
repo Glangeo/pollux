@@ -1,16 +1,16 @@
 import { Db } from 'mongodb';
 import { Collection, CollectionPartials } from '../../collection/types';
-import { DAO } from '../DAO';
+import { CollectionAdapter } from '../CollectionAdapter';
 
-export function getDAO<C extends Collection<any, any, any>>(
+export function getCollectionAdapter<C extends Collection<any, any, any>>(
   db: Db,
   collection: C
-): DAO<
+): CollectionAdapter<
   CollectionPartials.Entity<C>,
   CollectionPartials.Record<C>,
   CollectionPartials.DefaultValues<C>
 > {
-  const dao = new DAO(db, collection);
+  const adapter = new CollectionAdapter(db, collection);
 
-  return dao as any;
+  return adapter as any;
 }

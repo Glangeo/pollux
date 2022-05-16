@@ -1,10 +1,10 @@
 import { Collection } from '../../collection';
 import { EntitySchema, RecordSchema } from '../../types';
 
-export type DAOOptions<
+export type CollectionAdapterOptions<
   T extends EntitySchema,
   U extends RecordSchema<T>,
   F extends Partial<U>
 > = {
-  modelFactoryFunction?: Collection<T, U, F>['createEntityFromDBRecord'];
+  entityFactoryFunction?: Collection<T, U, F>['createEntityFromDBRecord'];
 };

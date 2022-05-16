@@ -16,9 +16,9 @@ import {
 import { stringifyObject } from 'src/local-utils';
 import { Collection as PolluxCollection } from '../collection/types/Collection';
 import { EntitySchema, RecordSchema } from '../types';
-import { DAOOptions } from './types';
+import { CollectionAdapterOptions } from './types';
 
-export class DAO<
+export class CollectionAdapter<
   T extends EntitySchema,
   R extends RecordSchema<T>,
   F extends Partial<R>
@@ -26,7 +26,7 @@ export class DAO<
   public constructor(
     private readonly db: Db,
     private readonly collection: PolluxCollection<T, R, F>,
-    private readonly options: DAOOptions<T, R, F> = {}
+    private readonly options: CollectionAdapterOptions<T, R, F> = {}
   ) {}
 
   public async create(form: Omit<R, keyof F | '_id'> & Partial<F>): Promise<T> {
@@ -245,8 +245,8 @@ export class DAO<
   }
 
   private createEntityFromDBRecord(record: WithId<R>): T {
-    if (this.options.modelFactoryFunction) {
-      return this.options.modelFactoryFunction(record as R);
+    if (this.options.entityFactoryFunction) {
+      return this.options.entityFactoryFunction(record as R);
     }
 
     return this.collection.createEntityFromDBRecord(record as R);
