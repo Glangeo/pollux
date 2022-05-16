@@ -28,10 +28,6 @@ export class ClientModel<
     return this.dao.getById(id);
   }
 
-  public async getByCredentialsId(id: number): Promise<Client<T, P, M>[]> {
-    return this.dao.getByCredentialsId(id);
-  }
-
   public async updateCsrf(id: number, token: string): Promise<boolean> {
     return this.dao.updateCsrf(id, token, Date.now());
   }

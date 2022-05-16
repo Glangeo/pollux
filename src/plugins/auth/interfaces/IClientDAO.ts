@@ -14,9 +14,7 @@ export interface IClientDAO<
 
   getById(id: number): Promise<Client<T, P, M>>;
 
-  getByCredentialsId(id: number): Promise<Client<T, P, M>[]>;
-
-  updateCsrf(id: number, token: string, date: number): Promise<boolean>;
+  updateCsrf(id: number, csrfToken: string, date: number): Promise<boolean>;
 
   block(id: number): Promise<boolean>;
 }

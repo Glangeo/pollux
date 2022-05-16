@@ -5,7 +5,7 @@ import {
   MongoDB,
   RecordSchema,
 } from 'src/db/drivers/mongo';
-import { Credentials, CredentialsPartials } from '../types';
+import { Credentials, CredentialsPartials } from 'src/plugins/auth/types';
 
 export const DEFAULT_CREDENTIALS_COLLECTION_NAME = 'AuthPlugin_Credentials';
 
@@ -27,6 +27,7 @@ export function getCredentialsCollection<
     async getRecordDefaultFields() {
       return {
         id: await generateEntityId(db.getDb(), this.name),
+        csrfToken: null as string | null,
         createdAt: Date.now(),
       };
     },

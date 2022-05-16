@@ -5,18 +5,18 @@ import {
   MongoDB,
   RecordSchema,
 } from 'src/db/drivers/mongo';
-import { Client, ClientPartials } from '../types';
+import { Client, ClientPartials } from 'src/plugins/auth/types';
 
 export const DEFAULT_CLIENT_COLLECTION_NAME = 'AuthPlugin_Clients';
 
 export type ClientRecord<
-  T extends ClientPartials.Type,
+  T extends ClientPartials.Type = string,
   P extends ClientPartials.Permissions = null,
   M extends ClientPartials.Meta = null
 > = RecordSchema<WithId<Client<T, P, M>>>;
 
 export function getClientCollection<
-  T extends ClientPartials.Type,
+  T extends ClientPartials.Type = string,
   P extends ClientPartials.Permissions = null,
   M extends ClientPartials.Meta = null
 >(db: MongoDB, name = DEFAULT_CLIENT_COLLECTION_NAME) {
