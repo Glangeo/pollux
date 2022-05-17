@@ -36,58 +36,45 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.__EntityIdsCollection = exports.generateEntityId = void 0;
-var prebuild_1 = require("../../../../core/exception/prebuild");
-var __1 = require("..");
-var helpers_1 = require("../adapter/helpers");
-var collection = (0, __1.createCollection)({
-    name: 'core__ids',
-    createEntityFromDBRecord: function (record) {
-        return record;
-    },
-    getRecordDefaultFields: function () {
+exports.ClientModel = void 0;
+var ClientModel = /** @class */ (function () {
+    function ClientModel(dao) {
+        this.dao = dao;
+    }
+    ClientModel.prototype.create = function (type, credentialsId, permissions, meta) {
         return __awaiter(this, void 0, void 0, function () {
+            var client;
             return __generator(this, function (_a) {
-                return [2 /*return*/, {
-                        id: -1,
-                        value: 1,
-                    }];
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.dao.create(type, credentialsId, permissions, meta)];
+                    case 1:
+                        client = _a.sent();
+                        return [2 /*return*/, client];
+                }
             });
         });
-    },
-});
-exports.__EntityIdsCollection = collection;
-function generateEntityId(db, collectionName) {
-    return __awaiter(this, void 0, void 0, function () {
-        var dao, publicId, exception_1, id;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0:
-                    dao = (0, helpers_1.getCollectionAdapter)(db, collection);
-                    _a.label = 1;
-                case 1:
-                    _a.trys.push([1, 3, , 7]);
-                    return [4 /*yield*/, dao.getOne({ key: collectionName })];
-                case 2:
-                    publicId = _a.sent();
-                    return [3 /*break*/, 7];
-                case 3:
-                    exception_1 = _a.sent();
-                    if (!(exception_1 instanceof prebuild_1.NotFoundException)) return [3 /*break*/, 5];
-                    return [4 /*yield*/, dao.create({ key: collectionName })];
-                case 4:
-                    publicId = _a.sent();
-                    return [3 /*break*/, 6];
-                case 5: throw exception_1;
-                case 6: return [3 /*break*/, 7];
-                case 7:
-                    id = publicId.value;
-                    return [4 /*yield*/, dao.updateOne({ key: collectionName }, { $set: { value: id + 1 } })];
-                case 8:
-                    _a.sent();
-                    return [2 /*return*/, id];
-            }
+    };
+    ClientModel.prototype.getById = function (id) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                return [2 /*return*/, this.dao.getById(id)];
+            });
         });
-    });
-}
-exports.generateEntityId = generateEntityId;
+    };
+    ClientModel.prototype.updateCsrf = function (id, token) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                return [2 /*return*/, this.dao.updateCsrf(id, token, Date.now())];
+            });
+        });
+    };
+    ClientModel.prototype.block = function (id) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                return [2 /*return*/, this.dao.block(id)];
+            });
+        });
+    };
+    return ClientModel;
+}());
+exports.ClientModel = ClientModel;

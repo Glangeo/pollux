@@ -36,58 +36,32 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.__EntityIdsCollection = exports.generateEntityId = void 0;
-var prebuild_1 = require("../../../../core/exception/prebuild");
-var __1 = require("..");
-var helpers_1 = require("../adapter/helpers");
-var collection = (0, __1.createCollection)({
-    name: 'core__ids',
-    createEntityFromDBRecord: function (record) {
-        return record;
-    },
-    getRecordDefaultFields: function () {
-        return __awaiter(this, void 0, void 0, function () {
-            return __generator(this, function (_a) {
-                return [2 /*return*/, {
-                        id: -1,
-                        value: 1,
-                    }];
+exports.getCredentialsCollection = exports.DEFAULT_CREDENTIALS_COLLECTION_NAME = void 0;
+var mongo_1 = require("../../../../../db/drivers/mongo");
+exports.DEFAULT_CREDENTIALS_COLLECTION_NAME = 'AuthPlugin_Credentials';
+function getCredentialsCollection(db, name) {
+    if (name === void 0) { name = exports.DEFAULT_CREDENTIALS_COLLECTION_NAME; }
+    return (0, mongo_1.createCollection)({
+        name: name,
+        createEntityFromDBRecord: function (record) {
+            return record;
+        },
+        getRecordDefaultFields: function () {
+            return __awaiter(this, void 0, void 0, function () {
+                var _a;
+                return __generator(this, function (_b) {
+                    switch (_b.label) {
+                        case 0:
+                            _a = {};
+                            return [4 /*yield*/, (0, mongo_1.generateEntityId)(db.getDb(), this.name)];
+                        case 1: return [2 /*return*/, (_a.id = _b.sent(),
+                                _a.csrfToken = null,
+                                _a.createdAt = Date.now(),
+                                _a)];
+                    }
+                });
             });
-        });
-    },
-});
-exports.__EntityIdsCollection = collection;
-function generateEntityId(db, collectionName) {
-    return __awaiter(this, void 0, void 0, function () {
-        var dao, publicId, exception_1, id;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0:
-                    dao = (0, helpers_1.getCollectionAdapter)(db, collection);
-                    _a.label = 1;
-                case 1:
-                    _a.trys.push([1, 3, , 7]);
-                    return [4 /*yield*/, dao.getOne({ key: collectionName })];
-                case 2:
-                    publicId = _a.sent();
-                    return [3 /*break*/, 7];
-                case 3:
-                    exception_1 = _a.sent();
-                    if (!(exception_1 instanceof prebuild_1.NotFoundException)) return [3 /*break*/, 5];
-                    return [4 /*yield*/, dao.create({ key: collectionName })];
-                case 4:
-                    publicId = _a.sent();
-                    return [3 /*break*/, 6];
-                case 5: throw exception_1;
-                case 6: return [3 /*break*/, 7];
-                case 7:
-                    id = publicId.value;
-                    return [4 /*yield*/, dao.updateOne({ key: collectionName }, { $set: { value: id + 1 } })];
-                case 8:
-                    _a.sent();
-                    return [2 /*return*/, id];
-            }
-        });
+        },
     });
 }
-exports.generateEntityId = generateEntityId;
+exports.getCredentialsCollection = getCredentialsCollection;
