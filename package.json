@@ -8,7 +8,8 @@
     "postbuild": "tsconfig-replace-paths -p tsconfig.json -o ./dist -s ./src",
     "test": "jest --coverage=false",
     "coverage": "jest",
-    "publish:beta": "node ./scripts/release-cli/index.js publish -t beta"
+    "publish:beta": "node ./scripts/release-cli/index.js publish -t beta",
+    "publish:rc": "node ./scripts/release-cli/index.js publish -t rc"
   },
   "repository": {
     "type": "git",
