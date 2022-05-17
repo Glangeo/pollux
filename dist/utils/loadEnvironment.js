@@ -23,10 +23,13 @@ var DevelopmentLogger_1 = require("../local-utils/DevelopmentLogger");
 var loadEnvFile_1 = require("./loadEnvFile");
 /**
  * Loads environment files for current bootstrap environment
+ *
+ * @param folderPath path to folder where .env.* files are located
  */
-function loadEnvironment() {
+function loadEnvironment(folderPath) {
     var e_1, _a;
-    var getEnvPath = function (filename) { return path_1.default.join(process.cwd(), filename); };
+    if (folderPath === void 0) { folderPath = process.cwd(); }
+    var getEnvPath = function (filename) { return path_1.default.join(folderPath, filename); };
     var environmentLocalsPaths = [
         'local',
         types_1.Environment.Production,

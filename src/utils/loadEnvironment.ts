@@ -10,9 +10,11 @@ import { loadEnvFile } from './loadEnvFile';
 
 /**
  * Loads environment files for current bootstrap environment
+ *
+ * @param folderPath path to folder where .env.* files are located
  */
-export function loadEnvironment(): void {
-  const getEnvPath = (filename: string) => path.join(process.cwd(), filename);
+export function loadEnvironment(folderPath = process.cwd()): void {
+  const getEnvPath = (filename: string) => path.join(folderPath, filename);
 
   const environmentLocalsPaths = [
     'local',
