@@ -2,6 +2,7 @@ import express from 'express';
 import bodyParser from 'body-parser';
 import merge from 'lodash/merge';
 import { DevelopmentLogger, DevLogEvent, fixUrl } from 'src/local-utils';
+import { ServiceConstructor } from 'src/distributed/http';
 import { Module } from '../module';
 import { InternalException } from '../exception';
 import { AppOptions } from './types';
@@ -10,15 +11,14 @@ const DEFAULT_PORT = 3000;
 
 export class App {
   public readonly server: express.Express;
+  public readonly name: string;
+  public services: ServiceConstructor[] = [];
   private _isInitied: boolean;
 
   private modulesQueue: Module[];
   private childAppQueue: [App, string?][] = [];
 
-  public constructor(
-    public readonly options: AppOptions = {},
-    public readonly name = 'Anonymous'
-  ) {
+  public constructor(public readonly options: AppOptions = {}, name?: string) {
     this._isInitied = false;
 
     if (this.options.logging) {
@@ -30,6 +30,7 @@ export class App {
       );
     }
 
+    this.name = name || this.constructor.name;
     this.modulesQueue = [];
     this.childAppQueue = [];
     this.server = express();

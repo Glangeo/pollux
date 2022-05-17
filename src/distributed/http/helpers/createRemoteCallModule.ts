@@ -51,7 +51,7 @@ export function createRemoteCallModule(services: ServiceConstructor[]): Module {
         `from ${req.originalUrl} to call ${serviceName}.${method}`
       );
 
-      return receiver.call(method as any, args);
+      return (receiver as any).call(method, args);
     },
   });
 

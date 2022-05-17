@@ -2,7 +2,12 @@ import { Axios } from 'axios';
 import { App, castUnknownErrorToException } from 'src/core';
 import { DevelopmentLogger, DevLogEvent, fixUrl } from 'src/local-utils';
 import { createRemoteCallModule, getRequestEmitter } from '../helpers';
-import { AppConfiguration, Contract, StartupConfig } from '../types';
+import {
+  AppConfiguration,
+  Contract,
+  ServiceConstructor,
+  StartupConfig,
+} from '../types';
 import { ServiceRegistry } from './ServiceRegistry';
 
 export class DistributedStartup {
@@ -19,11 +24,11 @@ export class DistributedStartup {
 
     this.currentApp = this.getCurrentApp(currentAppConfig);
 
-    for (const app of apps) {
-      const isDetached = app.name !== currentAppName;
+    for (const config of apps) {
+      const isDetached = config.name !== currentAppName;
 
       if (isDetached) {
-        this.initDetachedServices(app);
+        this.initDetachedServices(config);
       }
     }
   }
@@ -33,22 +38,35 @@ export class DistributedStartup {
   }
 
   protected getCurrentApp(appConfig: AppConfiguration): App {
-    const { app, port, services } = appConfig;
+    const { app, port, childApps = [] } = appConfig;
 
-    for (const constructor of services) {
-      const instance = new constructor();
+    const services: Set<ServiceConstructor> = new Set();
 
-      ServiceRegistry.setService(constructor, instance);
+    const addServiceToRegistry = (service: ServiceConstructor) => {
+      if (!services.has(service)) {
+        services.add(service);
 
-      const serviceApp = instance.getApp();
+        const instance = new service();
 
-      app.addChildAppToQueue(
-        serviceApp,
-        serviceApp.options.baseRoute || constructor.name.toLowerCase()
-      );
+        ServiceRegistry.setService(service, instance);
+      }
+    };
+
+    for (const service of app.services) {
+      addServiceToRegistry(service);
     }
 
-    const remoteCallModule = createRemoteCallModule(services);
+    for (const child of childApps) {
+      for (const service of child.services) {
+        addServiceToRegistry(service);
+      }
+
+      app.addChildAppToQueue(child, child.options.baseRoute || child.name);
+    }
+
+    const remoteCallModule = createRemoteCallModule(
+      Array.from(services.values())
+    );
     app.addModuleToQueue(remoteCallModule);
 
     app.options.port = port;
@@ -57,57 +75,74 @@ export class DistributedStartup {
   }
 
   protected initDetachedServices(appConfig: AppConfiguration): void {
-    const { app, host, services } = appConfig;
+    const { app, host, childApps = [] } = appConfig;
 
-    for (const service of services) {
-      const emitter = getRequestEmitter(service, async (request) => {
-        // TODO: move somewhere
-        const detachedRouterRoute = '/detached';
+    const baseAppRoute = app.options.baseRoute || app.name;
+    const services: Set<ServiceConstructor> = new Set();
 
-        const axios = new Axios({
-          baseURL: fixUrl(
-            [host, app.options.baseRoute || '', detachedRouterRoute].join('/')
-          ),
+    const fillServiceRegistryWithEmittersByApp = (app: App) => {
+      for (const service of app.services) {
+        if (services.has(service)) {
+          throw new Error(
+            `${service.name} was already added to registry by other application. Multiple instances of the same service are not allowed.`
+          );
+        }
+
+        const emitter = getRequestEmitter(service, async (request) => {
+          // TODO: move somewhere
+          const detachedRouterRoute = '/detached';
+
+          const axios = new Axios({
+            baseURL: fixUrl(
+              [host, baseAppRoute, detachedRouterRoute].join('/')
+            ),
+          });
+
+          // TODO: add authorization
+          try {
+            const response = await axios.post<string>(
+              '/call',
+              JSON.stringify(request),
+              {
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+              }
+            );
+
+            const { data } = JSON.parse(response.data) as {
+              status: string;
+              data: Contract.Response;
+            };
+            const { result, service, method } = data;
+
+            DevelopmentLogger.LOG(
+              DevLogEvent.DistributedRemoteCallResponded,
+              `from ${host} after call ${service}.${method}`
+            );
+
+            return { result, service, method };
+          } catch (error) {
+            // TODO: retrieve exception from service response
+            const exception = castUnknownErrorToException(error);
+
+            throw exception;
+          }
         });
 
-        // TODO: add authorization
-        try {
-          const response = await axios.post<string>(
-            '/call',
-            JSON.stringify(request),
-            {
-              headers: {
-                'Content-Type': 'application/json',
-              },
-            }
-          );
+        ServiceRegistry.setService(service, emitter as any);
 
-          const { data } = JSON.parse(response.data) as {
-            status: string;
-            data: Contract.Response;
-          };
-          const { result, service, method } = data;
+        DevelopmentLogger.LOG(
+          DevLogEvent.DistributedDetachedServiceAdded,
+          service.name
+        );
+      }
+    };
 
-          DevelopmentLogger.LOG(
-            DevLogEvent.DistributedRemoteCallResponded,
-            `from ${host} after call ${service}.${method}`
-          );
+    fillServiceRegistryWithEmittersByApp(app);
 
-          return { result, service, method };
-        } catch (error) {
-          // TODO: retrieve exception from service response
-          const exception = castUnknownErrorToException(error);
-
-          throw exception;
-        }
-      });
-
-      ServiceRegistry.setService(service, emitter as any);
-
-      DevelopmentLogger.LOG(
-        DevLogEvent.DistributedDetachedServiceAdded,
-        service.name
-      );
+    for (const child of childApps) {
+      fillServiceRegistryWithEmittersByApp(child);
     }
   }
 }
