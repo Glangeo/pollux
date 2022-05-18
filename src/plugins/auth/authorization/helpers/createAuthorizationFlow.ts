@@ -30,11 +30,23 @@ export function createAuthorizationFlow<
       const payload = config.verifyAccessToken(token);
       const client = await config.getClientById(payload.id);
 
-      if (client.csrfToken !== payload.csrfToken) {
+      const areCsrfTokenMatch = client.csrfToken === payload.csrfToken;
+
+      if (!areCsrfTokenMatch || client.isBlocked) {
+        const errors: string[] = [];
+
+        if (areCsrfTokenMatch) {
+          errors.push('CSRF tokens do not match.');
+        }
+
+        if (client.isBlocked) {
+          errors.push('Client is blocked.');
+        }
+
         throw new ValidationException({
           message: 'Access token is invalid.',
           meta: {
-            errors: ['Reason: CSRF tokens do not match'],
+            errors: [],
           },
           httpStatusCode: HTTPStatusCode.Unauthorized,
           publicInfo: {
