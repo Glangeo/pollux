@@ -1,4 +1,4 @@
-import { Router } from '../../../api/router/Router';
+import { Router } from '../../router/Router';
 /**
  * High abstract group for set of endpoints. Module is commonly used for one service
  */

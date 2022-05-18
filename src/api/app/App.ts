@@ -4,7 +4,7 @@ import merge from 'lodash/merge';
 import { DevelopmentLogger, DevLogEvent, fixUrl } from 'src/local-utils';
 import { ServiceConstructor } from 'src/distributed/http';
 import { Module } from '../module';
-import { InternalException } from '../exception';
+import { InternalException } from '../../core/exception';
 import { AppOptions } from './types';
 
 const DEFAULT_PORT = 3000;

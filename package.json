@@ -4,7 +4,7 @@
   "main": "index.js",
   "scripts": {
     "prebuild": "npx rimraf ./dist",
-    "build": "tsc",
+    "build": "tsc --project tsconfig.build.json",
     "postbuild": "tsconfig-replace-paths -p tsconfig.json -o ./dist -s ./src",
     "test": "jest --coverage=false",
     "coverage": "jest",

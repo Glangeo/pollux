@@ -1,4 +1,4 @@
-import { App } from '../../../core';
+import { App } from '../../../api';
 import { AppConfiguration, StartupConfig } from '../types';
 export declare class DistributedStartup {
     protected readonly config: StartupConfig;

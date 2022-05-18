@@ -82,7 +82,7 @@ var express_1 = __importDefault(require("express"));
 var body_parser_1 = __importDefault(require("body-parser"));
 var merge_1 = __importDefault(require("lodash/merge"));
 var local_utils_1 = require("../../local-utils");
-var exception_1 = require("../exception");
+var exception_1 = require("../../core/exception");
 var DEFAULT_PORT = 3000;
 var App = /** @class */ (function () {
     function App(options, name) {
