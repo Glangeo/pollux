@@ -25,4 +25,5 @@ export type Client<
   readonly permissions: P;
   readonly meta: M;
   readonly createdAt: number;
+  readonly csrfToken: string | null;
 };

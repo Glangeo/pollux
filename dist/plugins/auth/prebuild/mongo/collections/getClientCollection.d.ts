@@ -8,6 +8,7 @@ export declare function getClientCollection<T extends ClientPartials.Type = stri
     isBlocked: boolean;
     refreshedAt: number;
     createdAt: number;
+    csrfToken: string | null;
     permissions: P;
     meta: M;
 }>;

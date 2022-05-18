@@ -60,6 +60,7 @@ function getClientCollection(db, name, getPermissions, getMeta) {
                                 _a.isBlocked = false,
                                 _a.refreshedAt = Date.now(),
                                 _a.createdAt = Date.now(),
+                                _a.csrfToken = null,
                                 _a.permissions = getPermissions(),
                                 _a.meta = getMeta(),
                                 _a)];

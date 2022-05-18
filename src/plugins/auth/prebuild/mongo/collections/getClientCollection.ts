@@ -40,6 +40,7 @@ export function getClientCollection<
         isBlocked: false,
         refreshedAt: Date.now(),
         createdAt: Date.now(),
+        csrfToken: null as string | null,
         permissions: getPermissions(),
         meta: getMeta(),
       };

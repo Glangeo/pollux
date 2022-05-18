@@ -13,4 +13,5 @@ export declare type Client<T extends CoreTypes.PlainTypes.Primitive = string, P 
     readonly permissions: P;
     readonly meta: M;
     readonly createdAt: number;
+    readonly csrfToken: string | null;
 };

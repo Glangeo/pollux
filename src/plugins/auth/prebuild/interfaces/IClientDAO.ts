@@ -14,7 +14,11 @@ export interface IClientDAO<
 
   getById(id: number): Promise<Client<T, P, M>>;
 
-  updateCsrf(id: number, csrfToken: string, date: number): Promise<boolean>;
+  updateCsrf(
+    id: number,
+    csrfToken: string,
+    refreshedAt: number
+  ): Promise<boolean>;
 
   block(id: number): Promise<boolean>;
 }

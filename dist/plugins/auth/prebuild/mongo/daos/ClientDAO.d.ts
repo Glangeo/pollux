@@ -13,6 +13,7 @@ declare class WrapperForTypeExtract<T extends ClientPartials.Type = string, P ex
         isBlocked: boolean;
         refreshedAt: number;
         createdAt: number;
+        csrfToken: string | null;
         permissions: P;
         meta: M;
     }>;
