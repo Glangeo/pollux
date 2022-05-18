@@ -16,3 +16,4 @@ var __exportStar = (this && this.__exportStar) || function(m, exports) {
 Object.defineProperty(exports, "__esModule", { value: true });
 __exportStar(require("./Registry"), exports);
 __exportStar(require("./RegistryConfig"), exports);
+__exportStar(require("./RegistryMethodConfiguration"), exports);

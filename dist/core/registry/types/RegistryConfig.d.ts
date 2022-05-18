@@ -1,7 +1,4 @@
-export declare type RegistryMethodConfiguration = {
-    factory: () => void;
-    isMemoized?: boolean;
-};
-export declare type RegistryConfig = {
-    [key: string]: RegistryMethodConfiguration;
+import { RegistryMethodConfiguration } from './RegistryMethodConfiguration';
+export declare type RegistryConfig<M extends string, U> = {
+    [K in M]: RegistryMethodConfiguration<K, U, any>;
 };
