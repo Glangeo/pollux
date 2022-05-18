@@ -11,7 +11,6 @@ export type Credentials<M extends CredentialsPartials.Meta = null> = {
   readonly login: string;
   readonly salt: string;
   readonly hashedPassword: string;
-  readonly csrfToken: string | null;
   readonly meta: M;
   readonly createdAt: number;
 };

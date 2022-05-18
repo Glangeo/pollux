@@ -19,7 +19,6 @@ export type Client<
 > = {
   readonly id: number;
   readonly type: T;
-  readonly csrfToken: string | null;
   readonly refreshedAt: number;
   readonly isBlocked: boolean;
   readonly credentialsId: number;
