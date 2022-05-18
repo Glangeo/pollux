@@ -1,4 +1,5 @@
 import {
+  AuthorizationFlow,
   BaseAccessTokenPayload,
   createAuthorizationFlow,
 } from '../../authorization';
@@ -14,7 +15,7 @@ export function getAuthorizationFlow<
   clientModel: ClientModel<CT, CP, CM>,
   jwt: JWT<BaseAccessTokenPayload>,
   csrf: CSRF
-) {
+): AuthorizationFlow<CT, CP, CM, BaseAccessTokenPayload> {
   return createAuthorizationFlow({
     getClientById: (id) => clientModel.getById(id),
 

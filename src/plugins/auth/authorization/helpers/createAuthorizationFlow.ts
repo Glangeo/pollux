@@ -19,13 +19,18 @@ export function createAuthorizationFlow<
     ClientMeta,
     AccessTokenPayload
   >
-): AuthorizationFlow<ClientType, ClientPermissions, ClientMeta> {
+): AuthorizationFlow<
+  ClientType,
+  ClientPermissions,
+  ClientMeta,
+  AccessTokenPayload
+> {
   return {
     authorize: async (token) => {
-      const { id, csrfToken } = config.verifyAccessToken(token);
-      const client = await config.getClientById(id);
+      const payload = config.verifyAccessToken(token);
+      const client = await config.getClientById(payload.id);
 
-      if (client.csrfToken !== csrfToken) {
+      if (client.csrfToken !== payload.csrfToken) {
         throw new ValidationException({
           message: 'Access token is invalid.',
           meta: {
@@ -38,7 +43,10 @@ export function createAuthorizationFlow<
         });
       }
 
-      return client;
+      return {
+        client,
+        payload,
+      };
     },
 
     getAccessToken: async (client) => {
