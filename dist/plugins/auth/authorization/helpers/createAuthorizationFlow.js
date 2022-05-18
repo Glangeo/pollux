@@ -43,15 +43,15 @@ function createAuthorizationFlow(config) {
     var _this = this;
     return {
         authorize: function (token) { return __awaiter(_this, void 0, void 0, function () {
-            var _a, id, csrfToken, client;
-            return __generator(this, function (_b) {
-                switch (_b.label) {
+            var payload, client;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
                     case 0:
-                        _a = config.verifyAccessToken(token), id = _a.id, csrfToken = _a.csrfToken;
-                        return [4 /*yield*/, config.getClientById(id)];
+                        payload = config.verifyAccessToken(token);
+                        return [4 /*yield*/, config.getClientById(payload.id)];
                     case 1:
-                        client = _b.sent();
-                        if (client.csrfToken !== csrfToken) {
+                        client = _a.sent();
+                        if (client.csrfToken !== payload.csrfToken) {
                             throw new core_1.ValidationException({
                                 message: 'Access token is invalid.',
                                 meta: {
@@ -63,7 +63,10 @@ function createAuthorizationFlow(config) {
                                 },
                             });
                         }
-                        return [2 /*return*/, client];
+                        return [2 /*return*/, {
+                                client: client,
+                                payload: payload,
+                            }];
                 }
             });
         }); },
