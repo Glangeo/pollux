@@ -43,7 +43,7 @@ function createAuthorizationFlow(config) {
     var _this = this;
     return {
         authorize: function (token) { return __awaiter(_this, void 0, void 0, function () {
-            var payload, client;
+            var payload, client, areCsrfTokenMatch, errors;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -51,11 +51,19 @@ function createAuthorizationFlow(config) {
                         return [4 /*yield*/, config.getClientById(payload.id)];
                     case 1:
                         client = _a.sent();
-                        if (client.csrfToken !== payload.csrfToken) {
+                        areCsrfTokenMatch = client.csrfToken === payload.csrfToken;
+                        if (!areCsrfTokenMatch || client.isBlocked) {
+                            errors = [];
+                            if (areCsrfTokenMatch) {
+                                errors.push('CSRF tokens do not match.');
+                            }
+                            if (client.isBlocked) {
+                                errors.push('Client is blocked.');
+                            }
                             throw new core_1.ValidationException({
                                 message: 'Access token is invalid.',
                                 meta: {
-                                    errors: ['Reason: CSRF tokens do not match'],
+                                    errors: [],
                                 },
                                 httpStatusCode: api_1.HTTPStatusCode.Unauthorized,
                                 publicInfo: {
