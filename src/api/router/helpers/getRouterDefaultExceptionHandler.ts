@@ -21,8 +21,8 @@ export function getRouterDefaultExceptionHandler(
 
   const pipe = new ExceptionPipe((exception) => {
     const meta = isFullProjection
-      ? exception.getPublicProjection()
-      : exception.getFullProjection();
+      ? exception.getFullProjection()
+      : exception.getPublicProjection();
     const context = isFullProjection
       ? exception.message
       : exception.publicInfo?.message;
