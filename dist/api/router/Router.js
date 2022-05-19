@@ -136,7 +136,8 @@ var Router = /** @class */ (function () {
                 var path = (0, local_utils_1.fixUrl)("".concat(this.config.path, "/").concat(endpoint.route));
                 if (method) {
                     var middlewares = endpoint.middlewares || [];
-                    method.apply(void 0, __spreadArray(__spreadArray([path], __read(middlewares), false), [this.createRequestHandler(endpoint)], false));
+                    method.apply(void 0, __spreadArray(__spreadArray([path,
+                        this.getExceptionHandlerMiddleware(endpoint)], __read(middlewares), false), [this.createRequestHandler(endpoint)], false));
                     local_utils_1.DevelopmentLogger.LOG(local_utils_1.DevLogEvent.RouterRouteAdded, "Add route: ".concat(endpoint.method, " ").concat(path));
                 }
                 else {
@@ -156,12 +157,10 @@ var Router = /** @class */ (function () {
     Router.prototype.createRequestHandler = function (endpoint) {
         var _this = this;
         return function (req, res) { return __awaiter(_this, void 0, void 0, function () {
-            var requestData, result, response, error_1, exception, handler;
+            var requestData, result, response;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0:
-                        _a.trys.push([0, 3, , 5]);
-                        return [4 /*yield*/, this.tryGetRequestData(endpoint, req)];
+                    case 0: return [4 /*yield*/, this.tryGetRequestData(endpoint, req)];
                     case 1:
                         requestData = _a.sent();
                         return [4 /*yield*/, endpoint.action(requestData, req, res)];
@@ -171,18 +170,31 @@ var Router = /** @class */ (function () {
                             response = (0, helpers_2.createSuccessResponse)(result);
                             res.status(common_1.HTTPStatusCode.Ok).json(response);
                         }
-                        return [3 /*break*/, 5];
-                    case 3:
+                        return [2 /*return*/];
+                }
+            });
+        }); };
+    };
+    Router.prototype.getExceptionHandlerMiddleware = function (endpoint) {
+        var _this = this;
+        return function (req, res, next) { return __awaiter(_this, void 0, void 0, function () {
+            var error_1, exception, handler;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        _a.trys.push([0, 1, , 3]);
+                        return [2 /*return*/, next()];
+                    case 1:
                         error_1 = _a.sent();
                         exception = error_1 instanceof exception_1.Exception
                             ? error_1
                             : (0, helpers_1.castUnknownErrorToException)(error_1);
                         handler = this.config.getRouterExceptionHandler(req, res, endpoint);
                         return [4 /*yield*/, handler.handle(exception)];
-                    case 4:
+                    case 2:
                         _a.sent();
-                        return [3 /*break*/, 5];
-                    case 5: return [2 /*return*/];
+                        return [3 /*break*/, 3];
+                    case 3: return [2 /*return*/];
                 }
             });
         }); };

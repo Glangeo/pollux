@@ -38,5 +38,6 @@ export declare class Router {
      */
     getExpressRouter(): express.Router;
     private createRequestHandler;
+    private getExceptionHandlerMiddleware;
     private tryGetRequestData;
 }

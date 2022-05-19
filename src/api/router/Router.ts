@@ -95,7 +95,12 @@ export class Router {
       if (method) {
         const middlewares = endpoint.middlewares || [];
 
-        method(path, ...middlewares, this.createRequestHandler(endpoint));
+        method(
+          path,
+          this.getExceptionHandlerMiddleware(endpoint),
+          ...middlewares,
+          this.createRequestHandler(endpoint)
+        );
 
         DevelopmentLogger.LOG(
           DevLogEvent.RouterRouteAdded,
@@ -113,15 +118,23 @@ export class Router {
 
   private createRequestHandler(endpoint: AnyEndpoint): express.RequestHandler {
     return async (req, res) => {
+      const requestData = await this.tryGetRequestData(endpoint, req);
+      const result = await endpoint.action(requestData, req, res);
+
+      if (!res.headersSent) {
+        const response = createSuccessResponse(result);
+
+        res.status(HTTPStatusCode.Ok).json(response);
+      }
+    };
+  }
+
+  private getExceptionHandlerMiddleware(
+    endpoint: AnyEndpoint
+  ): express.RequestHandler {
+    return async (req, res, next) => {
       try {
-        const requestData = await this.tryGetRequestData(endpoint, req);
-        const result = await endpoint.action(requestData, req, res);
-
-        if (!res.headersSent) {
-          const response = createSuccessResponse(result);
-
-          res.status(HTTPStatusCode.Ok).json(response);
-        }
+        return next();
       } catch (error) {
         const exception =
           error instanceof Exception
