@@ -97,9 +97,13 @@ export class Router {
 
         method(
           path,
-          this.getExceptionHandlerMiddleware(endpoint),
-          ...middlewares,
-          this.createRequestHandler(endpoint)
+          ...middlewares.map((handler) =>
+            this.wrapWithExceptionHandler(handler, endpoint)
+          ),
+          this.wrapWithExceptionHandler(
+            this.createRequestHandler(endpoint),
+            endpoint
+          )
         );
 
         DevelopmentLogger.LOG(
@@ -129,12 +133,13 @@ export class Router {
     };
   }
 
-  private getExceptionHandlerMiddleware(
+  private wrapWithExceptionHandler(
+    handler: express.RequestHandler,
     endpoint: AnyEndpoint
   ): express.RequestHandler {
     return async (req, res, next) => {
       try {
-        return next();
+        return handler(req, res, next);
       } catch (error) {
         const exception =
           error instanceof Exception
