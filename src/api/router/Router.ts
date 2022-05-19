@@ -139,7 +139,7 @@ export class Router {
   ): express.RequestHandler {
     return async (req, res, next) => {
       try {
-        return handler(req, res, next);
+        return await handler(req, res, next);
       } catch (error) {
         const exception =
           error instanceof Exception

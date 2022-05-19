@@ -188,19 +188,20 @@ var Router = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        _a.trys.push([0, 1, , 3]);
-                        return [2 /*return*/, handler(req, res, next)];
-                    case 1:
+                        _a.trys.push([0, 2, , 4]);
+                        return [4 /*yield*/, handler(req, res, next)];
+                    case 1: return [2 /*return*/, _a.sent()];
+                    case 2:
                         error_1 = _a.sent();
                         exception = error_1 instanceof exception_1.Exception
                             ? error_1
                             : (0, helpers_1.castUnknownErrorToException)(error_1);
                         handler_1 = this.config.getRouterExceptionHandler(req, res, endpoint);
                         return [4 /*yield*/, handler_1.handle(exception)];
-                    case 2:
+                    case 3:
                         _a.sent();
-                        return [3 /*break*/, 3];
-                    case 3: return [2 /*return*/];
+                        return [3 /*break*/, 4];
+                    case 4: return [2 /*return*/];
                 }
             });
         }); };
