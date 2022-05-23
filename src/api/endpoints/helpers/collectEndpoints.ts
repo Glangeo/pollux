@@ -106,16 +106,22 @@ function confiurationsComparator(
   const getIndexOfFirstDynamicComponent = (path: string[]): number =>
     path.findIndex((component) => component.includes(':'));
 
-  let indexInA: number = getIndexOfFirstDynamicComponent(a.path);
-  let indexInB: number = getIndexOfFirstDynamicComponent(b.path);
+  const pathA = [...a.path];
+  const pathB = [...b.path];
+  let indexInA: number = getIndexOfFirstDynamicComponent(pathA);
+  let indexInB: number = getIndexOfFirstDynamicComponent(pathB);
 
-  while (indexInA === indexInB && indexInA !== -1 && indexInB !== -1) {
-    indexInA = getIndexOfFirstDynamicComponent(a.path.slice(indexInA + 1));
-    indexInB = getIndexOfFirstDynamicComponent(b.path.slice(indexInB + 1));
-  }
+  while (indexInA === indexInB) {
+    if (indexInA === -1 && indexInB === -1) {
+      return (
+        a.path[a.path.length - 1].length - b.path[b.path.length - 1].length
+      );
+    }
 
-  if (indexInA === -1 && indexInB === -1) {
-    return a.path[a.path.length - 1].length - b.path[b.path.length - 1].length;
+    pathA.splice(0, indexInA + 1);
+    pathB.splice(0, indexInB + 1);
+    indexInA = getIndexOfFirstDynamicComponent(pathA);
+    indexInB = getIndexOfFirstDynamicComponent(pathB);
   }
 
   return indexInA - indexInB;

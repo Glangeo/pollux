@@ -1,6 +1,6 @@
 import { createEndpoint, EndpointMethod } from 'src/api';
 
 export default createEndpoint({
-  method: EndpointMethod.POST,
+  method: EndpointMethod.GET,
   action: async () => ({}),
 });
