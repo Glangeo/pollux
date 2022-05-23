@@ -31,10 +31,14 @@ export function collectEndpoints(dirname: string): AnyEndpoint[] {
     route: configuration.path.join('/'),
   }));
 
-  return endpoints.map(({ route, ...rest }) => ({
-    ...rest,
-    route: fixUrl(route || ''),
-  }));
+  return endpoints
+    .map(({ route, ...rest }) => ({
+      ...rest,
+      route: fixUrl(route || ''),
+    }))
+    .sort(
+      ({ route: routeA }, { route: routeB }) => routeA.length - routeB.length
+    );
 }
 
 function configureEndpointsByPaths(
