@@ -78,9 +78,15 @@ function collectEndpoints(dirname) {
     var paths = fs_1.default.readdirSync(endpointsFolderPath);
     var configurations = configureEndpointsByPaths(endpointsFolderPath, paths, []);
     var endpoints = configurations.map(function (configuration) { return (__assign(__assign({}, configuration.endpoint), { route: configuration.path.join('/') })); });
-    return endpoints.map(function (_a) {
+    return endpoints
+        .map(function (_a) {
         var route = _a.route, rest = __rest(_a, ["route"]);
         return (__assign(__assign({}, rest), { route: (0, local_utils_1.fixUrl)(route || '') }));
+    })
+        .sort(function (_a, _b) {
+        var routeA = _a.route;
+        var routeB = _b.route;
+        return routeA.length - routeB.length;
     });
 }
 exports.collectEndpoints = collectEndpoints;
