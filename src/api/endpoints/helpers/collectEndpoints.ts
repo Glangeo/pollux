@@ -26,19 +26,14 @@ export function collectEndpoints(dirname: string): AnyEndpoint[] {
     []
   );
 
-  const endpoints: AnyEndpoint[] = configurations.map((configuration) => ({
-    ...configuration.endpoint,
-    route: configuration.path.join('/'),
-  }));
+  const endpoints: AnyEndpoint[] = configurations
+    .sort(confiurationsComparator)
+    .map((configuration) => ({
+      ...configuration.endpoint,
+      route: fixUrl(configuration.path.join('/')),
+    }));
 
-  return endpoints
-    .map(({ route, ...rest }) => ({
-      ...rest,
-      route: fixUrl(route || ''),
-    }))
-    .sort(
-      ({ route: routeA }, { route: routeB }) => routeA.length - routeB.length
-    );
+  return endpoints;
 }
 
 function configureEndpointsByPaths(
@@ -98,4 +93,30 @@ function castFolderOrFileNameToRoute(name: string): string {
   }
 
   return name.replace(/\.ts/g, '');
+}
+
+function confiurationsComparator(
+  a: EndpointConfiguration,
+  b: EndpointConfiguration
+): number {
+  if (a.path.length !== b.path.length) {
+    return a.path.length - b.path.length;
+  }
+
+  const getIndexOfFirstDynamicComponent = (path: string[]): number =>
+    path.findIndex((component) => component.includes(':'));
+
+  let indexInA: number = getIndexOfFirstDynamicComponent(a.path);
+  let indexInB: number = getIndexOfFirstDynamicComponent(b.path);
+
+  while (indexInA === indexInB && indexInA !== -1 && indexInB !== -1) {
+    indexInA = getIndexOfFirstDynamicComponent(a.path.slice(indexInA + 1));
+    indexInB = getIndexOfFirstDynamicComponent(b.path.slice(indexInB + 1));
+  }
+
+  if (indexInA === -1 && indexInB === -1) {
+    return a.path[a.path.length - 1].length - b.path[b.path.length - 1].length;
+  }
+
+  return indexInA - indexInB;
 }
