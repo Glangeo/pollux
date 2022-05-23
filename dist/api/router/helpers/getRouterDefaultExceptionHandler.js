@@ -13,8 +13,8 @@ function getRouterDefaultExceptionHandler(req, res, endpoint, isFullProjection) 
     var pipe = new exception_handler_1.ExceptionPipe(function (exception) {
         var _a;
         var meta = isFullProjection
-            ? exception.getPublicProjection()
-            : exception.getFullProjection();
+            ? exception.getFullProjection()
+            : exception.getPublicProjection();
         var context = isFullProjection
             ? exception.message
             : (_a = exception.publicInfo) === null || _a === void 0 ? void 0 : _a.message;
