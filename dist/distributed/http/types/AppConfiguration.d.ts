@@ -1,4 +1,4 @@
-import { App } from '../../../core';
+import { App } from '../../../api';
 export declare type AppConfiguration = {
     readonly app: App;
     readonly name: string;

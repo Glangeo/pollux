@@ -1,5 +1,6 @@
 import { Axios } from 'axios';
-import { App, castUnknownErrorToException } from 'src/core';
+import { App } from 'src/api';
+import { castUnknownErrorToException } from 'src/core';
 import { DevelopmentLogger, DevLogEvent, fixUrl } from 'src/local-utils';
 import { createRemoteCallModule, getRequestEmitter } from '../helpers';
 import {

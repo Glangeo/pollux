@@ -1,6 +1,13 @@
 import * as Yup from 'yup';
-import { AnyEndpoint, createEndpoint, EndpointMethod, Router } from 'src/api';
-import { createModule, InternalException, Module } from 'src/core';
+import {
+  AnyEndpoint,
+  createEndpoint,
+  createModule,
+  EndpointMethod,
+  Module,
+  Router,
+} from 'src/api';
+import { InternalException } from 'src/core';
 import { DevelopmentLogger, DevLogEvent } from 'src/local-utils';
 import { ServiceRegistry } from '../classes';
 import { ServiceConstructor } from '../types';

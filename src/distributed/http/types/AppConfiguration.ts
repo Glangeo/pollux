@@ -1,4 +1,4 @@
-import { App } from 'src/core';
+import { App } from 'src/api';
 
 export type AppConfiguration = {
   readonly app: App;

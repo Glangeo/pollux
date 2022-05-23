@@ -39,7 +39,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.__EntityIdsCollection = exports.generateEntityId = void 0;
 var prebuild_1 = require("../../../../core/exception/prebuild");
 var __1 = require("..");
-var helpers_1 = require("../dao/helpers");
+var helpers_1 = require("../adapter/helpers");
 var collection = (0, __1.createCollection)({
     name: 'core__ids',
     createEntityFromDBRecord: function (record) {
@@ -63,7 +63,7 @@ function generateEntityId(db, collectionName) {
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
-                    dao = (0, helpers_1.getDAO)(db, collection);
+                    dao = (0, helpers_1.getCollectionAdapter)(db, collection);
                     _a.label = 1;
                 case 1:
                     _a.trys.push([1, 3, , 7]);

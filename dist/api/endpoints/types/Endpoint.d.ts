@@ -1,5 +1,6 @@
 import express from 'express';
 import { ValidationSchema } from '../../validator';
+import { CoreTypes } from '../../../core';
 import { AnyEndpointMethod, EndpointMethod } from './EndpointMethod';
 import { EndpointPartials } from './EndpointPartials';
 /**
@@ -17,6 +18,10 @@ export declare type Endpoint<M extends EndpointMethod, Q extends ValidationSchem
      * Set of validation schemas for request data
      */
     readonly validation?: EndpointPartials.Validation<M, Q, P, B>;
+    /**
+     * Middlewares applied to this endpoint. Executes in the same order specified in the array
+     */
+    readonly middlewares?: CoreTypes.Api.Middleware[];
     /**
      * Handler that is called after successfull request data validation
      */

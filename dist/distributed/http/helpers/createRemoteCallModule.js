@@ -121,7 +121,7 @@ function createRemoteCallModule(services) {
             });
         },
     });
-    return (0, core_1.createModule)({
+    return (0, api_1.createModule)({
         name: 'RemoteCallReciever',
         router: new api_1.Router({
             path: '/detached',

@@ -1,7 +1,7 @@
 import { Db } from 'mongodb';
 import { NotFoundException } from 'src/core/exception/prebuild';
 import { createCollection, EntityId } from '..';
-import { getDAO } from '../dao/helpers';
+import { getCollectionAdapter } from '../adapter/helpers';
 import { EntitySchema, RecordSchema } from '../types';
 
 type PublicID = EntitySchema & {
@@ -27,7 +27,7 @@ export async function generateEntityId(
   db: Db,
   collectionName: string
 ): Promise<EntityId> {
-  const dao = getDAO(db, collection);
+  const dao = getCollectionAdapter(db, collection);
 
   let publicId: PublicID | undefined;
 

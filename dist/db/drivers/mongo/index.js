@@ -15,7 +15,7 @@ var __exportStar = (this && this.__exportStar) || function(m, exports) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 __exportStar(require("./MongoDB"), exports);
-__exportStar(require("./dao"), exports);
+__exportStar(require("./adapter"), exports);
 __exportStar(require("./collection"), exports);
 __exportStar(require("./types"), exports);
 __exportStar(require("./helpers"), exports);

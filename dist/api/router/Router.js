@@ -46,6 +46,31 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+var __read = (this && this.__read) || function (o, n) {
+    var m = typeof Symbol === "function" && o[Symbol.iterator];
+    if (!m) return o;
+    var i = m.call(o), r, ar = [], e;
+    try {
+        while ((n === void 0 || n-- > 0) && !(r = i.next()).done) ar.push(r.value);
+    }
+    catch (error) { e = { error: error }; }
+    finally {
+        try {
+            if (r && !r.done && (m = i["return"])) m.call(i);
+        }
+        finally { if (e) throw e.error; }
+    }
+    return ar;
+};
+var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
+    if (pack || arguments.length === 2) for (var i = 0, l = from.length, ar; i < l; i++) {
+        if (ar || !(i in from)) {
+            if (!ar) ar = Array.prototype.slice.call(from, 0, i);
+            ar[i] = from[i];
+        }
+    }
+    return to.concat(ar || Array.prototype.slice.call(from));
+};
 var __values = (this && this.__values) || function(o) {
     var s = typeof Symbol === "function" && Symbol.iterator, m = s && o[s], i = 0;
     if (m) return m.call(o);
@@ -86,36 +111,44 @@ var Router = /** @class */ (function () {
      */
     Router.prototype.getExpressRouter = function () {
         var e_1, _a;
+        var _this = this;
         var router = express_1.default.Router();
+        var _loop_1 = function (endpoint) {
+            if (!endpoint.route) {
+                local_utils_1.DevelopmentLogger.WARN('endpoint.route was not provided!');
+                return "continue";
+            }
+            var method = undefined;
+            switch (endpoint.method) {
+                case endpoints_1.EndpointMethod.GET:
+                    method = router.get.bind(router);
+                    break;
+                case endpoints_1.EndpointMethod.POST:
+                    method = router.post.bind(router);
+                    break;
+                case endpoints_1.EndpointMethod.PUT:
+                    method = router.put.bind(router);
+                    break;
+                default:
+                    break;
+            }
+            var path = (0, local_utils_1.fixUrl)("".concat(this_1.config.path, "/").concat(endpoint.route));
+            if (method) {
+                var middlewares = endpoint.middlewares || [];
+                method.apply(void 0, __spreadArray(__spreadArray([path], __read(middlewares.map(function (handler) {
+                    return _this.wrapWithExceptionHandler(handler, endpoint);
+                })), false), [this_1.wrapWithExceptionHandler(this_1.createRequestHandler(endpoint), endpoint)], false));
+                local_utils_1.DevelopmentLogger.LOG(local_utils_1.DevLogEvent.RouterRouteAdded, "Add route: ".concat(endpoint.method, " ").concat(path));
+            }
+            else {
+                local_utils_1.DevelopmentLogger.WARN("[WARNING] route ".concat(endpoint.method, " ").concat(path, " could not be added! Requested method is not supported. Currenlty supported methods: GET, POST, PUT"));
+            }
+        };
+        var this_1 = this;
         try {
             for (var _b = __values(this.config.endpoints), _c = _b.next(); !_c.done; _c = _b.next()) {
                 var endpoint = _c.value;
-                if (!endpoint.route) {
-                    local_utils_1.DevelopmentLogger.WARN('endpoint.route was not provided!');
-                    continue;
-                }
-                var method = undefined;
-                switch (endpoint.method) {
-                    case endpoints_1.EndpointMethod.GET:
-                        method = router.get.bind(router);
-                        break;
-                    case endpoints_1.EndpointMethod.POST:
-                        method = router.post.bind(router);
-                        break;
-                    case endpoints_1.EndpointMethod.PUT:
-                        method = router.put.bind(router);
-                        break;
-                    default:
-                        break;
-                }
-                var path = (0, local_utils_1.fixUrl)("".concat(this.config.path, "/").concat(endpoint.route));
-                if (method) {
-                    method(path, this.createRequestHandler(endpoint));
-                    local_utils_1.DevelopmentLogger.LOG(local_utils_1.DevLogEvent.RouterRouteAdded, "Add route: ".concat(endpoint.method, " ").concat(path));
-                }
-                else {
-                    local_utils_1.DevelopmentLogger.WARN("[WARNING] route ".concat(endpoint.method, " ").concat(path, " could not be added! Requested method is not supported. Currenlty supported methods: GET, POST, PUT"));
-                }
+                _loop_1(endpoint);
             }
         }
         catch (e_1_1) { e_1 = { error: e_1_1 }; }
@@ -130,12 +163,10 @@ var Router = /** @class */ (function () {
     Router.prototype.createRequestHandler = function (endpoint) {
         var _this = this;
         return function (req, res) { return __awaiter(_this, void 0, void 0, function () {
-            var requestData, result, response, error_1, exception, handler;
+            var requestData, result, response;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0:
-                        _a.trys.push([0, 3, , 5]);
-                        return [4 /*yield*/, this.tryGetRequestData(endpoint, req)];
+                    case 0: return [4 /*yield*/, this.tryGetRequestData(endpoint, req)];
                     case 1:
                         requestData = _a.sent();
                         return [4 /*yield*/, endpoint.action(requestData, req, res)];
@@ -145,18 +176,32 @@ var Router = /** @class */ (function () {
                             response = (0, helpers_2.createSuccessResponse)(result);
                             res.status(common_1.HTTPStatusCode.Ok).json(response);
                         }
-                        return [3 /*break*/, 5];
-                    case 3:
+                        return [2 /*return*/];
+                }
+            });
+        }); };
+    };
+    Router.prototype.wrapWithExceptionHandler = function (handler, endpoint) {
+        var _this = this;
+        return function (req, res, next) { return __awaiter(_this, void 0, void 0, function () {
+            var error_1, exception, handler_1;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        _a.trys.push([0, 2, , 4]);
+                        return [4 /*yield*/, handler(req, res, next)];
+                    case 1: return [2 /*return*/, _a.sent()];
+                    case 2:
                         error_1 = _a.sent();
                         exception = error_1 instanceof exception_1.Exception
                             ? error_1
                             : (0, helpers_1.castUnknownErrorToException)(error_1);
-                        handler = this.config.getRouterExceptionHandler(req, res, endpoint);
-                        return [4 /*yield*/, handler.handle(exception)];
-                    case 4:
+                        handler_1 = this.config.getRouterExceptionHandler(req, res, endpoint);
+                        return [4 /*yield*/, handler_1.handle(exception)];
+                    case 3:
                         _a.sent();
-                        return [3 /*break*/, 5];
-                    case 5: return [2 /*return*/];
+                        return [3 /*break*/, 4];
+                    case 4: return [2 /*return*/];
                 }
             });
         }); };
