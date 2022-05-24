@@ -18,4 +18,4 @@ __exportStar(require("./loadAliases"), exports);
 __exportStar(require("./loadEnvFile"), exports);
 __exportStar(require("./loadEnvironment"), exports);
 __exportStar(require("./throwsException"), exports);
-__exportStar(require("./bind-methods"), exports);
+__exportStar(require("./bindMethods"), exports);

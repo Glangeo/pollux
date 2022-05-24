@@ -50,13 +50,20 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.getRequestEmitter = void 0;
 var core_1 = require("../../../core");
 function getRequestEmitter(constructor, onRequest) {
-    var e_1, _a;
     var emitter = {};
-    var keys = Object.getOwnPropertyNames(constructor.prototype);
+    // Collect methods from prototype
+    addMethodsFromObject(emitter, constructor.prototype, onRequest, constructor.name);
+    // Collect methods from instance
+    addMethodsFromObject(emitter, new constructor(), onRequest, constructor.name);
+    return emitter;
+}
+exports.getRequestEmitter = getRequestEmitter;
+function addMethodsFromObject(emitter, obj, onRequest, className) {
+    var e_1, _a;
+    var keys = Object.getOwnPropertyNames(obj);
     var _loop_1 = function (key) {
-        var isMethod = key !== 'constructor' && typeof constructor.prototype[key] === 'function';
+        var isMethod = key !== 'constructor' && typeof obj[key] === 'function';
         if (isMethod) {
-            // TODO: add support of static methods and etc.
             emitter[key] = function () {
                 var args = [];
                 for (var _i = 0; _i < arguments.length; _i++) {
@@ -74,14 +81,14 @@ function getRequestEmitter(constructor, onRequest) {
                                     throw new core_1.InternalException({
                                         message: 'Could not make distributed call: args contain circular structure',
                                         meta: {
-                                            description: ["Class: ".concat(constructor.name), "Method: ".concat(key)],
+                                            description: ["Class: ".concat(className), "Method: ".concat(key)],
                                         },
                                     });
                                 }
                                 request = {
                                     args: args,
                                     method: key,
-                                    service: constructor.name,
+                                    service: className,
                                 };
                                 return [4 /*yield*/, onRequest(request)];
                             case 1:
@@ -106,6 +113,4 @@ function getRequestEmitter(constructor, onRequest) {
         }
         finally { if (e_1) throw e_1.error; }
     }
-    return emitter;
 }
-exports.getRequestEmitter = getRequestEmitter;
