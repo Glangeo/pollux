@@ -128,14 +128,18 @@ function confiurationsComparator(a, b) {
     var getIndexOfFirstDynamicComponent = function (path) {
         return path.findIndex(function (component) { return component.includes(':'); });
     };
-    var indexInA = getIndexOfFirstDynamicComponent(a.path);
-    var indexInB = getIndexOfFirstDynamicComponent(b.path);
-    while (indexInA === indexInB && indexInA !== -1 && indexInB !== -1) {
-        indexInA = getIndexOfFirstDynamicComponent(a.path.slice(indexInA + 1));
-        indexInB = getIndexOfFirstDynamicComponent(b.path.slice(indexInB + 1));
-    }
-    if (indexInA === -1 && indexInB === -1) {
-        return a.path[a.path.length - 1].length - b.path[b.path.length - 1].length;
+    var pathA = __spreadArray([], __read(a.path), false);
+    var pathB = __spreadArray([], __read(b.path), false);
+    var indexInA = getIndexOfFirstDynamicComponent(pathA);
+    var indexInB = getIndexOfFirstDynamicComponent(pathB);
+    while (indexInA === indexInB) {
+        if (indexInA === -1 && indexInB === -1) {
+            return (a.path[a.path.length - 1].length - b.path[b.path.length - 1].length);
+        }
+        pathA.splice(0, indexInA + 1);
+        pathB.splice(0, indexInB + 1);
+        indexInA = getIndexOfFirstDynamicComponent(pathA);
+        indexInB = getIndexOfFirstDynamicComponent(pathB);
     }
     return indexInA - indexInB;
 }
