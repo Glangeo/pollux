@@ -1,4 +1,4 @@
-import { bindMethods } from '.';
+import { bindMethods } from '../bindMethods';
 
 describe('binds methods in class', () => {
   @bindMethods
