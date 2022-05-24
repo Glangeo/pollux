@@ -122,6 +122,11 @@ export class Router {
 
   private createRequestHandler(endpoint: AnyEndpoint): express.RequestHandler {
     return async (req, res) => {
+      DevelopmentLogger.LOG(
+        DevLogEvent.RouterIncomingRequest,
+        `${endpoint.method} ${req.url}`
+      );
+
       const requestData = await this.tryGetRequestData(endpoint, req);
       const result = await endpoint.action(requestData, req, res);
 

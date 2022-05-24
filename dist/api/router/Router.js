@@ -166,7 +166,9 @@ var Router = /** @class */ (function () {
             var requestData, result, response;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.tryGetRequestData(endpoint, req)];
+                    case 0:
+                        local_utils_1.DevelopmentLogger.LOG(local_utils_1.DevLogEvent.RouterIncomingRequest, "".concat(endpoint.method, " ").concat(req.url));
+                        return [4 /*yield*/, this.tryGetRequestData(endpoint, req)];
                     case 1:
                         requestData = _a.sent();
                         return [4 /*yield*/, endpoint.action(requestData, req, res)];
