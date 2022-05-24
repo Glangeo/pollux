@@ -10,17 +10,6 @@ var __assign = (this && this.__assign) || function () {
     };
     return __assign.apply(this, arguments);
 };
-var __rest = (this && this.__rest) || function (s, e) {
-    var t = {};
-    for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0)
-        t[p] = s[p];
-    if (s != null && typeof Object.getOwnPropertySymbols === "function")
-        for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
-            if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i]))
-                t[p[i]] = s[p[i]];
-        }
-    return t;
-};
 var __values = (this && this.__values) || function(o) {
     var s = typeof Symbol === "function" && Symbol.iterator, m = s && o[s], i = 0;
     if (m) return m.call(o);
@@ -77,11 +66,10 @@ function collectEndpoints(dirname) {
     var endpointsFolderPath = path_1.default.resolve(dirname, 'endpoints');
     var paths = fs_1.default.readdirSync(endpointsFolderPath);
     var configurations = configureEndpointsByPaths(endpointsFolderPath, paths, []);
-    var endpoints = configurations.map(function (configuration) { return (__assign(__assign({}, configuration.endpoint), { route: configuration.path.join('/') })); });
-    return endpoints.map(function (_a) {
-        var route = _a.route, rest = __rest(_a, ["route"]);
-        return (__assign(__assign({}, rest), { route: (0, local_utils_1.fixUrl)(route || '') }));
-    });
+    var endpoints = configurations
+        .sort(confiurationsComparator)
+        .map(function (configuration) { return (__assign(__assign({}, configuration.endpoint), { route: (0, local_utils_1.fixUrl)(configuration.path.join('/')) })); });
+    return endpoints;
 }
 exports.collectEndpoints = collectEndpoints;
 function configureEndpointsByPaths(absoluteBasePath, relativePaths, components) {
@@ -132,4 +120,26 @@ function castFolderOrFileNameToRoute(name) {
         return ":".concat(param);
     }
     return name.replace(/\.ts/g, '');
+}
+function confiurationsComparator(a, b) {
+    if (a.path.length !== b.path.length) {
+        return a.path.length - b.path.length;
+    }
+    var getIndexOfFirstDynamicComponent = function (path) {
+        return path.findIndex(function (component) { return component.includes(':'); });
+    };
+    var pathA = __spreadArray([], __read(a.path), false);
+    var pathB = __spreadArray([], __read(b.path), false);
+    var indexInA = getIndexOfFirstDynamicComponent(pathA);
+    var indexInB = getIndexOfFirstDynamicComponent(pathB);
+    while (indexInA === indexInB) {
+        if (indexInA === -1 && indexInB === -1) {
+            return (a.path[a.path.length - 1].length - b.path[b.path.length - 1].length);
+        }
+        pathA.splice(0, indexInA + 1);
+        pathB.splice(0, indexInB + 1);
+        indexInA = getIndexOfFirstDynamicComponent(pathA);
+        indexInB = getIndexOfFirstDynamicComponent(pathB);
+    }
+    return indexInA - indexInB;
 }
