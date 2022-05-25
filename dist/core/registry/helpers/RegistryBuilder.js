@@ -11,17 +11,17 @@ var __values = (this && this.__values) || function(o) {
     throw new TypeError(s ? "Object is not iterable." : "Symbol.iterator is not defined.");
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.RegistryFactory = void 0;
-var RegistryFactory = /** @class */ (function () {
-    function RegistryFactory() {
+exports.RegistryBuilder = void 0;
+var RegistryBuilder = /** @class */ (function () {
+    function RegistryBuilder() {
         this.config = {};
     }
-    RegistryFactory.prototype.addMethod = function (config) {
+    RegistryBuilder.prototype.addMethod = function (config) {
         var key = config.key;
         this.config[key] = config;
         return this;
     };
-    RegistryFactory.prototype.build = function () {
+    RegistryBuilder.prototype.build = function () {
         var e_1, _a;
         var registry = {};
         try {
@@ -42,10 +42,10 @@ var RegistryFactory = /** @class */ (function () {
         }
         return registry;
     };
-    RegistryFactory.prototype.GET_DEFAULT_REGISTRY_METHOD = function (registry, factory) {
+    RegistryBuilder.prototype.GET_DEFAULT_REGISTRY_METHOD = function (registry, factory) {
         return function () { return factory(registry); };
     };
-    RegistryFactory.prototype.GET_MEMOIZED_REGISTRY_METHOD = function (key, registry, factory) {
+    RegistryBuilder.prototype.GET_MEMOIZED_REGISTRY_METHOD = function (key, registry, factory) {
         return function () {
             var memoizedKey = "__memoized_".concat(key);
             if (!registry[memoizedKey]) {
@@ -54,6 +54,6 @@ var RegistryFactory = /** @class */ (function () {
             return registry[memoizedKey];
         };
     };
-    return RegistryFactory;
+    return RegistryBuilder;
 }());
-exports.RegistryFactory = RegistryFactory;
+exports.RegistryBuilder = RegistryBuilder;

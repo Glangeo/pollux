@@ -1,13 +1,13 @@
 import { Db } from 'mongodb';
 import { NotFoundException } from 'src/core/exception/prebuild';
-import { createCollection, EntityId } from '..';
+import { createCollection } from '..';
 import { getCollectionAdapter } from '../adapter/helpers';
 import { EntitySchema, RecordSchema } from '../types';
 
-type PublicID = EntitySchema & {
+type PublicID = EntitySchema<{
   key: string;
   value: number;
-};
+}>;
 type PublicIDRecord = RecordSchema<PublicID>;
 
 const collection = createCollection({
@@ -26,7 +26,7 @@ const collection = createCollection({
 export async function generateEntityId(
   db: Db,
   collectionName: string
-): Promise<EntityId> {
+): Promise<number> {
   const dao = getCollectionAdapter(db, collection);
 
   let publicId: PublicID | undefined;

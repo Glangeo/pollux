@@ -13,7 +13,7 @@ export type ClientRecord<
   T extends ClientPartials.Type = string,
   P extends ClientPartials.Permissions = null,
   M extends ClientPartials.Meta = null
-> = RecordSchema<WithId<Client<T, P, M>>>;
+> = RecordSchema<Client<T, P, M>>;
 
 export function getClientCollection<
   T extends ClientPartials.Type = string,
@@ -29,7 +29,7 @@ export function getClientCollection<
     name,
 
     createEntityFromDBRecord(
-      record: WithId<ClientRecord<T, P, M>>
+      record: ClientRecord<T, P, M>
     ): WithId<Client<T, P, M>> {
       return record;
     },

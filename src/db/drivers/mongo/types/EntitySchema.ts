@@ -1,6 +1,3 @@
 import { WithId } from 'mongodb';
-import { EntityId } from './EntityId';
 
-export type EntitySchema = WithId<{
-  id: EntityId;
-}>;
+export type EntitySchema<T> = WithId<T>;

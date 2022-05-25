@@ -4,7 +4,7 @@ import {
   RegistryMethodConfiguration,
 } from '../types';
 
-export class RegistryFactory<C extends RegistryConfig<'', any>> {
+export class RegistryBuilder<C extends RegistryConfig<'', any>> {
   private config: C;
 
   public constructor() {
@@ -13,7 +13,7 @@ export class RegistryFactory<C extends RegistryConfig<'', any>> {
 
   public addMethod<M extends string, U>(
     config: RegistryMethodConfiguration<M, U, Registry<C>>
-  ): RegistryFactory<C & RegistryConfig<M, U>> {
+  ): RegistryBuilder<C & RegistryConfig<M, U>> {
     const { key } = config;
 
     (this.config as any)[key] = config;

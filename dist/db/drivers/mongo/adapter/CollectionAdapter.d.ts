@@ -1,8 +1,8 @@
 import { Db, WithId, Collection, Filter, FindOptions, UpdateFilter, UpdateOptions, IndexSpecification, CreateIndexesOptions } from 'mongodb';
 import { Collection as PolluxCollection } from '../collection/types/Collection';
-import { EntitySchema, RecordSchema } from '../types';
+import { RecordSchema } from '../types';
 import { CollectionAdapterOptions } from './types';
-export declare class CollectionAdapter<T extends EntitySchema, R extends RecordSchema<T>, F extends Partial<R>> {
+export declare class CollectionAdapter<T, R extends RecordSchema<T>, F extends Partial<R>> {
     private readonly db;
     private readonly collection;
     private readonly options;

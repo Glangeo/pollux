@@ -1,3 +1,3 @@
-import { EntitySchema } from './EntitySchema';
+import { WithId } from 'mongodb';
 
-export type RecordSchema<T extends EntitySchema> = T;
+export type RecordSchema<T> = WithId<T>;
