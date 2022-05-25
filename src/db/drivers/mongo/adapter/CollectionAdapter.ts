@@ -15,11 +15,11 @@ import {
 } from 'src/core/exception/prebuild';
 import { stringifyObject } from 'src/local-utils';
 import { Collection as PolluxCollection } from '../collection/types/Collection';
-import { EntitySchema, RecordSchema } from '../types';
+import { RecordSchema } from '../types';
 import { CollectionAdapterOptions } from './types';
 
 export class CollectionAdapter<
-  T extends EntitySchema,
+  T,
   R extends RecordSchema<T>,
   F extends Partial<R>
 > {

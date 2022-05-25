@@ -10,7 +10,7 @@ import { Credentials, CredentialsPartials } from 'src/plugins/auth/types';
 export const DEFAULT_CREDENTIALS_COLLECTION_NAME = 'AuthPlugin_Credentials';
 
 export type CredentialsRecord<M extends CredentialsPartials.Meta = null> =
-  RecordSchema<WithId<Credentials<M>>>;
+  RecordSchema<Credentials<M>>;
 
 export function getCredentialsCollection<
   M extends CredentialsPartials.Meta = null
@@ -19,7 +19,7 @@ export function getCredentialsCollection<
     name,
 
     createEntityFromDBRecord(
-      record: WithId<CredentialsRecord<M>>
+      record: CredentialsRecord<M>
     ): WithId<Credentials<M>> {
       return record;
     },

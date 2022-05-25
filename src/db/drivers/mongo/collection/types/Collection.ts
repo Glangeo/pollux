@@ -1,10 +1,6 @@
-import { EntitySchema, RecordSchema } from '../../types';
+import { RecordSchema } from '../../types';
 
-export type Collection<
-  T extends EntitySchema,
-  U extends RecordSchema<T>,
-  F extends Partial<U>
-> = {
+export type Collection<T, U extends RecordSchema<any>, F extends Partial<U>> = {
   readonly name: string;
 
   createEntityFromDBRecord(record: U): T;

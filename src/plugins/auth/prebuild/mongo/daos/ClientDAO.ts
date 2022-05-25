@@ -62,7 +62,7 @@ export class ClientDAO<
   ): Promise<boolean> {
     return this.adapter.updateOne(
       { id },
-      { $set: { csrfToken: csrfToken, refreshedAt: date } }
+      { $set: { csrfToken, refreshedAt: date } }
     );
   }
 

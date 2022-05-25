@@ -8,7 +8,7 @@ import { ClientRecord } from '../collections';
  * to extract type from generic function with passing generic types to it
  * */
 declare class WrapperForTypeExtract<T extends ClientPartials.Type = string, P extends ClientPartials.Permissions = null, M extends ClientPartials.Meta = null> {
-    wrapped(args: any[]): import("../../../../../db/drivers/mongo").Collection<WithId<Client<T, P, M>>, WithId<WithId<Client<T, P, M>>>, {
+    wrapped(args: any[]): import("../../../../../db/drivers/mongo").Collection<WithId<Client<T, P, M>>, ClientRecord<T, P, M>, {
         id: number;
         isBlocked: boolean;
         refreshedAt: number;

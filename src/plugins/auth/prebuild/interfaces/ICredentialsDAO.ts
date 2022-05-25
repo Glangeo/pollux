@@ -1,4 +1,3 @@
-import { EntityId } from 'src/db/drivers/mongo';
 import { CredentialsPartials, Credentials } from '../../types';
 
 export interface ICredentialsDAO<M extends CredentialsPartials.Meta = null> {
@@ -11,5 +10,5 @@ export interface ICredentialsDAO<M extends CredentialsPartials.Meta = null> {
 
   getByLogin(login: string): Promise<Credentials<M>>;
 
-  getById(id: EntityId): Promise<Credentials<M>>;
+  getById(id: Credentials<M>['id']): Promise<Credentials<M>>;
 }

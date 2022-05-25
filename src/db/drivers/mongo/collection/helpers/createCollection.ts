@@ -1,4 +1,4 @@
-import { EntitySchema, RecordSchema } from '../../types';
+import { RecordSchema } from '../../types';
 import { Collection } from '../types/Collection';
 
 /**
@@ -8,7 +8,7 @@ import { Collection } from '../types/Collection';
  * @returns
  */
 export function createCollection<
-  T extends EntitySchema,
+  T,
   U extends RecordSchema<T>,
   F extends Partial<U>
 >(collection: Collection<T, U, F>): Collection<T, U, F> {

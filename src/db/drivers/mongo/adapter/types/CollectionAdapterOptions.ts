@@ -1,8 +1,8 @@
 import { Collection } from '../../collection';
-import { EntitySchema, RecordSchema } from '../../types';
+import { RecordSchema } from '../../types';
 
 export type CollectionAdapterOptions<
-  T extends EntitySchema,
+  T,
   U extends RecordSchema<T>,
   F extends Partial<U>
 > = {
