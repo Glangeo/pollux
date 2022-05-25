@@ -1,14 +1,14 @@
-import { RegistryFactory } from '../RegistryFactory';
+import { RegistryBuilder } from '../RegistryFactory';
 
 describe('creates simple registry successfuly', () => {
   it('creates empty registry', () => {
-    const registry = new RegistryFactory().build();
+    const registry = new RegistryBuilder().build();
 
     expect(registry).toEqual({});
   });
 
   it('creates registry correclty', () => {
-    const registry = new RegistryFactory()
+    const registry = new RegistryBuilder()
       .addMethod({
         key: 'getNumber',
         factory: () => 123,
@@ -21,7 +21,7 @@ describe('creates simple registry successfuly', () => {
   });
 
   it('memoize method results', () => {
-    const registry = new RegistryFactory()
+    const registry = new RegistryBuilder()
       .addMethod({
         key: 'getNumber',
         factory: () => Math.random(),
@@ -35,7 +35,7 @@ describe('creates simple registry successfuly', () => {
   });
 
   it('do not moemize method result if requested', () => {
-    const registry = new RegistryFactory()
+    const registry = new RegistryBuilder()
       .addMethod({
         key: 'getNumber',
         factory: () => Math.random(),
@@ -50,7 +50,7 @@ describe('creates simple registry successfuly', () => {
   });
 
   it('allows to call already added methods', () => {
-    const registry = new RegistryFactory()
+    const registry = new RegistryBuilder()
       .addMethod({
         key: 'getName',
         factory: () => 'Jhon',
