@@ -1,4 +1,4 @@
-import { RegistryBuilder } from '../RegistryFactory';
+import { RegistryBuilder } from '../helpers';
 
 describe('creates simple registry successfuly', () => {
   it('creates empty registry', () => {
