@@ -6,4 +6,4 @@ import { Collection } from '../types/Collection';
  * @param collection collection properties
  * @returns
  */
-export declare function createCollection<T, U extends RecordSchema<T>, F extends Partial<U>>(collection: Collection<T, U, F>): Collection<T, U, F>;
+export declare function createCollection<T, U extends RecordSchema<any>, F extends Partial<U>>(collection: Collection<T, U, F>): Collection<T, U, F>;
