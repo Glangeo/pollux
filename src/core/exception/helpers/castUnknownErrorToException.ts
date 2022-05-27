@@ -12,6 +12,7 @@ export function castUnknownErrorToException(error: any): Exception {
       type: ExceptionType.Runtime,
       message: error.message,
       httpStatusCode: HTTPStatusCode.InternalServerError,
+      stack: error.stack,
     });
   }
 

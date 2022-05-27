@@ -127,6 +127,7 @@ function confiurationsComparator(
   while (indexInA === indexInB) {
     if (indexInA === -1 && indexInB === -1) {
       return (
+        // TODO: fix order
         a.path[a.path.length - 1].length - b.path[b.path.length - 1].length
       );
     }

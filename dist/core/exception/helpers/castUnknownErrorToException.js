@@ -13,6 +13,7 @@ function castUnknownErrorToException(error) {
             type: prebuild_1.ExceptionType.Runtime,
             message: error.message,
             httpStatusCode: api_1.HTTPStatusCode.InternalServerError,
+            stack: error.stack,
         });
     }
     return new Exception_1.Exception({

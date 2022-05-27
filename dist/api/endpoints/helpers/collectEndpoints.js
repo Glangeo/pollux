@@ -152,7 +152,9 @@ function confiurationsComparator(a, b) {
     var indexInB = getIndexOfFirstDynamicComponent(pathB);
     while (indexInA === indexInB) {
         if (indexInA === -1 && indexInB === -1) {
-            return (a.path[a.path.length - 1].length - b.path[b.path.length - 1].length);
+            return (
+            // TODO: fix order
+            a.path[a.path.length - 1].length - b.path[b.path.length - 1].length);
         }
         pathA.splice(0, indexInA + 1);
         pathB.splice(0, indexInB + 1);
