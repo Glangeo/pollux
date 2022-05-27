@@ -121,6 +121,9 @@ var Router = /** @class */ (function () {
             }
             var method = undefined;
             switch (endpoint.method) {
+                case endpoints_1.EndpointMethod.HEAD:
+                    method = router.head.bind(router);
+                    break;
                 case endpoints_1.EndpointMethod.GET:
                     method = router.get.bind(router);
                     break;
@@ -129,6 +132,12 @@ var Router = /** @class */ (function () {
                     break;
                 case endpoints_1.EndpointMethod.PUT:
                     method = router.put.bind(router);
+                    break;
+                case endpoints_1.EndpointMethod.PATCH:
+                    method = router.patch.bind(router);
+                    break;
+                case endpoints_1.EndpointMethod.DELETE:
+                    method = router.delete.bind(router);
                     break;
                 default:
                     break;
