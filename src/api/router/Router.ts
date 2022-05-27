@@ -75,6 +75,10 @@ export class Router {
       let method: express.IRouterMatcher<typeof router> | undefined = undefined;
 
       switch (endpoint.method) {
+        case EndpointMethod.HEAD:
+          method = router.head.bind(router);
+          break;
+
         case EndpointMethod.GET:
           method = router.get.bind(router);
           break;
@@ -85,6 +89,14 @@ export class Router {
 
         case EndpointMethod.PUT:
           method = router.put.bind(router);
+          break;
+
+        case EndpointMethod.PATCH:
+          method = router.patch.bind(router);
+          break;
+
+        case EndpointMethod.DELETE:
+          method = router.delete.bind(router);
           break;
 
         default:
