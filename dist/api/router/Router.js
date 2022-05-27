@@ -93,6 +93,7 @@ var helpers_1 = require("../../core/exception/helpers");
 var prebuild_1 = require("../../core/exception/prebuild");
 var local_utils_1 = require("../../local-utils");
 var common_1 = require("../common");
+var context_1 = require("../context");
 var endpoints_1 = require("../endpoints");
 var helpers_2 = require("../response/helpers");
 var validator_1 = require("../validator");
@@ -163,16 +164,23 @@ var Router = /** @class */ (function () {
     Router.prototype.createRequestHandler = function (endpoint) {
         var _this = this;
         return function (req, res) { return __awaiter(_this, void 0, void 0, function () {
-            var requestData, result, response;
+            var requestData, context, result, response;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         local_utils_1.DevelopmentLogger.LOG(local_utils_1.DevLogEvent.RouterIncomingRequest, "".concat(endpoint.method, " ").concat(req.url));
-                        return [4 /*yield*/, this.tryGetRequestData(endpoint, req)];
+                        if (!endpoint.onBeforeValidation) return [3 /*break*/, 2];
+                        return [4 /*yield*/, endpoint.onBeforeValidation(req, res)];
                     case 1:
+                        _a.sent();
+                        _a.label = 2;
+                    case 2: return [4 /*yield*/, this.tryGetRequestData(endpoint, req)];
+                    case 3:
                         requestData = _a.sent();
-                        return [4 /*yield*/, endpoint.action(requestData, req, res)];
-                    case 2:
+                        context = (0, context_1.getContext)(req, res);
+                        (0, context_1.setContext)(context, res);
+                        return [4 /*yield*/, endpoint.action(requestData, context, req, res)];
+                    case 4:
                         result = _a.sent();
                         if (!res.headersSent) {
                             response = (0, helpers_2.createSuccessResponse)(result);

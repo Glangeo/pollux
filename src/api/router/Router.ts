@@ -6,6 +6,7 @@ import { ValidationException } from 'src/core/exception/prebuild';
 import { DevelopmentLogger, DevLogEvent, fixUrl } from 'src/local-utils';
 import { Optional } from 'utility-types';
 import { HTTPStatusCode } from '../common';
+import { getContext, setContext } from '../context';
 import { AnyEndpoint, EndpointMethod, isEndpointWithBody } from '../endpoints';
 import { createSuccessResponse } from '../response/helpers';
 import { validate, ValidationSchema, Validator } from '../validator';
@@ -127,8 +128,16 @@ export class Router {
         `${endpoint.method} ${req.url}`
       );
 
+      if (endpoint.onBeforeValidation) {
+        await endpoint.onBeforeValidation(req, res);
+      }
+
       const requestData = await this.tryGetRequestData(endpoint, req);
-      const result = await endpoint.action(requestData, req, res);
+      const context = getContext(req, res);
+
+      setContext(context, res);
+
+      const result = await endpoint.action(requestData, context, req, res);
 
       if (!res.headersSent) {
         const response = createSuccessResponse(result);

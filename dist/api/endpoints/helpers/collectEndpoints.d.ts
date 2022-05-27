@@ -2,7 +2,8 @@ import { AnyEndpoint } from '../types/Endpoint';
 /**
  * Collects endpoints from their files inside specified folder
  *
- * @param dirname path to folder where endpoints are stored
+ * @param dirname path to folder where endpoints folder is placed
+ * @param [folderName] folder name where endpoints are places
  * @returns array of collected from folder endpoints
  */
-export declare function collectEndpoints(dirname: string): AnyEndpoint[];
+export declare function collectEndpoints(dirname: string, folderName?: string): AnyEndpoint[];
