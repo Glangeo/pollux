@@ -1,7 +1,9 @@
 import { CoreTypes } from '../types';
 import { ExceptionProperties } from './types/ExceptionProperties';
 declare type Meta = CoreTypes.PlainTypes.Object;
-export declare type ExceptionConstructionProperties<T extends Meta = {}, U extends Meta = {}> = Omit<ExceptionProperties<T, U>, 'stack'>;
+export declare type ExceptionConstructionProperties<T extends Meta = {}, U extends Meta = {}> = Omit<ExceptionProperties<T, U>, 'stack'> & {
+    stack?: string;
+};
 export declare class Exception<T extends Meta = {}, U extends Meta = {}> implements ExceptionProperties<T, U> {
     readonly stack: string;
     readonly type: string;

@@ -6,6 +6,7 @@ import { ValidationException } from 'src/core/exception/prebuild';
 import { DevelopmentLogger, DevLogEvent, fixUrl } from 'src/local-utils';
 import { Optional } from 'utility-types';
 import { HTTPStatusCode } from '../common';
+import { getContext, setContext } from '../context';
 import { AnyEndpoint, EndpointMethod, isEndpointWithBody } from '../endpoints';
 import { createSuccessResponse } from '../response/helpers';
 import { validate, ValidationSchema, Validator } from '../validator';
@@ -74,6 +75,10 @@ export class Router {
       let method: express.IRouterMatcher<typeof router> | undefined = undefined;
 
       switch (endpoint.method) {
+        case EndpointMethod.HEAD:
+          method = router.head.bind(router);
+          break;
+
         case EndpointMethod.GET:
           method = router.get.bind(router);
           break;
@@ -84,6 +89,14 @@ export class Router {
 
         case EndpointMethod.PUT:
           method = router.put.bind(router);
+          break;
+
+        case EndpointMethod.PATCH:
+          method = router.patch.bind(router);
+          break;
+
+        case EndpointMethod.DELETE:
+          method = router.delete.bind(router);
           break;
 
         default:
@@ -127,8 +140,16 @@ export class Router {
         `${endpoint.method} ${req.url}`
       );
 
+      if (endpoint.onBeforeValidation) {
+        await endpoint.onBeforeValidation(req, res);
+      }
+
       const requestData = await this.tryGetRequestData(endpoint, req);
-      const result = await endpoint.action(requestData, req, res);
+      const context = getContext(req, res);
+
+      setContext(context, res);
+
+      const result = await endpoint.action(requestData, context, req, res);
 
       if (!res.headersSent) {
         const response = createSuccessResponse(result);

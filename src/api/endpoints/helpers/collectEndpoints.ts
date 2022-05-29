@@ -3,6 +3,7 @@
 import fs from 'fs';
 import pth from 'path';
 import { fixUrl } from 'src/local-utils';
+import { EndpointMethod } from '../types';
 import { AnyEndpoint } from '../types/Endpoint';
 
 type EndpointConfiguration = {
@@ -13,11 +14,15 @@ type EndpointConfiguration = {
 /**
  * Collects endpoints from their files inside specified folder
  *
- * @param dirname path to folder where endpoints are stored
+ * @param dirname path to folder where endpoints folder is placed
+ * @param [folderName] folder name where endpoints are places
  * @returns array of collected from folder endpoints
  */
-export function collectEndpoints(dirname: string): AnyEndpoint[] {
-  const endpointsFolderPath = pth.resolve(dirname, 'endpoints');
+export function collectEndpoints(
+  dirname: string,
+  folderName = 'endpoints'
+): AnyEndpoint[] {
+  const endpointsFolderPath = pth.resolve(dirname, folderName);
   const paths = fs.readdirSync(endpointsFolderPath);
 
   const configurations = configureEndpointsByPaths(
@@ -53,12 +58,20 @@ function configureEndpointsByPaths(
       if (module.default) {
         const route = castFolderOrFileNameToRoute(path);
 
-        const configuration: EndpointConfiguration = {
-          path: [...components, route],
-          endpoint: module.default,
-        };
+        const endpoints = Array.isArray(module.default)
+          ? module.default
+          : [module.default];
 
-        configurations.push(configuration);
+        checkIfEndpointsOfSameRouteHasDifferentMethods(endpoints, path);
+
+        for (const endpoint of endpoints) {
+          const configuration: EndpointConfiguration = {
+            endpoint,
+            path: [...components, route],
+          };
+
+          configurations.push(configuration);
+        }
       } else {
         throw new Error('Endpoint file must have a default export');
       }
@@ -114,6 +127,7 @@ function confiurationsComparator(
   while (indexInA === indexInB) {
     if (indexInA === -1 && indexInB === -1) {
       return (
+        // TODO: fix order
         a.path[a.path.length - 1].length - b.path[b.path.length - 1].length
       );
     }
@@ -125,4 +139,21 @@ function confiurationsComparator(
   }
 
   return indexInA - indexInB;
+}
+
+function checkIfEndpointsOfSameRouteHasDifferentMethods(
+  endpoints: AnyEndpoint[],
+  path: string
+) {
+  const set: Set<EndpointMethod> = new Set();
+
+  endpoints.forEach((endpoint: any) => {
+    if (set.has(endpoint.method)) {
+      throw new Error(
+        `Could not add multiple endpoints with same method and route.\nPath: ${path}`
+      );
+    }
+
+    set.add(endpoint.method);
+  });
 }

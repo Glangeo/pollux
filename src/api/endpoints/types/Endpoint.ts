@@ -1,4 +1,5 @@
 import express from 'express';
+import { Context } from 'src/api/context';
 import { ValidationSchema } from 'src/api/validator';
 import { CoreTypes } from 'src/core';
 import { AnyEndpointMethod, EndpointMethod } from './EndpointMethod';
@@ -33,6 +34,7 @@ export type Endpoint<
    */
   readonly action: (
     data: EndpointPartials.RequestData<Q, P, B>,
+    context: Context,
     req: express.Request,
     res: express.Response
   ) => Promise<any>;
@@ -42,6 +44,13 @@ export type Endpoint<
    * NOTICE: Router will not add endpoint without route field specified. You can omit this field in configuration if you use collectEndpoints helper
    */
   readonly route?: string;
+  /**
+   * Calls before endpoint request data validation
+   */
+  readonly onBeforeValidation?: (
+    req: express.Request,
+    res: express.Response
+  ) => Promise<void>;
 };
 
 /**

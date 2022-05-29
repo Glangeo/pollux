@@ -6,7 +6,10 @@ exports.EndpointMethod = void 0;
  */
 var EndpointMethod;
 (function (EndpointMethod) {
+    EndpointMethod["HEAD"] = "HEAD";
     EndpointMethod["GET"] = "GET";
     EndpointMethod["POST"] = "POST";
     EndpointMethod["PUT"] = "PUT";
+    EndpointMethod["PATCH"] = "PATCH";
+    EndpointMethod["DELETE"] = "DELETE";
 })(EndpointMethod = exports.EndpointMethod || (exports.EndpointMethod = {}));
