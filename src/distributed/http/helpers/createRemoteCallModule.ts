@@ -33,7 +33,7 @@ export function createRemoteCallModule(services: ServiceConstructor[]): Module {
       }).required(),
     },
 
-    action: async ({ body }, req) => {
+    action: async ({ body }, _, req) => {
       const { service: serviceName, method, args } = body;
 
       const receiver = receivers.find(({ service }) => service === serviceName);

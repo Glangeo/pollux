@@ -59,11 +59,13 @@ var local_utils_1 = require("../../../local-utils");
 /**
  * Collects endpoints from their files inside specified folder
  *
- * @param dirname path to folder where endpoints are stored
+ * @param dirname path to folder where endpoints folder is placed
+ * @param [folderName] folder name where endpoints are places
  * @returns array of collected from folder endpoints
  */
-function collectEndpoints(dirname) {
-    var endpointsFolderPath = path_1.default.resolve(dirname, 'endpoints');
+function collectEndpoints(dirname, folderName) {
+    if (folderName === void 0) { folderName = 'endpoints'; }
+    var endpointsFolderPath = path_1.default.resolve(dirname, folderName);
     var paths = fs_1.default.readdirSync(endpointsFolderPath);
     var configurations = configureEndpointsByPaths(endpointsFolderPath, paths, []);
     var endpoints = configurations
@@ -73,7 +75,7 @@ function collectEndpoints(dirname) {
 }
 exports.collectEndpoints = collectEndpoints;
 function configureEndpointsByPaths(absoluteBasePath, relativePaths, components) {
-    var e_1, _a;
+    var e_1, _a, e_2, _b;
     var configurations = [];
     try {
         for (var relativePaths_1 = __values(relativePaths), relativePaths_1_1 = relativePaths_1.next(); !relativePaths_1_1.done; relativePaths_1_1 = relativePaths_1.next()) {
@@ -84,11 +86,27 @@ function configureEndpointsByPaths(absoluteBasePath, relativePaths, components) 
                 var module_1 = require(absolutePath);
                 if (module_1.default) {
                     var route = castFolderOrFileNameToRoute(path);
-                    var configuration = {
-                        path: __spreadArray(__spreadArray([], __read(components), false), [route], false),
-                        endpoint: module_1.default,
-                    };
-                    configurations.push(configuration);
+                    var endpoints = Array.isArray(module_1.default)
+                        ? module_1.default
+                        : [module_1.default];
+                    checkIfEndpointsOfSameRouteHasDifferentMethods(endpoints, path);
+                    try {
+                        for (var endpoints_1 = (e_2 = void 0, __values(endpoints)), endpoints_1_1 = endpoints_1.next(); !endpoints_1_1.done; endpoints_1_1 = endpoints_1.next()) {
+                            var endpoint = endpoints_1_1.value;
+                            var configuration = {
+                                endpoint: endpoint,
+                                path: __spreadArray(__spreadArray([], __read(components), false), [route], false),
+                            };
+                            configurations.push(configuration);
+                        }
+                    }
+                    catch (e_2_1) { e_2 = { error: e_2_1 }; }
+                    finally {
+                        try {
+                            if (endpoints_1_1 && !endpoints_1_1.done && (_b = endpoints_1.return)) _b.call(endpoints_1);
+                        }
+                        finally { if (e_2) throw e_2.error; }
+                    }
                 }
                 else {
                     throw new Error('Endpoint file must have a default export');
@@ -134,7 +152,9 @@ function confiurationsComparator(a, b) {
     var indexInB = getIndexOfFirstDynamicComponent(pathB);
     while (indexInA === indexInB) {
         if (indexInA === -1 && indexInB === -1) {
-            return (a.path[a.path.length - 1].length - b.path[b.path.length - 1].length);
+            return (
+            // TODO: fix order
+            a.path[a.path.length - 1].length - b.path[b.path.length - 1].length);
         }
         pathA.splice(0, indexInA + 1);
         pathB.splice(0, indexInB + 1);
@@ -142,4 +162,13 @@ function confiurationsComparator(a, b) {
         indexInB = getIndexOfFirstDynamicComponent(pathB);
     }
     return indexInA - indexInB;
+}
+function checkIfEndpointsOfSameRouteHasDifferentMethods(endpoints, path) {
+    var set = new Set();
+    endpoints.forEach(function (endpoint) {
+        if (set.has(endpoint.method)) {
+            throw new Error("Could not add multiple endpoints with same method and route.\nPath: ".concat(path));
+        }
+        set.add(endpoint.method);
+    });
 }

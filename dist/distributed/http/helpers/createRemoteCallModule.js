@@ -88,7 +88,7 @@ function createRemoteCallModule(services) {
                 args: Yup.array().required(),
             }).required(),
         },
-        action: function (_a, req) {
+        action: function (_a, _, req) {
             var body = _a.body;
             return __awaiter(_this, void 0, void 0, function () {
                 var serviceName, method, args, receiver;

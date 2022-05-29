@@ -7,10 +7,11 @@ type Meta = CoreTypes.PlainTypes.Object;
 export type ExceptionConstructionProperties<
   T extends Meta = {},
   U extends Meta = {}
-> = Omit<ExceptionProperties<T, U>, 'stack'>;
+> = Omit<ExceptionProperties<T, U>, 'stack'> & { stack?: string };
 
 export class Exception<T extends Meta = {}, U extends Meta = {}>
-  implements ExceptionProperties<T, U> {
+  implements ExceptionProperties<T, U>
+{
   public readonly stack: string;
   public readonly type: string;
   public readonly message: string;

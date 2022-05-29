@@ -9,7 +9,12 @@ var EndpointMethod_1 = require("../types/EndpointMethod");
  * @returns
  */
 function isEndpointWithBody(endpoint) {
-    var methodsWithBody = [EndpointMethod_1.EndpointMethod.POST, EndpointMethod_1.EndpointMethod.PUT];
+    var methodsWithBody = [
+        EndpointMethod_1.EndpointMethod.POST,
+        EndpointMethod_1.EndpointMethod.PUT,
+        EndpointMethod_1.EndpointMethod.PATCH,
+        EndpointMethod_1.EndpointMethod.DELETE,
+    ];
     return methodsWithBody.includes(endpoint.method);
 }
 exports.isEndpointWithBody = isEndpointWithBody;

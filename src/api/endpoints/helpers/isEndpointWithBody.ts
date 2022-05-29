@@ -18,7 +18,12 @@ export function isEndpointWithBody<
 >(
   endpoint: Endpoint<any, Q, P, B>
 ): endpoint is Endpoint<EndpointMethodWithBody, Q, P, B> {
-  const methodsWithBody = [EndpointMethod.POST, EndpointMethod.PUT];
+  const methodsWithBody = [
+    EndpointMethod.POST,
+    EndpointMethod.PUT,
+    EndpointMethod.PATCH,
+    EndpointMethod.DELETE,
+  ];
 
   return methodsWithBody.includes(endpoint.method);
 }
