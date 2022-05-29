@@ -1,4 +1,4 @@
-import { capitalize } from 'lodash';
+import { upperFirst } from 'lodash';
 import { UpdateComposer } from '../types';
 import { SettersMap } from '../types/SettersMap';
 
@@ -60,7 +60,7 @@ export class UpdateComposerBuilder<
     };
 
     for (const key of Object.keys(this.map)) {
-      composer[`set${capitalize(key)}`] = getWrappedSetter(key);
+      composer[`set${upperFirst(key)}`] = getWrappedSetter(key);
     }
 
     composer.set = (key: string, value: any) => getWrappedSetter(key)(value);

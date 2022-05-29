@@ -51,7 +51,7 @@ var UpdateComposerBuilder = /** @class */ (function () {
         try {
             for (var _b = __values(Object.keys(this.map)), _c = _b.next(); !_c.done; _c = _b.next()) {
                 var key = _c.value;
-                composer["set".concat((0, lodash_1.capitalize)(key))] = getWrappedSetter(key);
+                composer["set".concat((0, lodash_1.upperFirst)(key))] = getWrappedSetter(key);
             }
         }
         catch (e_1_1) { e_1 = { error: e_1_1 }; }
