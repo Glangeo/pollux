@@ -3,13 +3,16 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Exception = void 0;
 var Exception = /** @class */ (function () {
     function Exception(params) {
-        var type = params.type, message = params.message, meta = params.meta, publicInfo = params.publicInfo;
+        var type = params.type, message = params.message, meta = params.meta, publicInfo = params.publicInfo, httpStatusCode = params.httpStatusCode, stack = params.stack;
         this.type = type;
         this.message = message;
         this.meta = meta;
         this.publicInfo = publicInfo;
-        this.stack = '';
-        Error.captureStackTrace(this, this.constructor);
+        this.httpStatusCode = httpStatusCode;
+        this.stack = stack || '';
+        if (!stack) {
+            Error.captureStackTrace(this, this.constructor);
+        }
     }
     Exception.prototype.toString = function () {
         return "".concat(this.constructor.name, ": ").concat(this.message);
