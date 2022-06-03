@@ -23,15 +23,18 @@ export class Exception<T extends Meta = {}, U extends Meta = {}>
   };
 
   public constructor(params: ExceptionConstructionProperties<T, U>) {
-    const { type, message, meta, publicInfo } = params;
+    const { type, message, meta, publicInfo, httpStatusCode, stack } = params;
 
     this.type = type;
     this.message = message;
     this.meta = meta;
     this.publicInfo = publicInfo;
-    this.stack = '';
+    this.httpStatusCode = httpStatusCode;
+    this.stack = stack || '';
 
-    Error.captureStackTrace(this, this.constructor);
+    if (!stack) {
+      Error.captureStackTrace(this, this.constructor);
+    }
   }
 
   public toString(): string {
