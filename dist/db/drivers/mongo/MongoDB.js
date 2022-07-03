@@ -38,6 +38,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.MongoDB = void 0;
 var mongodb_1 = require("mongodb");
+var core_1 = require("../../../core");
 var prebuild_1 = require("../../../core/exception/prebuild");
 var local_utils_1 = require("../../../local-utils");
 var MongoDB = /** @class */ (function () {
@@ -78,6 +79,36 @@ var MongoDB = /** @class */ (function () {
                     case 1:
                         _a.sent();
                         return [2 /*return*/];
+                }
+            });
+        });
+    };
+    MongoDB.prototype.doInsideTransaction = function (action, options, exceptionHandler) {
+        return __awaiter(this, void 0, void 0, function () {
+            var session, error_1, exception;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        session = this.connection.startSession();
+                        _a.label = 1;
+                    case 1:
+                        _a.trys.push([1, 3, 5, 7]);
+                        return [4 /*yield*/, session.withTransaction(action, options)];
+                    case 2:
+                        _a.sent();
+                        return [3 /*break*/, 7];
+                    case 3:
+                        error_1 = _a.sent();
+                        exception = (0, core_1.castUnknownErrorToException)(error_1);
+                        return [4 /*yield*/, exceptionHandler.handle(exception)];
+                    case 4:
+                        _a.sent();
+                        return [3 /*break*/, 7];
+                    case 5: return [4 /*yield*/, session.endSession()];
+                    case 6:
+                        _a.sent();
+                        return [7 /*endfinally*/];
+                    case 7: return [2 /*return*/];
                 }
             });
         });

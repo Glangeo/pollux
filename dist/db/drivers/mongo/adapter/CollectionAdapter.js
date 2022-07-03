@@ -87,12 +87,16 @@ exports.CollectionAdapter = void 0;
 var prebuild_1 = require("../../../../core/exception/prebuild");
 var local_utils_1 = require("../../../../local-utils");
 var CollectionAdapter = /** @class */ (function () {
-    function CollectionAdapter(db, collection, options) {
+    function CollectionAdapter(db, collection, options, session) {
         if (options === void 0) { options = {}; }
         this.db = db;
         this.collection = collection;
         this.options = options;
+        this.session = session;
     }
+    CollectionAdapter.prototype.withSession = function (session) {
+        return new CollectionAdapter(this.db, this.collection, this.options, session);
+    };
     CollectionAdapter.prototype.create = function (form) {
         return __awaiter(this, void 0, void 0, function () {
             var dbCollection, defaultValues, data, operation;

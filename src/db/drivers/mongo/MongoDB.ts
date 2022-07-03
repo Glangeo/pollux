@@ -1,4 +1,10 @@
-import { Db, MongoClient } from 'mongodb';
+import {
+  Db,
+  MongoClient,
+  TransactionOptions,
+  WithTransactionCallback,
+} from 'mongodb';
+import { castUnknownErrorToException, ExceptionHandler } from 'src/core';
 import { InternalException } from 'src/core/exception/prebuild';
 import { DevelopmentLogger, DevLogEvent } from 'src/local-utils';
 
@@ -33,5 +39,23 @@ export class MongoDB {
 
   public async disconnect(): Promise<void> {
     await this.connection.close();
+  }
+
+  public async doInsideTransaction(
+    action: WithTransactionCallback<void>,
+    options: TransactionOptions,
+    exceptionHandler: ExceptionHandler
+  ): Promise<void> {
+    const session = this.connection.startSession();
+
+    try {
+      await session.withTransaction(action, options);
+    } catch (error) {
+      const exception = castUnknownErrorToException(error);
+
+      await exceptionHandler.handle(exception);
+    } finally {
+      await session.endSession();
+    }
   }
 }

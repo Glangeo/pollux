@@ -1,4 +1,4 @@
-import { Db, WithId, Collection, Filter, FindOptions, UpdateFilter, UpdateOptions, IndexSpecification, CreateIndexesOptions } from 'mongodb';
+import { Db, WithId, Collection, Filter, FindOptions, UpdateFilter, UpdateOptions, IndexSpecification, CreateIndexesOptions, ClientSession } from 'mongodb';
 import { Collection as PolluxCollection } from '../collection/types/Collection';
 import { RecordSchema } from '../types';
 import { CollectionAdapterOptions } from './types';
@@ -6,7 +6,9 @@ export declare class CollectionAdapter<T, R extends RecordSchema<T>, F extends P
     private readonly db;
     private readonly collection;
     private readonly options;
-    constructor(db: Db, collection: PolluxCollection<T, R, F>, options?: CollectionAdapterOptions<T, R, F>);
+    private readonly session?;
+    constructor(db: Db, collection: PolluxCollection<T, R, F>, options?: CollectionAdapterOptions<T, R, F>, session?: ClientSession | undefined);
+    withSession(session: ClientSession): CollectionAdapter<T, R, F>;
     create(form: Omit<R, keyof F | '_id'> & Partial<F>): Promise<T>;
     createMany(form: (Omit<R, keyof F> & Partial<F>)[]): Promise<T[]>;
     getOne(query: Filter<R>): Promise<T>;

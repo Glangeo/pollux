@@ -8,6 +8,7 @@ import {
   UpdateOptions,
   IndexSpecification,
   CreateIndexesOptions,
+  ClientSession,
 } from 'mongodb';
 import {
   InternalException,
@@ -26,8 +27,18 @@ export class CollectionAdapter<
   public constructor(
     private readonly db: Db,
     private readonly collection: PolluxCollection<T, R, F>,
-    private readonly options: CollectionAdapterOptions<T, R, F> = {}
+    private readonly options: CollectionAdapterOptions<T, R, F> = {},
+    private readonly session?: ClientSession
   ) {}
+
+  public withSession(session: ClientSession): CollectionAdapter<T, R, F> {
+    return new CollectionAdapter<T, R, F>(
+      this.db,
+      this.collection,
+      this.options,
+      session
+    );
+  }
 
   public async create(form: Omit<R, keyof F | '_id'> & Partial<F>): Promise<T> {
     const dbCollection = this.getDBCollection();
