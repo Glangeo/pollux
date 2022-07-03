@@ -4,7 +4,6 @@ import {
   TransactionOptions,
   WithTransactionCallback,
 } from 'mongodb';
-import { castUnknownErrorToException, ExceptionHandler } from 'src/core';
 import { InternalException } from 'src/core/exception/prebuild';
 import { DevelopmentLogger, DevLogEvent } from 'src/local-utils';
 
@@ -41,19 +40,14 @@ export class MongoDB {
     await this.connection.close();
   }
 
-  public async doInsideTransaction(
-    action: WithTransactionCallback<void>,
-    options: TransactionOptions,
-    exceptionHandler: ExceptionHandler
-  ): Promise<void> {
+  public async doInsideTransaction<T>(
+    action: WithTransactionCallback<T>,
+    options?: TransactionOptions
+  ): Promise<T> {
     const session = this.connection.startSession();
 
     try {
-      await session.withTransaction(action, options);
-    } catch (error) {
-      const exception = castUnknownErrorToException(error);
-
-      await exceptionHandler.handle(exception);
+      return await session.withTransaction(action, options);
     } finally {
       await session.endSession();
     }
