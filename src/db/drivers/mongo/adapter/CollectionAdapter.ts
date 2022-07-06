@@ -35,6 +35,15 @@ export class CollectionAdapter<
     private readonly session?: ClientSession
   ) {}
 
+  public withSession(session: ClientSession): CollectionAdapter<T, R, F> {
+    return new CollectionAdapter(
+      this.db,
+      this.collection,
+      this.options,
+      session
+    );
+  }
+
   public async create(
     form: Omit<R, keyof F | '_id'> & Partial<F>,
     options: InsertOneOptions = {}
