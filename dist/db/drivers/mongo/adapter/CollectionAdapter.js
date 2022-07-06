@@ -94,6 +94,9 @@ var CollectionAdapter = /** @class */ (function () {
         this.options = options;
         this.session = session;
     }
+    CollectionAdapter.prototype.withSession = function (session) {
+        return new CollectionAdapter(this.db, this.collection, this.options, session);
+    };
     CollectionAdapter.prototype.create = function (form, options) {
         if (options === void 0) { options = {}; }
         return __awaiter(this, void 0, void 0, function () {

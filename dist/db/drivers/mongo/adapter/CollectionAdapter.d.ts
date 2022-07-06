@@ -8,6 +8,7 @@ export declare class CollectionAdapter<T, R extends RecordSchema<T>, F extends P
     private readonly options;
     private readonly session?;
     constructor(db: Db, collection: PolluxCollection<T, R, F>, options?: CollectionAdapterOptions<T, R, F>, session?: ClientSession | undefined);
+    withSession(session: ClientSession): CollectionAdapter<T, R, F>;
     create(form: Omit<R, keyof F | '_id'> & Partial<F>, options?: InsertOneOptions): Promise<T>;
     createMany(form: (Omit<R, keyof F> & Partial<F>)[], options?: BulkWriteOptions): Promise<T[]>;
     getOne(query: Filter<R>, options?: FindOptions<R>): Promise<T>;
