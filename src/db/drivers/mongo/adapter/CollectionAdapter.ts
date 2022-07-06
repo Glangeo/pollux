@@ -9,6 +9,10 @@ import {
   IndexSpecification,
   CreateIndexesOptions,
   ClientSession,
+  InsertOneOptions,
+  BulkWriteOptions,
+  CountDocumentsOptions,
+  DeleteOptions,
 } from 'mongodb';
 import {
   InternalException,
@@ -31,16 +35,10 @@ export class CollectionAdapter<
     private readonly session?: ClientSession
   ) {}
 
-  public withSession(session: ClientSession): CollectionAdapter<T, R, F> {
-    return new CollectionAdapter<T, R, F>(
-      this.db,
-      this.collection,
-      this.options,
-      session
-    );
-  }
-
-  public async create(form: Omit<R, keyof F | '_id'> & Partial<F>): Promise<T> {
+  public async create(
+    form: Omit<R, keyof F | '_id'> & Partial<F>,
+    options: InsertOneOptions = {}
+  ): Promise<T> {
     const dbCollection = this.getDBCollection();
     const defaultValues = await this.collection.getRecordDefaultFields();
 
@@ -51,7 +49,11 @@ export class CollectionAdapter<
 
     const operation = await dbCollection.insertOne(
       // TODO: fix this type somehow
-      data as any
+      data as any,
+      {
+        session: this.session,
+        ...options,
+      }
     );
 
     if (operation.acknowledged) {
@@ -70,7 +72,8 @@ export class CollectionAdapter<
   }
 
   public async createMany(
-    form: (Omit<R, keyof F> & Partial<F>)[]
+    form: (Omit<R, keyof F> & Partial<F>)[],
+    options?: BulkWriteOptions
   ): Promise<T[]> {
     const dbCollection = this.getDBCollection();
     const processedData = [];
@@ -84,7 +87,10 @@ export class CollectionAdapter<
       });
     }
 
-    const operation = await dbCollection.insertMany(processedData as any);
+    const operation = await dbCollection.insertMany(processedData as any, {
+      session: this.session,
+      ...options,
+    });
 
     if (operation.acknowledged) {
       const ids = Object.keys(operation.insertedIds).reduce(
@@ -105,9 +111,12 @@ export class CollectionAdapter<
     });
   }
 
-  public async getOne(query: Filter<R>): Promise<T> {
+  public async getOne(query: Filter<R>, options?: FindOptions<R>): Promise<T> {
     const dbCollection = this.getDBCollection();
-    const document = await dbCollection.findOne(query);
+    const document = await dbCollection.findOne(query, {
+      session: this.session,
+      ...options,
+    });
 
     if (document) {
       return this.createEntityFromDBRecord(document);
@@ -124,10 +133,13 @@ export class CollectionAdapter<
 
   public async getMany(
     query: Filter<R>,
-    options: FindOptions<R> = {}
+    options?: FindOptions<R>
   ): Promise<T[]> {
     const dbCollection = this.getDBCollection();
-    const dbQuery = dbCollection.find(query, options as any);
+    const dbQuery = dbCollection.find(query, {
+      session: this.session,
+      ...options,
+    });
 
     const documents = await dbQuery.toArray();
 
@@ -140,9 +152,15 @@ export class CollectionAdapter<
     return [];
   }
 
-  public async getAll(): Promise<T[]> {
+  public async getAll(options?: FindOptions<R>): Promise<T[]> {
     const dbCollection = this.getDBCollection();
-    const dbQuery = dbCollection.find();
+    const dbQuery = dbCollection.find(
+      {},
+      {
+        session: this.session,
+        ...options,
+      }
+    );
 
     const documents = await dbQuery.toArray();
 
@@ -157,10 +175,14 @@ export class CollectionAdapter<
 
   public async getDBRecordField<K extends keyof WithId<R>>(
     query: Filter<R>,
-    fieldName: K
+    fieldName: K,
+    options?: FindOptions<R>
   ): Promise<WithId<R>[K]> {
     const dbCollection = this.getDBCollection();
-    const document = await dbCollection.findOne(query);
+    const document = await dbCollection.findOne(query, {
+      session: this.session,
+      ...options,
+    });
 
     if (document) {
       return document[fieldName];
@@ -175,9 +197,15 @@ export class CollectionAdapter<
     });
   }
 
-  public async getRecordsCount(query: Filter<R>): Promise<number> {
+  public async getRecordsCount(
+    query: Filter<R>,
+    options: CountDocumentsOptions
+  ): Promise<number> {
     const dbCollection = this.getDBCollection();
-    const count = await dbCollection.countDocuments(query);
+    const count = await dbCollection.countDocuments(query, {
+      session: this.session,
+      ...options,
+    });
 
     return count;
   }
@@ -189,11 +217,10 @@ export class CollectionAdapter<
   ): Promise<boolean> {
     const dbCollection = this.getDBCollection();
 
-    const operation = await dbCollection.updateOne(
-      query,
-      updates,
-      options || {}
-    );
+    const operation = await dbCollection.updateOne(query, updates, {
+      session: this.session,
+      ...options,
+    });
 
     return Boolean(operation.acknowledged && operation.matchedCount);
   }
@@ -205,25 +232,36 @@ export class CollectionAdapter<
   ): Promise<boolean> {
     const dbCollection = this.getDBCollection();
 
-    const operation = await dbCollection.updateMany(
-      query,
-      updates,
-      options || {}
-    );
+    const operation = await dbCollection.updateMany(query, updates, {
+      session: this.session,
+      ...options,
+    });
 
     return Boolean(operation.acknowledged && operation.matchedCount);
   }
 
-  public async deleteOne(query: Filter<R>): Promise<boolean> {
+  public async deleteOne(
+    query: Filter<R>,
+    options?: DeleteOptions
+  ): Promise<boolean> {
     const dbCollection = this.getDBCollection();
-    const operation = await dbCollection.deleteOne(query);
+    const operation = await dbCollection.deleteOne(query, {
+      session: this.session,
+      ...options,
+    });
 
     return Boolean(operation.acknowledged && operation.deletedCount);
   }
 
-  public async deleteMany(query: Filter<R>): Promise<boolean> {
+  public async deleteMany(
+    query: Filter<R>,
+    options: DeleteOptions
+  ): Promise<boolean> {
     const dbCollection = this.getDBCollection();
-    const operation = await dbCollection.deleteMany(query);
+    const operation = await dbCollection.deleteMany(query, {
+      session: this.session,
+      ...options,
+    });
 
     return Boolean(operation.acknowledged && operation.deletedCount);
   }
@@ -233,7 +271,12 @@ export class CollectionAdapter<
     options: Parameters<Collection<R>['aggregate']>[1]
   ): Promise<T[]> {
     const dbCollection = this.getDBCollection();
-    const documents = await dbCollection.aggregate(pipeline, options).toArray();
+    const documents = await dbCollection
+      .aggregate(pipeline, {
+        session: this.session,
+        ...options,
+      })
+      .toArray();
 
     if (documents.length > 0) {
       return documents.map((document) =>
@@ -248,7 +291,10 @@ export class CollectionAdapter<
     fieldOrSpec: IndexSpecification,
     options?: CreateIndexesOptions
   ): Promise<void> {
-    await this.getDBCollection().createIndex(fieldOrSpec, options || {});
+    await this.getDBCollection().createIndex(fieldOrSpec, {
+      session: this.session,
+      ...options,
+    });
   }
 
   private getDBCollection(): Collection<R> {
