@@ -57,7 +57,7 @@ var collection = (0, __1.createCollection)({
     },
 });
 exports.__EntityIdsCollection = collection;
-function generateEntityId(db, collectionName) {
+function generateEntityId(db, collectionName, session) {
     return __awaiter(this, void 0, void 0, function () {
         var dao, publicId, exception_1, id;
         return __generator(this, function (_a) {
@@ -67,14 +67,14 @@ function generateEntityId(db, collectionName) {
                     _a.label = 1;
                 case 1:
                     _a.trys.push([1, 3, , 7]);
-                    return [4 /*yield*/, dao.getOne({ key: collectionName })];
+                    return [4 /*yield*/, dao.getOne({ key: collectionName }, { session: session })];
                 case 2:
                     publicId = _a.sent();
                     return [3 /*break*/, 7];
                 case 3:
                     exception_1 = _a.sent();
                     if (!(exception_1 instanceof prebuild_1.NotFoundException)) return [3 /*break*/, 5];
-                    return [4 /*yield*/, dao.create({ key: collectionName })];
+                    return [4 /*yield*/, dao.create({ key: collectionName }, { session: session })];
                 case 4:
                     publicId = _a.sent();
                     return [3 /*break*/, 6];
@@ -82,7 +82,7 @@ function generateEntityId(db, collectionName) {
                 case 6: return [3 /*break*/, 7];
                 case 7:
                     id = publicId.value;
-                    return [4 /*yield*/, dao.updateOne({ key: collectionName }, { $set: { value: id + 1 } })];
+                    return [4 /*yield*/, dao.updateOne({ key: collectionName }, { $set: { value: id + 1 } }, { session: session })];
                 case 8:
                     _a.sent();
                     return [2 /*return*/, id];
