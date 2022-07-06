@@ -1,4 +1,4 @@
-import { Db } from 'mongodb';
+import { ClientSession, Db } from 'mongodb';
 import { NotFoundException } from 'src/core/exception/prebuild';
 import { createCollection } from '..';
 import { getCollectionAdapter } from '../adapter/helpers';
@@ -25,17 +25,18 @@ const collection = createCollection({
 
 export async function generateEntityId(
   db: Db,
-  collectionName: string
+  collectionName: string,
+  session?: ClientSession
 ): Promise<number> {
   const dao = getCollectionAdapter(db, collection);
 
   let publicId: PublicID | undefined;
 
   try {
-    publicId = await dao.getOne({ key: collectionName });
+    publicId = await dao.getOne({ key: collectionName }, { session });
   } catch (exception) {
     if (exception instanceof NotFoundException) {
-      publicId = await dao.create({ key: collectionName });
+      publicId = await dao.create({ key: collectionName }, { session });
     } else {
       throw exception;
     }
@@ -43,7 +44,11 @@ export async function generateEntityId(
 
   const id = publicId.value;
 
-  await dao.updateOne({ key: collectionName }, { $set: { value: id + 1 } });
+  await dao.updateOne(
+    { key: collectionName },
+    { $set: { value: id + 1 } },
+    { session }
+  );
 
   return id;
 }
