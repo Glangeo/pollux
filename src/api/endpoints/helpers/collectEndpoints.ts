@@ -62,9 +62,7 @@ function configureEndpointsByPaths(
         const module = require(absolutePath);
 
         if (module.default) {
-          const route = castFolderOrFileNameToRoute(
-            path.replace(endpointRegExp, '')
-          );
+          const route = castFolderOrFileNameToRoute(path);
 
           const endpoints = Array.isArray(module.default)
             ? module.default
@@ -103,8 +101,14 @@ function configureEndpointsByPaths(
   return configurations;
 }
 
-function castFolderOrFileNameToRoute(name: string): string {
-  if (name === 'index.ts') {
+function castFolderOrFileNameToRoute(nameWithExtension: string): string {
+  const lastIndexOfDot = nameWithExtension.lastIndexOf('.');
+  const name =
+    lastIndexOfDot !== -1
+      ? nameWithExtension.slice(0, lastIndexOfDot)
+      : nameWithExtension;
+
+  if (name === 'index') {
     return '/';
   }
 
