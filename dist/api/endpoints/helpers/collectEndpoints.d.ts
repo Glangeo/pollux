@@ -6,4 +6,4 @@ import { AnyEndpoint } from '../types/Endpoint';
  * @param [folderName] folder name where endpoints are places
  * @returns array of collected from folder endpoints
  */
-export declare function collectEndpoints(dirname: string, folderName?: string): AnyEndpoint[];
+export declare function collectEndpoints(dirname: string, folderName?: string, endpointRegExp?: RegExp): AnyEndpoint[];
