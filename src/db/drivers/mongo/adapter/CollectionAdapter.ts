@@ -208,7 +208,7 @@ export class CollectionAdapter<
 
   public async getRecordsCount(
     query: Filter<R>,
-    options: CountDocumentsOptions
+    options?: CountDocumentsOptions
   ): Promise<number> {
     const dbCollection = this.getDBCollection();
     const count = await dbCollection.countDocuments(query, {
@@ -264,7 +264,7 @@ export class CollectionAdapter<
 
   public async deleteMany(
     query: Filter<R>,
-    options: DeleteOptions
+    options?: DeleteOptions
   ): Promise<boolean> {
     const dbCollection = this.getDBCollection();
     const operation = await dbCollection.deleteMany(query, {
@@ -277,7 +277,7 @@ export class CollectionAdapter<
 
   public async aggregate(
     pipeline: Parameters<Collection<R>['aggregate']>[0],
-    options: Parameters<Collection<R>['aggregate']>[1]
+    options?: Parameters<Collection<R>['aggregate']>[1]
   ): Promise<T[]> {
     const dbCollection = this.getDBCollection();
     const documents = await dbCollection
