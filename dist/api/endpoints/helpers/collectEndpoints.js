@@ -113,7 +113,7 @@ function configureEndpointsByPaths(absoluteBasePath, relativePaths, components, 
                     }
                 }
                 else {
-                    throw new Error('Endpoint file must have a default export');
+                    throw new Error("Endpoint file must have a default export. Endpoint file path: ".concat(absolutePath));
                 }
             }
             else {
