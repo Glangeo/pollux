@@ -80,7 +80,9 @@ function configureEndpointsByPaths(
           }
         }
       } else {
-        throw new Error('Endpoint file must have a default export');
+        throw new Error(
+          `Endpoint file must have a default export. Endpoint file path: ${absolutePath}`
+        );
       }
     } else {
       const route = castFolderOrFileNameToRoute(path);
