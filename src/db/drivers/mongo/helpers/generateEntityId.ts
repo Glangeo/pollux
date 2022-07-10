@@ -28,15 +28,15 @@ export async function generateEntityId(
   collectionName: string,
   session?: ClientSession
 ): Promise<number> {
-  const dao = getCollectionAdapter(db, collection);
+  const dao = getCollectionAdapter(db, collection, undefined, session);
 
   let publicId: PublicID | undefined;
 
   try {
-    publicId = await dao.getOne({ key: collectionName }, { session });
+    publicId = await dao.getOne({ key: collectionName });
   } catch (exception) {
     if (exception instanceof NotFoundException) {
-      publicId = await dao.create({ key: collectionName }, { session });
+      publicId = await dao.create({ key: collectionName });
     } else {
       throw exception;
     }
@@ -44,11 +44,7 @@ export async function generateEntityId(
 
   const id = publicId.value;
 
-  await dao.updateOne(
-    { key: collectionName },
-    { $set: { value: id + 1 } },
-    { session }
-  );
+  await dao.updateOne({ key: collectionName }, { $set: { value: id + 1 } });
 
   return id;
 }
