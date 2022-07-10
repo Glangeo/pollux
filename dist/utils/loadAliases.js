@@ -27,8 +27,9 @@ var module_alias_1 = __importDefault(require("module-alias"));
 /**
  * Loads aliases from tsconfig to require.resolce
  */
-function loadAliases() {
-    var tsconfig = require(path_1.default.join(process.cwd(), 'tsconfig.json'));
+function loadAliases(tsConfigPath) {
+    if (tsConfigPath === void 0) { tsConfigPath = path_1.default.join(process.cwd(), 'tsconfig.json'); }
+    var tsconfig = require(tsConfigPath);
     for (var alias in tsconfig.compilerOptions.paths) {
         var aliasName = alias.replace('/*', '');
         var _a = __read(tsconfig.compilerOptions.paths[alias], 1), aliasPath = _a[0];
