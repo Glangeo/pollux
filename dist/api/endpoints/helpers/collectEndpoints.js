@@ -88,7 +88,7 @@ function configureEndpointsByPaths(absoluteBasePath, relativePaths, components, 
                 if (isEndpoint) {
                     var module_1 = require(absolutePath);
                     if (module_1.default) {
-                        var route = castFolderOrFileNameToRoute(path.replace(endpointRegExp, ''));
+                        var route = castFolderOrFileNameToRoute(path);
                         var endpoints = Array.isArray(module_1.default)
                             ? module_1.default
                             : [module_1.default];
@@ -131,8 +131,12 @@ function configureEndpointsByPaths(absoluteBasePath, relativePaths, components, 
     }
     return configurations;
 }
-function castFolderOrFileNameToRoute(name) {
-    if (name === 'index.ts') {
+function castFolderOrFileNameToRoute(nameWithExtension) {
+    var lastIndexOfDot = nameWithExtension.lastIndexOf('.');
+    var name = lastIndexOfDot !== -1
+        ? nameWithExtension.slice(0, lastIndexOfDot)
+        : nameWithExtension;
+    if (name === 'index') {
         return '/';
     }
     if (name.includes('[')) {
