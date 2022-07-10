@@ -88,7 +88,7 @@ function configureEndpointsByPaths(absoluteBasePath, relativePaths, components, 
                 if (isEndpoint) {
                     var module_1 = require(absolutePath);
                     if (module_1.default) {
-                        var route = castFolderOrFileNameToRoute(path);
+                        var route = castFolderOrFileNameToRoute(path.replace(endpointRegExp, ''));
                         var endpoints = Array.isArray(module_1.default)
                             ? module_1.default
                             : [module_1.default];
