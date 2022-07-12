@@ -81,7 +81,7 @@ export class CollectionAdapter<
   }
 
   public async createMany(
-    form: (Omit<R, keyof F> & Partial<F>)[],
+    form: (Omit<R, keyof F | '_id'> & Partial<F>)[],
     options?: BulkWriteOptions
   ): Promise<T[]> {
     const dbCollection = this.getDBCollection();
