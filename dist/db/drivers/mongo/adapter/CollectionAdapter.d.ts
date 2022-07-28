@@ -19,8 +19,8 @@ export declare class CollectionAdapter<T, R extends RecordSchema<T>, F extends P
     updateOne(query: Filter<R>, updates: UpdateFilter<R> | Partial<R>, options?: UpdateOptions): Promise<boolean>;
     updateMany(query: Filter<R>, updates: UpdateFilter<R> | Partial<R>, options?: UpdateOptions): Promise<boolean>;
     deleteOne(query: Filter<R>, options?: DeleteOptions): Promise<boolean>;
-    deleteMany(query: Filter<R>, options: DeleteOptions): Promise<boolean>;
-    aggregate(pipeline: Parameters<Collection<R>['aggregate']>[0], options: Parameters<Collection<R>['aggregate']>[1]): Promise<T[]>;
+    deleteMany(query: Filter<R>, options?: DeleteOptions): Promise<boolean>;
+    aggregate(pipeline: Parameters<Collection<R>['aggregate']>[0], options?: Parameters<Collection<R>['aggregate']>[1]): Promise<T[]>;
     createIndex(fieldOrSpec: IndexSpecification, options?: CreateIndexesOptions): Promise<void>;
     private getDBCollection;
     private createEntityFromDBRecord;
