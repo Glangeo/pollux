@@ -1,6 +1,6 @@
 {
   "name": "@glangeo/pollux",
-  "version": "2.0.0-rc-1659026736131",
+  "version": "2.0.0-rc-1659026759209",
   "main": "index.js",
   "scripts": {
     "prebuild": "npx rimraf ./dist",
