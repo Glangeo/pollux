@@ -15,7 +15,7 @@ export declare class CollectionAdapter<T, R extends RecordSchema<T>, F extends P
     getMany(query: Filter<R>, options?: FindOptions<R>): Promise<T[]>;
     getAll(options?: FindOptions<R>): Promise<T[]>;
     getDBRecordField<K extends keyof WithId<R>>(query: Filter<R>, fieldName: K, options?: FindOptions<R>): Promise<WithId<R>[K]>;
-    getRecordsCount(query: Filter<R>, options: CountDocumentsOptions): Promise<number>;
+    getRecordsCount(query: Filter<R>, options?: CountDocumentsOptions): Promise<number>;
     updateOne(query: Filter<R>, updates: UpdateFilter<R> | Partial<R>, options?: UpdateOptions): Promise<boolean>;
     updateMany(query: Filter<R>, updates: UpdateFilter<R> | Partial<R>, options?: UpdateOptions): Promise<boolean>;
     deleteOne(query: Filter<R>, options?: DeleteOptions): Promise<boolean>;
