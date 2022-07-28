@@ -6,8 +6,10 @@ import moduleAlias from 'module-alias';
 /**
  * Loads aliases from tsconfig to require.resolce
  */
-export function loadAliases(): void {
-  const tsconfig = require(path.join(process.cwd(), 'tsconfig.json'));
+export function loadAliases(
+  tsConfigPath = path.join(process.cwd(), 'tsconfig.json')
+): void {
+  const tsconfig = require(tsConfigPath);
 
   for (const alias in tsconfig.compilerOptions.paths) {
     const aliasName = alias.replace('/*', '');

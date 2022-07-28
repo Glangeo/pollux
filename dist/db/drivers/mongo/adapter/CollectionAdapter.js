@@ -87,13 +87,18 @@ exports.CollectionAdapter = void 0;
 var prebuild_1 = require("../../../../core/exception/prebuild");
 var local_utils_1 = require("../../../../local-utils");
 var CollectionAdapter = /** @class */ (function () {
-    function CollectionAdapter(db, collection, options) {
+    function CollectionAdapter(db, collection, options, session) {
         if (options === void 0) { options = {}; }
         this.db = db;
         this.collection = collection;
         this.options = options;
+        this.session = session;
     }
-    CollectionAdapter.prototype.create = function (form) {
+    CollectionAdapter.prototype.withSession = function (session) {
+        return new CollectionAdapter(this.db, this.collection, this.options, session);
+    };
+    CollectionAdapter.prototype.create = function (form, options) {
+        if (options === void 0) { options = {}; }
         return __awaiter(this, void 0, void 0, function () {
             var dbCollection, defaultValues, data, operation;
             return __generator(this, function (_a) {
@@ -106,7 +111,7 @@ var CollectionAdapter = /** @class */ (function () {
                         data = __assign(__assign({}, defaultValues), form);
                         return [4 /*yield*/, dbCollection.insertOne(
                             // TODO: fix this type somehow
-                            data)];
+                            data, __assign({ session: this.session }, options))];
                     case 2:
                         operation = _a.sent();
                         if (operation.acknowledged) {
@@ -125,7 +130,7 @@ var CollectionAdapter = /** @class */ (function () {
             });
         });
     };
-    CollectionAdapter.prototype.createMany = function (form) {
+    CollectionAdapter.prototype.createMany = function (form, options) {
         return __awaiter(this, void 0, void 0, function () {
             var dbCollection, processedData, form_1, form_1_1, inputData, defaultValues, e_1_1, operation, ids;
             var e_1, _a;
@@ -161,7 +166,7 @@ var CollectionAdapter = /** @class */ (function () {
                         }
                         finally { if (e_1) throw e_1.error; }
                         return [7 /*endfinally*/];
-                    case 8: return [4 /*yield*/, dbCollection.insertMany(processedData)];
+                    case 8: return [4 /*yield*/, dbCollection.insertMany(processedData, __assign({ session: this.session }, options))];
                     case 9:
                         operation = _b.sent();
                         if (operation.acknowledged) {
@@ -181,14 +186,14 @@ var CollectionAdapter = /** @class */ (function () {
             });
         });
     };
-    CollectionAdapter.prototype.getOne = function (query) {
+    CollectionAdapter.prototype.getOne = function (query, options) {
         return __awaiter(this, void 0, void 0, function () {
             var dbCollection, document;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         dbCollection = this.getDBCollection();
-                        return [4 /*yield*/, dbCollection.findOne(query)];
+                        return [4 /*yield*/, dbCollection.findOne(query, __assign({ session: this.session }, options))];
                     case 1:
                         document = _a.sent();
                         if (document) {
@@ -206,7 +211,6 @@ var CollectionAdapter = /** @class */ (function () {
         });
     };
     CollectionAdapter.prototype.getMany = function (query, options) {
-        if (options === void 0) { options = {}; }
         return __awaiter(this, void 0, void 0, function () {
             var dbCollection, dbQuery, documents;
             var _this = this;
@@ -214,7 +218,7 @@ var CollectionAdapter = /** @class */ (function () {
                 switch (_a.label) {
                     case 0:
                         dbCollection = this.getDBCollection();
-                        dbQuery = dbCollection.find(query, options);
+                        dbQuery = dbCollection.find(query, __assign({ session: this.session }, options));
                         return [4 /*yield*/, dbQuery.toArray()];
                     case 1:
                         documents = _a.sent();
@@ -228,7 +232,7 @@ var CollectionAdapter = /** @class */ (function () {
             });
         });
     };
-    CollectionAdapter.prototype.getAll = function () {
+    CollectionAdapter.prototype.getAll = function (options) {
         return __awaiter(this, void 0, void 0, function () {
             var dbCollection, dbQuery, documents;
             var _this = this;
@@ -236,7 +240,7 @@ var CollectionAdapter = /** @class */ (function () {
                 switch (_a.label) {
                     case 0:
                         dbCollection = this.getDBCollection();
-                        dbQuery = dbCollection.find();
+                        dbQuery = dbCollection.find({}, __assign({ session: this.session }, options));
                         return [4 /*yield*/, dbQuery.toArray()];
                     case 1:
                         documents = _a.sent();
@@ -250,14 +254,14 @@ var CollectionAdapter = /** @class */ (function () {
             });
         });
     };
-    CollectionAdapter.prototype.getDBRecordField = function (query, fieldName) {
+    CollectionAdapter.prototype.getDBRecordField = function (query, fieldName, options) {
         return __awaiter(this, void 0, void 0, function () {
             var dbCollection, document;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         dbCollection = this.getDBCollection();
-                        return [4 /*yield*/, dbCollection.findOne(query)];
+                        return [4 /*yield*/, dbCollection.findOne(query, __assign({ session: this.session }, options))];
                     case 1:
                         document = _a.sent();
                         if (document) {
@@ -274,14 +278,14 @@ var CollectionAdapter = /** @class */ (function () {
             });
         });
     };
-    CollectionAdapter.prototype.getRecordsCount = function (query) {
+    CollectionAdapter.prototype.getRecordsCount = function (query, options) {
         return __awaiter(this, void 0, void 0, function () {
             var dbCollection, count;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         dbCollection = this.getDBCollection();
-                        return [4 /*yield*/, dbCollection.countDocuments(query)];
+                        return [4 /*yield*/, dbCollection.countDocuments(query, __assign({ session: this.session }, options))];
                     case 1:
                         count = _a.sent();
                         return [2 /*return*/, count];
@@ -296,7 +300,7 @@ var CollectionAdapter = /** @class */ (function () {
                 switch (_a.label) {
                     case 0:
                         dbCollection = this.getDBCollection();
-                        return [4 /*yield*/, dbCollection.updateOne(query, updates, options || {})];
+                        return [4 /*yield*/, dbCollection.updateOne(query, updates, __assign({ session: this.session }, options))];
                     case 1:
                         operation = _a.sent();
                         return [2 /*return*/, Boolean(operation.acknowledged && operation.matchedCount)];
@@ -311,7 +315,7 @@ var CollectionAdapter = /** @class */ (function () {
                 switch (_a.label) {
                     case 0:
                         dbCollection = this.getDBCollection();
-                        return [4 /*yield*/, dbCollection.updateMany(query, updates, options || {})];
+                        return [4 /*yield*/, dbCollection.updateMany(query, updates, __assign({ session: this.session }, options))];
                     case 1:
                         operation = _a.sent();
                         return [2 /*return*/, Boolean(operation.acknowledged && operation.matchedCount)];
@@ -319,14 +323,14 @@ var CollectionAdapter = /** @class */ (function () {
             });
         });
     };
-    CollectionAdapter.prototype.deleteOne = function (query) {
+    CollectionAdapter.prototype.deleteOne = function (query, options) {
         return __awaiter(this, void 0, void 0, function () {
             var dbCollection, operation;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         dbCollection = this.getDBCollection();
-                        return [4 /*yield*/, dbCollection.deleteOne(query)];
+                        return [4 /*yield*/, dbCollection.deleteOne(query, __assign({ session: this.session }, options))];
                     case 1:
                         operation = _a.sent();
                         return [2 /*return*/, Boolean(operation.acknowledged && operation.deletedCount)];
@@ -334,14 +338,14 @@ var CollectionAdapter = /** @class */ (function () {
             });
         });
     };
-    CollectionAdapter.prototype.deleteMany = function (query) {
+    CollectionAdapter.prototype.deleteMany = function (query, options) {
         return __awaiter(this, void 0, void 0, function () {
             var dbCollection, operation;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         dbCollection = this.getDBCollection();
-                        return [4 /*yield*/, dbCollection.deleteMany(query)];
+                        return [4 /*yield*/, dbCollection.deleteMany(query, __assign({ session: this.session }, options))];
                     case 1:
                         operation = _a.sent();
                         return [2 /*return*/, Boolean(operation.acknowledged && operation.deletedCount)];
@@ -357,7 +361,9 @@ var CollectionAdapter = /** @class */ (function () {
                 switch (_a.label) {
                     case 0:
                         dbCollection = this.getDBCollection();
-                        return [4 /*yield*/, dbCollection.aggregate(pipeline, options).toArray()];
+                        return [4 /*yield*/, dbCollection
+                                .aggregate(pipeline, __assign({ session: this.session }, options))
+                                .toArray()];
                     case 1:
                         documents = _a.sent();
                         if (documents.length > 0) {
@@ -374,7 +380,7 @@ var CollectionAdapter = /** @class */ (function () {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.getDBCollection().createIndex(fieldOrSpec, options || {})];
+                    case 0: return [4 /*yield*/, this.getDBCollection().createIndex(fieldOrSpec, __assign({ session: this.session }, options))];
                     case 1:
                         _a.sent();
                         return [2 /*return*/];

@@ -82,6 +82,27 @@ var MongoDB = /** @class */ (function () {
             });
         });
     };
+    MongoDB.prototype.doInsideTransaction = function (action, options) {
+        return __awaiter(this, void 0, void 0, function () {
+            var session;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        session = this.connection.startSession();
+                        _a.label = 1;
+                    case 1:
+                        _a.trys.push([1, , 3, 5]);
+                        return [4 /*yield*/, session.withTransaction(action, options)];
+                    case 2: return [2 /*return*/, _a.sent()];
+                    case 3: return [4 /*yield*/, session.endSession()];
+                    case 4:
+                        _a.sent();
+                        return [7 /*endfinally*/];
+                    case 5: return [2 /*return*/];
+                }
+            });
+        });
+    };
     return MongoDB;
 }());
 exports.MongoDB = MongoDB;

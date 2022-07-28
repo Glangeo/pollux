@@ -1,4 +1,4 @@
-import { Db } from 'mongodb';
+import { Db, TransactionOptions, WithTransactionCallback } from 'mongodb';
 export declare class MongoDB {
     private readonly connectionUri;
     private readonly primaryDbName?;
@@ -7,4 +7,5 @@ export declare class MongoDB {
     getDb(dbName?: string): Db;
     connect(): Promise<void>;
     disconnect(): Promise<void>;
+    doInsideTransaction<T>(action: WithTransactionCallback<T>, options?: TransactionOptions): Promise<T>;
 }

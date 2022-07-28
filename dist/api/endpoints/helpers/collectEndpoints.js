@@ -63,18 +63,19 @@ var local_utils_1 = require("../../../local-utils");
  * @param [folderName] folder name where endpoints are places
  * @returns array of collected from folder endpoints
  */
-function collectEndpoints(dirname, folderName) {
+function collectEndpoints(dirname, folderName, endpointRegExp) {
     if (folderName === void 0) { folderName = 'endpoints'; }
+    if (endpointRegExp === void 0) { endpointRegExp = /.*\.ts$/g; }
     var endpointsFolderPath = path_1.default.resolve(dirname, folderName);
     var paths = fs_1.default.readdirSync(endpointsFolderPath);
-    var configurations = configureEndpointsByPaths(endpointsFolderPath, paths, []);
+    var configurations = configureEndpointsByPaths(endpointsFolderPath, paths, [], endpointRegExp);
     var endpoints = configurations
         .sort(confiurationsComparator)
         .map(function (configuration) { return (__assign(__assign({}, configuration.endpoint), { route: (0, local_utils_1.fixUrl)(configuration.path.join('/')) })); });
     return endpoints;
 }
 exports.collectEndpoints = collectEndpoints;
-function configureEndpointsByPaths(absoluteBasePath, relativePaths, components) {
+function configureEndpointsByPaths(absoluteBasePath, relativePaths, components, endpointRegExp) {
     var e_1, _a, e_2, _b;
     var configurations = [];
     try {
@@ -83,38 +84,41 @@ function configureEndpointsByPaths(absoluteBasePath, relativePaths, components) 
             var absolutePath = path_1.default.resolve(absoluteBasePath, path);
             var isFile = fs_1.default.lstatSync(absolutePath).isFile();
             if (isFile) {
-                var module_1 = require(absolutePath);
-                if (module_1.default) {
-                    var route = castFolderOrFileNameToRoute(path);
-                    var endpoints = Array.isArray(module_1.default)
-                        ? module_1.default
-                        : [module_1.default];
-                    checkIfEndpointsOfSameRouteHasDifferentMethods(endpoints, path);
-                    try {
-                        for (var endpoints_1 = (e_2 = void 0, __values(endpoints)), endpoints_1_1 = endpoints_1.next(); !endpoints_1_1.done; endpoints_1_1 = endpoints_1.next()) {
-                            var endpoint = endpoints_1_1.value;
-                            var configuration = {
-                                endpoint: endpoint,
-                                path: __spreadArray(__spreadArray([], __read(components), false), [route], false),
-                            };
-                            configurations.push(configuration);
-                        }
-                    }
-                    catch (e_2_1) { e_2 = { error: e_2_1 }; }
-                    finally {
+                var isEndpoint = Boolean(absolutePath.match(endpointRegExp));
+                if (isEndpoint) {
+                    var module_1 = require(absolutePath);
+                    if (module_1.default) {
+                        var route = castFolderOrFileNameToRoute(path);
+                        var endpoints = Array.isArray(module_1.default)
+                            ? module_1.default
+                            : [module_1.default];
+                        checkIfEndpointsOfSameRouteHasDifferentMethods(endpoints, path);
                         try {
-                            if (endpoints_1_1 && !endpoints_1_1.done && (_b = endpoints_1.return)) _b.call(endpoints_1);
+                            for (var endpoints_1 = (e_2 = void 0, __values(endpoints)), endpoints_1_1 = endpoints_1.next(); !endpoints_1_1.done; endpoints_1_1 = endpoints_1.next()) {
+                                var endpoint = endpoints_1_1.value;
+                                var configuration = {
+                                    endpoint: endpoint,
+                                    path: __spreadArray(__spreadArray([], __read(components), false), [route], false),
+                                };
+                                configurations.push(configuration);
+                            }
                         }
-                        finally { if (e_2) throw e_2.error; }
+                        catch (e_2_1) { e_2 = { error: e_2_1 }; }
+                        finally {
+                            try {
+                                if (endpoints_1_1 && !endpoints_1_1.done && (_b = endpoints_1.return)) _b.call(endpoints_1);
+                            }
+                            finally { if (e_2) throw e_2.error; }
+                        }
                     }
-                }
-                else {
-                    throw new Error('Endpoint file must have a default export');
+                    else {
+                        throw new Error("Endpoint file must have a default export. Endpoint file path: ".concat(absolutePath));
+                    }
                 }
             }
             else {
                 var route = castFolderOrFileNameToRoute(path);
-                configurations.push.apply(configurations, __spreadArray([], __read(configureEndpointsByPaths(path_1.default.resolve(absoluteBasePath, path), fs_1.default.readdirSync(absolutePath), __spreadArray(__spreadArray([], __read(components), false), [route], false))), false));
+                configurations.push.apply(configurations, __spreadArray([], __read(configureEndpointsByPaths(path_1.default.resolve(absoluteBasePath, path), fs_1.default.readdirSync(absolutePath), __spreadArray(__spreadArray([], __read(components), false), [route], false), endpointRegExp)), false));
             }
         }
     }
@@ -127,8 +131,12 @@ function configureEndpointsByPaths(absoluteBasePath, relativePaths, components) 
     }
     return configurations;
 }
-function castFolderOrFileNameToRoute(name) {
-    if (name === 'index.ts') {
+function castFolderOrFileNameToRoute(nameWithExtension) {
+    var lastIndexOfDot = nameWithExtension.lastIndexOf('.');
+    var name = lastIndexOfDot !== -1
+        ? nameWithExtension.slice(0, lastIndexOfDot)
+        : nameWithExtension;
+    if (name === 'index') {
         return '/';
     }
     if (name.includes('[')) {

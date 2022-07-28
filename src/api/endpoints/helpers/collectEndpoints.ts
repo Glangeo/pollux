@@ -20,7 +20,8 @@ type EndpointConfiguration = {
  */
 export function collectEndpoints(
   dirname: string,
-  folderName = 'endpoints'
+  folderName = 'endpoints',
+  endpointRegExp = /.*\.ts$/g
 ): AnyEndpoint[] {
   const endpointsFolderPath = pth.resolve(dirname, folderName);
   const paths = fs.readdirSync(endpointsFolderPath);
@@ -28,7 +29,8 @@ export function collectEndpoints(
   const configurations = configureEndpointsByPaths(
     endpointsFolderPath,
     paths,
-    []
+    [],
+    endpointRegExp
   );
 
   const endpoints: AnyEndpoint[] = configurations
@@ -44,7 +46,8 @@ export function collectEndpoints(
 function configureEndpointsByPaths(
   absoluteBasePath: string,
   relativePaths: string[],
-  components: string[]
+  components: string[],
+  endpointRegExp: RegExp
 ): EndpointConfiguration[] {
   const configurations: EndpointConfiguration[] = [];
 
@@ -53,27 +56,33 @@ function configureEndpointsByPaths(
     const isFile = fs.lstatSync(absolutePath).isFile();
 
     if (isFile) {
-      const module = require(absolutePath);
+      const isEndpoint = Boolean(absolutePath.match(endpointRegExp));
 
-      if (module.default) {
-        const route = castFolderOrFileNameToRoute(path);
+      if (isEndpoint) {
+        const module = require(absolutePath);
 
-        const endpoints = Array.isArray(module.default)
-          ? module.default
-          : [module.default];
+        if (module.default) {
+          const route = castFolderOrFileNameToRoute(path);
 
-        checkIfEndpointsOfSameRouteHasDifferentMethods(endpoints, path);
+          const endpoints = Array.isArray(module.default)
+            ? module.default
+            : [module.default];
 
-        for (const endpoint of endpoints) {
-          const configuration: EndpointConfiguration = {
-            endpoint,
-            path: [...components, route],
-          };
+          checkIfEndpointsOfSameRouteHasDifferentMethods(endpoints, path);
 
-          configurations.push(configuration);
+          for (const endpoint of endpoints) {
+            const configuration: EndpointConfiguration = {
+              endpoint,
+              path: [...components, route],
+            };
+
+            configurations.push(configuration);
+          }
+        } else {
+          throw new Error(
+            `Endpoint file must have a default export. Endpoint file path: ${absolutePath}`
+          );
         }
-      } else {
-        throw new Error('Endpoint file must have a default export');
       }
     } else {
       const route = castFolderOrFileNameToRoute(path);
@@ -82,7 +91,8 @@ function configureEndpointsByPaths(
         ...configureEndpointsByPaths(
           pth.resolve(absoluteBasePath, path),
           fs.readdirSync(absolutePath),
-          [...components, route]
+          [...components, route],
+          endpointRegExp
         )
       );
     }
@@ -91,8 +101,14 @@ function configureEndpointsByPaths(
   return configurations;
 }
 
-function castFolderOrFileNameToRoute(name: string): string {
-  if (name === 'index.ts') {
+function castFolderOrFileNameToRoute(nameWithExtension: string): string {
+  const lastIndexOfDot = nameWithExtension.lastIndexOf('.');
+  const name =
+    lastIndexOfDot !== -1
+      ? nameWithExtension.slice(0, lastIndexOfDot)
+      : nameWithExtension;
+
+  if (name === 'index') {
     return '/';
   }
 

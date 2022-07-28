@@ -6,8 +6,8 @@
     "prebuild": "npx rimraf ./dist",
     "build": "tsc --project tsconfig.build.json",
     "postbuild": "tsconfig-replace-paths -p tsconfig.json -o ./dist -s ./src",
-    "test": "jest --coverage=false",
-    "coverage": "jest",
+    "test": "jest",
+    "coverage": "jest --coverage=true",
     "publish:beta": "node ./scripts/release-cli/index.js publish -t beta",
     "publish:rc": "node ./scripts/release-cli/index.js publish -t rc"
   },

@@ -57,13 +57,13 @@ var collection = (0, __1.createCollection)({
     },
 });
 exports.__EntityIdsCollection = collection;
-function generateEntityId(db, collectionName) {
+function generateEntityId(db, collectionName, session) {
     return __awaiter(this, void 0, void 0, function () {
         var dao, publicId, exception_1, id;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
-                    dao = (0, helpers_1.getCollectionAdapter)(db, collection);
+                    dao = (0, helpers_1.getCollectionAdapter)(db, collection, undefined, session);
                     _a.label = 1;
                 case 1:
                     _a.trys.push([1, 3, , 7]);

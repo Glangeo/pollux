@@ -1,4 +1,4 @@
-import { Db } from 'mongodb';
+import { ClientSession, Db } from 'mongodb';
 import { NotFoundException } from 'src/core/exception/prebuild';
 import { createCollection } from '..';
 import { getCollectionAdapter } from '../adapter/helpers';
@@ -25,9 +25,10 @@ const collection = createCollection({
 
 export async function generateEntityId(
   db: Db,
-  collectionName: string
+  collectionName: string,
+  session?: ClientSession
 ): Promise<number> {
-  const dao = getCollectionAdapter(db, collection);
+  const dao = getCollectionAdapter(db, collection, undefined, session);
 
   let publicId: PublicID | undefined;
 

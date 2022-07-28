@@ -1,4 +1,9 @@
-import { Db, MongoClient } from 'mongodb';
+import {
+  Db,
+  MongoClient,
+  TransactionOptions,
+  WithTransactionCallback,
+} from 'mongodb';
 import { InternalException } from 'src/core/exception/prebuild';
 import { DevelopmentLogger, DevLogEvent } from 'src/local-utils';
 
@@ -33,5 +38,18 @@ export class MongoDB {
 
   public async disconnect(): Promise<void> {
     await this.connection.close();
+  }
+
+  public async doInsideTransaction<T>(
+    action: WithTransactionCallback<T>,
+    options?: TransactionOptions
+  ): Promise<T> {
+    const session = this.connection.startSession();
+
+    try {
+      return await session.withTransaction(action, options);
+    } finally {
+      await session.endSession();
+    }
   }
 }
