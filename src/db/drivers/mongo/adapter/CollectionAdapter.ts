@@ -208,7 +208,7 @@ export class CollectionAdapter<
 
   public async getRecordsCount(
     query: Filter<R>,
-    options: CountDocumentsOptions
+    options?: CountDocumentsOptions
   ): Promise<number> {
     const dbCollection = this.getDBCollection();
     const count = await dbCollection.countDocuments(query, {
