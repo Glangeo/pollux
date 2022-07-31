@@ -47,7 +47,17 @@ export class MongoDB {
     const session = this.connection.startSession();
 
     try {
-      return await session.withTransaction(action, options);
+      session.startTransaction(options);
+
+      const result = await action(session);
+
+      await session.commitTransaction();
+
+      return result;
+    } catch (error) {
+      await session.abortTransaction();
+
+      throw error;
     } finally {
       await session.endSession();
     }

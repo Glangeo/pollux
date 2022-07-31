@@ -84,21 +84,33 @@ var MongoDB = /** @class */ (function () {
     };
     MongoDB.prototype.doInsideTransaction = function (action, options) {
         return __awaiter(this, void 0, void 0, function () {
-            var session;
+            var session, result, error_1;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         session = this.connection.startSession();
                         _a.label = 1;
                     case 1:
-                        _a.trys.push([1, , 3, 5]);
-                        return [4 /*yield*/, session.withTransaction(action, options)];
-                    case 2: return [2 /*return*/, _a.sent()];
-                    case 3: return [4 /*yield*/, session.endSession()];
+                        _a.trys.push([1, 4, 6, 8]);
+                        session.startTransaction(options);
+                        return [4 /*yield*/, action(session)];
+                    case 2:
+                        result = _a.sent();
+                        return [4 /*yield*/, session.commitTransaction()];
+                    case 3:
+                        _a.sent();
+                        return [2 /*return*/, result];
                     case 4:
+                        error_1 = _a.sent();
+                        return [4 /*yield*/, session.abortTransaction()];
+                    case 5:
+                        _a.sent();
+                        throw error_1;
+                    case 6: return [4 /*yield*/, session.endSession()];
+                    case 7:
                         _a.sent();
                         return [7 /*endfinally*/];
-                    case 5: return [2 /*return*/];
+                    case 8: return [2 /*return*/];
                 }
             });
         });
