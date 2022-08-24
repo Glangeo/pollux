@@ -1,6 +1,6 @@
 {
   "name": "@glangeo/pollux",
-  "version": "2.0.0-rc-1659295775309",
+  "version": "2.0.0-rc-1661372218028",
   "main": "index.js",
   "scripts": {
     "prebuild": "npx rimraf ./dist",
@@ -31,7 +31,7 @@
     "jsonwebtoken": "^8.5.1",
     "lodash": "^4.17.21",
     "module-alias": "^2.2.2",
-    "mongodb": "^4.5.0",
+    "mongodb": "4.5.0",
     "utility-types": "^3.10.0",
     "yup": "^0.32.8"
   },
