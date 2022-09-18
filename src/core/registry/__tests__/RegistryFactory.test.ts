@@ -1,13 +1,13 @@
 import { RegistryBuilder } from '../helpers';
 
-describe('creates simple registry successfuly', () => {
+describe('creates simple registry successfully', () => {
   it('creates empty registry', () => {
     const registry = new RegistryBuilder().build();
 
     expect(registry).toEqual({});
   });
 
-  it('creates registry correclty', () => {
+  it('creates registry correctly', () => {
     const registry = new RegistryBuilder()
       .addMethod({
         key: 'getNumber',
@@ -34,7 +34,7 @@ describe('creates simple registry successfuly', () => {
     expect(number1).toEqual(number2);
   });
 
-  it('do not moemize method result if requested', () => {
+  it('do not memoize method result if requested', () => {
     const registry = new RegistryBuilder()
       .addMethod({
         key: 'getNumber',
@@ -53,7 +53,7 @@ describe('creates simple registry successfuly', () => {
     const registry = new RegistryBuilder()
       .addMethod({
         key: 'getName',
-        factory: () => 'Jhon',
+        factory: () => 'Jon',
       })
       .addMethod({
         key: 'getGreeting',
@@ -63,6 +63,33 @@ describe('creates simple registry successfuly', () => {
 
     const greeting = registry.getGreeting();
 
-    expect(greeting).toEqual('Hi, Jhon!');
+    expect(greeting).toEqual('Hi, Jon!');
+  });
+
+  it('allows to define custom parameter in factory function', () => {
+    const registry = new RegistryBuilder()
+      .addMethod({
+        key: 'getGreeting',
+        factory: (_, name: string) => `Hi, ${name}!`,
+      })
+      .build();
+
+    const greeting = registry.getGreeting('Jon');
+
+    expect(greeting).toEqual('Hi, Jon!');
+  });
+
+  it('allows to define multiple custom parameters in factory function', () => {
+    const registry = new RegistryBuilder()
+      .addMethod({
+        key: 'getGreeting',
+        factory: (_, firstName: string, lastName: string) =>
+          `Hi, ${firstName} ${lastName}!`,
+      })
+      .build();
+
+    const greeting = registry.getGreeting('Jon', 'Doe');
+
+    expect(greeting).toEqual('Hi, Jon Doe!');
   });
 });
